@@ -270,3 +270,15 @@ Status: an unvalidated hypothesis.
   - red-line edits don't auto re-run past reports
   - Q&A answers not stored.
 - **Dependencies needing approval are listed, none added:** PDF and DOCX extraction, test runner, Supabase local stack, schema validation.
+
+### 19. Broke the spec into tickets (`/to-tickets`)
+- **What I asked for:** run `/mattpocock-skills:to-tickets` on `.scratch/redline-v1/spec.md`.
+- **Proposed 13 tracer-bullet tickets; I approved them as is.** They are in `.scratch/redline-v1/issues/01`–`13`.
+- **Order:**
+  - 01 is the walking skeleton: sign in → .txt upload → `analyze` through the model port → verified flags shown and saved with the model ID, with T1/T2 tests.
+  - From 01: 02 severity/exposure, 04 summary/deadlines/incorporated terms, 06 counter-offers, 08 question box, 09 PDF/DOCX extraction, 10 library.
+  - Then: 03 confidence (needs 02), 05 verdict line (needs 02 + 04), 07 red lines (needs 02), 11 isolation tests (needs 07 + 10), 12 eval harness (needs 02 + 04).
+  - 13, the labelled fixture set, is `ready-for-human` and has no blockers.
+- **Why .txt first:** it keeps the skeleton free of any extraction library that needs approval. PDF/DOCX come in 09.
+- **Gated on approval, written into the tickets:** test runner + Supabase credentials (01), PDF/DOCX libraries (09), local Supabase stack (11).
+- **Frontier now:** 01 and 13.
