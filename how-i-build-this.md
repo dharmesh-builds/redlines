@@ -282,3 +282,8 @@ Status: an unvalidated hypothesis.
 - **Why .txt first:** it keeps the skeleton free of any extraction library that needs approval. PDF/DOCX come in 09.
 - **Gated on approval, written into the tickets:** test runner + Supabase credentials (01), PDF/DOCX libraries (09), local Supabase stack (11).
 - **Frontier now:** 01 and 13.
+
+### 20. Rule: user-facing copy goes through the humanizer
+- **What I asked for:** add one rule to CLAUDE.md, in my own words, without restructuring the file. All copy a user reads (landing page, UI labels, error messages, empty states) is run through the humanizer skill before it is committed. Copy that reads as model-written is a defect, not a matter of taste.
+- **Done:** a new final section, `## User-facing copy`, with the rule word for word. No other lines changed.
+- **Effect on tickets:** every ticket with UI text goes through the humanizer before its commit. Examples: "not supported" messages (09), the verdict line (05), "the document doesn't say" (08), and empty library states (10).

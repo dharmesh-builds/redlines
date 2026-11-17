@@ -54,3 +54,6 @@ Excluded on purpose: payments and billing, OCR for scanned documents, and sharin
 - Issue tracker: local markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`. Approval questions still go to `QUESTIONS.md`.
 - Triage labels: the five default role names, recorded as a `Status:` line in each issue file. See `docs/agents/triage-labels.md`.
 - Domain docs: single-context, with `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
+## User-facing copy
+All copy a user reads in this product, meaning the landing page, UI labels, error messages and empty states, has to be run through the humanizer skill before it is committed. Copy that reads as though a model wrote it is a defect, not a matter of taste.
