@@ -50,6 +50,7 @@ Excluded on purpose: payments and billing, OCR for scanned documents, and sharin
   - Append only. Never rewrite past entries.
 
 ## Agent skills
+- Grilling (`/grill-me`, `/grilling`): ask every question through the multiple-choice question tool. Put the recommended option first; free text only via its "Other" option.
 - Issue tracker: local markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`. Approval questions still go to `QUESTIONS.md`.
 - Triage labels: the five default role names, recorded as a `Status:` line in each issue file. See `docs/agents/triage-labels.md`.
 - Domain docs: single-context, with `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

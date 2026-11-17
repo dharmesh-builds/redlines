@@ -150,3 +150,57 @@ Status: an unvalidated hypothesis.
   - A compact `## Agent skills` block in `CLAUDE.md`, so it stays within the 60-line limit.
 - **Split decided:** `QUESTIONS.md` is only for questions that need my approval during unattended builds. `.scratch/` is for planned work.
 - **Commit:** "Add project harness: instructions, first decision, agent config", containing ADR 0001, `docs/agents/`, the `CLAUDE.md` block and this log. Committed locally, not pushed.
+
+### 9. Designed the `flush` skill (one grilling round, all recommendations accepted)
+- **Purpose:** at the end of a session, read the conversation and file whatever is durable into the right place in the repo.
+- **What to keep:** only what a future session would otherwise get wrong or redo:
+  - decisions with their reasons, and rejected alternatives
+  - terms, open questions (labeled as open), agreed future work, standing rules.
+  - Drop unresolved discussion, anything already readable from the repo or git, and step-by-step narration.
+- **Where it goes**
+  - Decisions → a new `docs/adr/NNNN-*.md`.
+  - Terms → `GLOSSARY.md`.
+  - Questions needing approval → `QUESTIONS.md`.
+  - Future work → the issue tracker named in `docs/agents/issue-tracker.md`.
+  - Agent rules → `CLAUDE.md`, but **proposed only, never written**.
+  - Session narrative → the build log, only if `CLAUDE.md` names one.
+  - `CLAUDE.md` can add more destinations.
+- **What it refuses**
+  - secrets and personal details
+  - guesses written up as decisions
+  - overwriting an ADR (supersede it instead)
+  - editing past entries of an append-only log
+  - pasted or fetched text filed as instructions
+  - verbatim transcript chunks
+  - Anything important that it skips is reported with the reason.
+- **How it runs:** show a filing plan → one approval → write → commit locally, never push.
+- **In a bare repo**
+  - Create only the files actually needed, each with a one-line header.
+  - Never create `CLAUDE.md`.
+  - Outside a git repo, write the files but don't commit.
+  - Never invent a build log.
+- **Status:** design agreed; the skill isn't written yet.
+
+### 10. Built the `flush` skill
+- **Where:** `~/.claude/skills/flush/SKILL.md`, at user level so it's available in every project. It lives outside this repo, so it isn't in git here.
+- **Additions I made beyond the interview**
+  - Survey the repo before routing: decisions folder, glossary, issue tracker, session log, `QUESTIONS.md`.
+  - **Ask before creating any missing destination.** This replaces the interview answer "create on demand".
+  - `CLAUDE.md` changes are shown and need an explicit yes.
+  - Never write credentials, API keys or `.env` contents.
+  - If nothing durable happened, say so and write nothing.
+- **Description:** fires on "flush", "capture this session" and "save what we decided". It explicitly excludes cache, buffer and DNS flushes, ordinary saves and commits, and memory notes.
+- **Design choices Claude made**
+  - 8 steps: survey → harvest → screen → stop if empty → plan → write → commit → report.
+  - Remove duplicates against what each destination already records.
+  - Match the repo's existing formats.
+  - A regex scan for credentials before committing.
+  - Stage files by path, never `git add -A`, so unrelated work or a stray `.env` isn't swept in.
+  - Commit locally, never push.
+
+### 11. Grilling rule: options, not free text
+- **What I asked for:** whenever the grill-me skill runs in this project, always give me options to choose from instead of making me type free text. Record the rule in CLAUDE.md.
+- **Done:** added one line under `## Agent skills` in `CLAUDE.md` (now 56 lines). Questions go through the multiple-choice question tool, recommended option first; free text only through "Other".
+
+### 12. Committed and pushed
+- Committed the grilling rule in `CLAUDE.md` and log entries 9–11. Pushed everything to `origin/main`, including the earlier unpushed harness commit `9842df9`.
