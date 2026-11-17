@@ -1,6 +1,5 @@
 :root {
   --desk: #2d2f33;
-  --desk-raised: #36393e;
   --desk-ink: #f1efe8;
   --desk-ink-soft: #c9c6bd;
   --paper: #fbfbf8;
@@ -14,6 +13,12 @@
   --note-medium: #fff3c4;
   --note-low: #ddf2ff;
   --highlighter: #fff27a;
+  --verified: #24553a;
+  --dropped: #8a2a12;
+  --desk-rule: #4a4d53;
+  --scrollbar: #5a5d63;
+  --lift: var(--lift);
+  --lift-soft: var(--lift-soft);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --sheet-pad: 44px;
   --space-1: 8px;
@@ -25,12 +30,24 @@
   color-scheme: dark;
 }
 
+/* Light mode: the desk turns pale; paper, tab inks and highlighter stay the same. */
+:root[data-theme="light"] {
+  --desk: #e7e4dc;
+  --desk-ink: #1d1e20;
+  --desk-ink-soft: #4d4a44;
+  --desk-rule: #c8c3b8;
+  --scrollbar: #b9b4a9;
+  --lift: rgba(58, 48, 30, 0.22);
+  --lift-soft: rgba(58, 48, 30, 0.12);
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
 }
 
 html {
-  scrollbar-color: #5a5d63 var(--desk);
+  scrollbar-color: var(--scrollbar) var(--desk);
 }
 
 body {
@@ -89,6 +106,43 @@ h2 {
   text-decoration: none;
 }
 
+.head-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--desk-rule);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--desk-ink);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--desk-ink-soft);
+  background: color-mix(in srgb, var(--desk-ink) 8%, transparent);
+}
+
+.icon-moon {
+  display: none;
+}
+
+:root[data-theme="light"] .icon-sun {
+  display: none;
+}
+
+:root[data-theme="light"] .icon-moon {
+  display: block;
+}
+
 .head-link {
   font-weight: 600;
   text-decoration: underline;
@@ -133,13 +187,13 @@ h2 {
   text-decoration: none;
   padding: 18px 28px;
   border-radius: 2px 6px 6px 2px;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18), 0 10px 24px -8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 0 var(--lift-soft), 0 10px 24px -8px var(--lift);
   transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
 }
 
 .cta:hover {
   transform: translateX(4px);
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18), 0 14px 28px -8px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 2px 0 var(--lift-soft), 0 14px 28px -8px var(--lift);
 }
 
 .formats-after {
@@ -169,7 +223,7 @@ h2 {
   font-family: var(--font-doc), Georgia, serif;
   font-size: 0.9375rem;
   line-height: 1.6;
-  box-shadow: 0 1px 0 var(--paper-edge), 0 24px 48px -16px rgba(0, 0, 0, 0.55), 0 4px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 0 var(--paper-edge), 0 24px 48px -16px var(--lift), 0 4px 10px var(--lift-soft);
   z-index: 1;
 }
 
@@ -253,7 +307,7 @@ mark.on {
   color: var(--ink);
   text-align: left;
   cursor: pointer;
-  box-shadow: 0 3px 8px -2px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 3px 8px -2px var(--lift);
   z-index: 2;
   animation: tab-out 900ms var(--ease-out) backwards;
   transition: width 260ms var(--ease-out), padding 260ms var(--ease-out);
@@ -316,7 +370,7 @@ mark.on {
   font-size: 0.9375rem;
   line-height: 1.45;
   color: var(--ink);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 18px 32px -14px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 2px 4px var(--lift-soft), 0 18px 32px -14px var(--lift);
   z-index: 2;
 }
 
@@ -387,7 +441,7 @@ mark.on {
   gap: 6px;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #24553a;
+  color: var(--verified);
 }
 
 .check {
@@ -425,7 +479,7 @@ mark.on {
   background: var(--paper);
   color: var(--ink);
   padding: 22px 26px;
-  box-shadow: 0 16px 32px -14px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 32px -14px var(--lift), 0 2px 6px var(--lift-soft);
 }
 
 .slip:nth-child(2) {
@@ -452,11 +506,11 @@ mark.on {
 }
 
 .slip-result.pass {
-  color: #24553a;
+  color: var(--verified);
 }
 
 .slip-result.fail {
-  color: #8a2a12;
+  color: var(--dropped);
 }
 
 .verdict-sheet {
@@ -465,7 +519,7 @@ mark.on {
   background: var(--paper);
   color: var(--ink);
   padding: 32px 36px 28px;
-  box-shadow: 0 16px 32px -14px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 32px -14px var(--lift), 0 2px 6px var(--lift-soft);
 }
 
 .verdict {
@@ -504,7 +558,7 @@ mark.on {
   color: var(--desk-ink-soft);
   max-width: 42ch;
   padding-top: var(--space-2);
-  border-top: 1px solid #4a4d53;
+  border-top: 1px solid var(--desk-rule);
 }
 
 .limits strong {
@@ -529,7 +583,7 @@ mark.on {
   max-width: 1440px;
   margin: 0 auto;
   padding: var(--space-3) clamp(16px, 3.4vw, 48px) var(--space-4);
-  border-top: 1px solid #4a4d53;
+  border-top: 1px solid var(--desk-rule);
   color: var(--desk-ink-soft);
   font-size: 0.875rem;
 }

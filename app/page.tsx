@@ -1,4 +1,5 @@
 import { ContractDemo } from "./contract-demo";
+import { ThemeToggle } from "./theme-toggle";
 
 const TRY_HREF = "/app";
 const FORMATS = "PDF with selectable text, Word (.docx), plain text, or paste it in.";
@@ -10,9 +11,12 @@ export default function Home() {
         <a href="/" className="wordmark">
           Redline
         </a>
-        <a href={TRY_HREF} className="head-link">
-          Try it on your contract
-        </a>
+        <div className="head-actions">
+          <a href={TRY_HREF} className="head-link">
+            Try it on your contract
+          </a>
+          <ThemeToggle />
+        </div>
       </header>
 
       <main>

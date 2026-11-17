@@ -203,6 +203,12 @@ A desaturated charcoal-and-bond base carries three saturated sticky-tab inks and
 - **Bond Paper** (paper) with **Paper Edge** (paper-edge): the sheet and paper slips; the edge colour is a 1px under-line that gives the sheet a thickness.
 - **Ink** (ink) and **Ink Soft** (ink-soft): printed text on paper, notes and tabs; ink-soft for captions, fact labels and secondary reasons.
 
+### Light mode
+Readers switch modes with a small round button at the top right of the header (sun or moon icon, labelled "Switch to light mode" / "Switch to dark mode"). The choice is saved in `localStorage` under `redline-theme`. An inline script applies it before the first paint, so the page doesn't flash. Dark is the default.
+- **Only the desk changes:** desk #e7e4dc, desk-ink #1d1e20, desk-ink-soft #4d4a44, desk-rule #c8c3b8, scrollbar #b9b4a9.
+- **Paper, ink, tab inks, note tints and highlighter are the same in both modes.** The contract and its tabs look identical; only the desk under them changes.
+- **Shadows** use the `--lift` and `--lift-soft` tokens. They are warm and much lighter in light mode (rgba(58,48,30,0.22) / 0.12) than in dark mode (black at 0.55 / 0.2).
+
 ### Named Rules
 **The Two Surfaces Rule.** Content sits either on the desk or on paper. Notes are paper in a tab's tint. Do not add a third surface (no cards, panels or glass).
 

@@ -326,3 +326,17 @@ Status: an unvalidated hypothesis.
 - **DESIGN.md + `.impeccable/design.json`** written by the documenter from the shipped build.
   - Not repaired: an unused `--desk-raised` token, hard-coded #24553a/#8a2a12/#4a4d53, `width` animation on tabs, a duplicate padding-right in the 1180px rule.
 - **Open:** the CTA links to `/app`, which ticket 01 builds.
+
+### 23. Light-mode toggle on the landing page
+- **What I asked for:** a small light-mode button at the top right of the landing page.
+- **Done:**
+  - `app/theme-toggle.tsx`: a 36px round button with sun/moon SVG icons and an aria-label that names the action.
+  - Header: the button sits after "Try it on your contract".
+  - `:root[data-theme="light"]` changes only the desk tokens. Paper, tab inks, notes and highlighter don't change, so the contract looks the same in both modes.
+  - The choice is saved in localStorage (try/catch), and an inline head script applies it before first paint. Dark stays the default.
+- **Cleanup done along the way** (from the documenter's list):
+  - removed the unused `--desk-raised`
+  - tokenized the hard-coded #24553a/#8a2a12/#4a4d53/#5a5d63
+  - all shadows now use `--lift`/`--lift-soft`, so they change with the theme.
+- **DESIGN.md:** added a "Light mode" subsection under Colors.
+- **Detector:** 8 advisories, all from before this change: font sizes not on the DESIGN.md type scale (0.875, 1.125, 1.3125, 2.125rem and the close heading). Not fixed; that is a separate decision about the type scale.

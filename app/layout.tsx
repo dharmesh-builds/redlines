@@ -23,7 +23,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${serif.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${serif.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Apply the saved theme before first paint so the page doesn't flash dark. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('redline-theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}",
+          }}
+        />
+      </head>
       <body>{children}</body>
     </html>
   );
