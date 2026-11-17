@@ -256,3 +256,17 @@ Status: an unvalidated hypothesis.
 - **Outputs:** `docs/adr/0006`. In `PRD.md`, the "[Proposed]" marker and both "open" notes were removed, Q4/Q6 tightened, and a new test Q7 added (labels follow the rules and stay the same across `OPENROUTER_MODEL`).
 - **Why the rules:** they are deterministic and testable, and stay stable when the model env var changes. Cost: subtle ambiguity is missed.
 - **Still unresolved:** nothing blocking specs. The research gaps (willingness to pay, competitor citations, whether vendors negotiate) remain as stated in PRD §8.
+
+### 18. Wrote the v1 spec (`/to-spec`)
+- **What I asked for:** read `PRD.md`, then run `/mattpocock-skills:to-spec`.
+- **Seams (confirmed by me):** one main seam, an **Analysis** module (`analyze(documentText, redLines) → Report`, `ask(documentText, question) → Answer`) with the OpenRouter call behind an injected model port, plus two thin seams: browser **Extraction** (file → text or "unsupported") and **per-user isolation** (RLS).
+  - Rejected: Analysis only, an HTTP-route seam, finer seams per rule.
+- **Output:** `.scratch/redline-v1/spec.md`, `Status: ready-for-agent`. 57 user stories.
+- **Key design decision in the spec:** the model returns only structured candidates (quotes, figures, cap stated or not, undefined terms, outside references, red-line match, counter-offer). **Severity, confidence and the verdict are computed by code,** never by the model. That is what makes T1–T5 and Q4/Q6/Q7 testable with a scripted model, and stable across `OPENROUTER_MODEL`.
+- **Eval suite:** separate and on demand. It reuses `analyze` with the real adapter to measure Q1/Q2/Q3/Q5 on the labelled fixture set, which still doesn't exist.
+- **Claude's own defaults, flagged in the spec:**
+  - formats PDF/DOCX/TXT
+  - bounded exposure with no computable 12-month fee = Medium
+  - red-line edits don't auto re-run past reports
+  - Q&A answers not stored.
+- **Dependencies needing approval are listed, none added:** PDF and DOCX extraction, test runner, Supabase local stack, schema validation.
