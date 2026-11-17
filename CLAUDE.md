@@ -48,3 +48,8 @@ Excluded on purpose: payments and billing, OCR for scanned documents, and sharin
 - After every meaningful step, append a dense entry to `how-i-build-this.md`:
   - what I asked, what you did, the outputs, the decision and why.
   - Append only. Never rewrite past entries.
+
+## Agent skills
+- Issue tracker: local markdown under `.scratch/<feature>/`. See `docs/agents/issue-tracker.md`. Approval questions still go to `QUESTIONS.md`.
+- Triage labels: the five default role names, recorded as a `Status:` line in each issue file. See `docs/agents/triage-labels.md`.
+- Domain docs: single-context, with `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

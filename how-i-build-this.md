@@ -127,3 +127,26 @@ Status: an unvalidated hypothesis.
 - **What I asked for:** commit and push.
 - **Done:** committed `CLAUDE.md` and `how-i-build-this.md` and pushed to `origin/main` (redlines). The secret scan before committing was clean.
 - **Note:** this was a push I explicitly asked for. The CLAUDE.md rule "never push" applies to unattended builds.
+
+### 7. ADR 0001: every flag cites its source
+- **What I asked for:** the first architecture decision record (ADR), at `docs/adr/0001-every-flag-cites-its-source.md`, in 4 sections and under 40 lines. No code.
+- **Decision recorded:** each flag carries the exact source sentence and is checked as a verbatim match against the stored text before it is shown. A flag that can't be cited is dropped and treated as a bug.
+- **Alternatives rejected:** model's own words; section references only; a paraphrase plus a link; citing only when possible.
+- **Consequences worth remembering**
+  - Risks that come from something *missing* from the document (e.g. no termination clause) can't be flagged without a separately designed treatment, which needs approval.
+  - Analysis output must be structured, with quotes kept separate from explanations.
+  - The check needs whitespace and quote-mark normalization that never changes the words.
+  - Some real risks will be lost by design.
+  - Tests must fail the build on any uncited flag and must include a fabrication case.
+
+### 8. Engineering skill pack set up + harness commit
+- **Plugins installed:** `mattpocock-skills` (`skill-creator` was already installed). Ran `/setup-matt-pocock-skills`.
+- **My choices**
+  - Issues are tracked as local markdown under `.scratch/<feature>/`, not GitHub Issues.
+  - The five default triage labels, recorded as `Status:` lines in each issue file.
+  - Single-context domain docs: `GLOSSARY.md` + `docs/adr/`.
+- **Written**
+  - `docs/agents/issue-tracker.md`, `triage-labels.md` and `domain.md`.
+  - A compact `## Agent skills` block in `CLAUDE.md`, so it stays within the 60-line limit.
+- **Split decided:** `QUESTIONS.md` is only for questions that need my approval during unattended builds. `.scratch/` is for planned work.
+- **Commit:** "Add project harness: instructions, first decision, agent config", containing ADR 0001, `docs/agents/`, the `CLAUDE.md` block and this log. Committed locally, not pushed.
