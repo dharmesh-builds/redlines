@@ -204,3 +204,55 @@ Status: an unvalidated hypothesis.
 
 ### 12. Committed and pushed
 - Committed the grilling rule in `CLAUDE.md` and log entries 9–11. Pushed everything to `origin/main`, including the earlier unpushed harness commit `9842df9`.
+
+### 13. Trigger eval of the `flush` description
+- **What I asked for:** an eval of where flush triggers when it shouldn't, and where it misses when it should.
+- **Method**
+  - Ran skill-creator's `run_eval` from a scratchpad copy, patched for Python 3.9 and to count calls to the installed `flush` skill.
+  - 20 phrases × 3 runs on `claude-opus-5-5`: 10 that should trigger and 10 near-misses.
+- **Result: 18/20.**
+  - **Zero false triggers.** It correctly ignored Redis, DNS and log-handler flushes, commit/push, memory notes, "write an ADR", summarize-in-chat, a log-line edit, and "what did we decide?".
+  - **Misses**
+    - "save what we decided about the supabase RLS setup…" fired 0/3, even though it contains the exact phrase.
+    - "closing out for the night, make sure nothing we decided gets lost" (a paraphrase) fired 1/3.
+- **Caveat:** each test is a fresh `claude -p` with no conversation, so "save what we decided about X" has nothing to save. Part of that miss may come from the test setup.
+- **Open:** the description hasn't been changed yet.
+
+### 14. Fixed the `flush` description and reran: 20/20
+- **Change:** added to the description: `including when the phrase names a topic ("save what we decided about the auth flow")`.
+- **Rerun** (same 20 phrases × 3 runs): **20/20, still zero false triggers.**
+  - "save what we decided about … RLS" went from 0/3 to 3/3.
+  - The "closing out for the night" paraphrase went from 1/3 to 3/3, so flush now fires more readily on paraphrases.
+  - "capture this session … OCR" dropped from 3/3 to 2/3; still a pass, to watch.
+- **Note:** 3 runs per phrase is a small sample, so changes of one run can be noise.
+
+### 15. Grilled the brief: 10 questions, 3 rounds
+- **What I asked for:** use grill-with-docs to make me *decide* things for the brief. Ten questions in three rounds (who it's for / what makes a clause dangerous / trade-offs and blind spots). Recommendation first; record vocabulary and ADRs as we go; stop after round three.
+- **Vocabulary file:** used `GLOSSARY.md`, not `CONTEXT.md`, because the repo's domain-docs convention (`docs/agents/domain.md`) names `GLOSSARY.md`. Terms: target user, flag, source sentence, deadline flag, severity, exposure, red line, boilerplate flag, confidence, verdict line, incorporated terms.
+- **Round 1 (all recommended):** SMB SaaS/B2B buyers; freelancers explicitly not served; deadlines flagged, not tracked. → ADR 0002. Pushback: "flag, don't track" would not have saved the Costar reviewer, whose loss came 11 months after signing.
+- **Round 2:** severity = **biggest money exposure** (rejected my "fires without you acting"); red lines raise, never suppress (recommended); boilerplate **Low, always** (rejected "silent unless a red line"). → ADR 0003. Pushback: exposure ranking can put a no-fee-stated auto-renewal below an uncapped indemnity, which pulls against the reason the segment was chosen. Guard added: exposure only from figures in the document.
+- **Round 3:** more false alarms (recommended); **confidence labels** (rejected "flat claims, named gaps"); verdict line with Lows folded (recommended); blind spot = **incorporated terms** (order form → vendor.com/terms, MSA, DPA), decided as **summary note only** (rejected "flag High"). → ADRs 0004, 0005.
+- **Pushback recorded as open consequences:** (a) the false-alarm bias plus Low-confidence labels can quietly turn back into a miss bias; (b) the verdict line can say "fine" about an order form whose real terms Redline never read. Open: whether the verdict line names the unread documents.
+- **Outputs:** `GLOSSARY.md`, `docs/adr/0002`–`0005`. Nothing went to `QUESTIONS.md`: nothing chosen needs a scope change.
+
+### 16. Wrote `PRD.md` from the settled decisions
+- **What I asked for:** a brief with 8 sections (who / problem / v1 list / what good looks like / my red lines / calls and costs / not building / research gaps). Every line must change what gets built or how it's judged. Quote the research; say where nothing supports a claim. No code.
+- **Done:** `PRD.md`, built from ADRs 0001–0005, `GLOSSARY.md` and the research files. Real quotes: CoStar ×2 and Birdeye (Trustpilot). Paraphrases from the research are attributed and not shown as quotes.
+- **"Good" is written as pass/fail tests:**
+  - trust T1–T5: verbatim citation, fabrication rejected, figures traceable, refusals outside the document, red lines only add or raise
+  - quality Q1–Q6: 100% of High-labelled clauses flagged, exact deadlines, false-alarm rate tracked, verdict line correct, incorporated terms found, counter-offers on target.
+  - Quality tests need a **labelled fixture set that doesn't exist yet**. The brief names it as the first piece of work.
+- **Red lines:** a clause table with usual severity, why it matters and the strength of evidence. Indemnity and liability rest on unverified WorldCC snippets; that is said in the table.
+- **Claude's own call, flagged in the doc:** the High threshold, "≥ 12 months of the contract's fees", is marked *[Proposed; not yet decided]*. ADR 0003 set severity by exposure but gave no cut-off.
+- **Calls table:** 10 rows (choice / chosen against / who is worse off). Two are still open: the confidence calibration rule, and whether the verdict line names unread incorporated documents. The research's CoStar §3 "link in the fine print" case is exactly the call-9 risk, and the brief says so.
+
+### 17. Closed the open questions before specs
+- **What I asked for:** ask me any remaining open questions, with options, before we move to specs.
+- **Four questions, all answered with the recommended option:**
+  - High cut-off = unbounded, or ≥ 12 months of fees
+  - confidence set by checkable rules (Low: undefined term / outside terms / spans clauses; Medium: unquantified; High: otherwise), never the model's self-rating
+  - the verdict line names unread incorporated documents
+  - counter-offer = rewritten clause + an email-ready request to the vendor, for every flag.
+- **Outputs:** `docs/adr/0006`. In `PRD.md`, the "[Proposed]" marker and both "open" notes were removed, Q4/Q6 tightened, and a new test Q7 added (labels follow the rules and stay the same across `OPENROUTER_MODEL`).
+- **Why the rules:** they are deterministic and testable, and stay stable when the model env var changes. Cost: subtle ambiguity is missed.
+- **Still unresolved:** nothing blocking specs. The research gaps (willingness to pay, competitor citations, whether vendors negotiate) remain as stated in PRD §8.
