@@ -8,6 +8,7 @@
 
 - [ ] User can sign in with Supabase auth and sign out
 - [ ] Uploading a .txt file extracts its text in the browser; the file itself is never sent to the server or stored
+- [ ] Pasting text is accepted as an alternative to upload (approved 2026-11-18); empty or very short pastes get a clear message
 - [ ] Documents and reports tables exist with row-level security limiting every operation to the owner
 - [ ] `analyze(documentText, redLines)` calls the model through a port; the production adapter calls OpenRouter server-side, reads the model from `OPENROUTER_MODEL`, and fails loudly if it is unset
 - [ ] The model returns structured candidate flags (clause type, source sentences, explanation); code, not the model, decides what is shown

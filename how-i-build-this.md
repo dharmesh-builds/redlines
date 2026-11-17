@@ -287,3 +287,42 @@ Status: an unvalidated hypothesis.
 - **What I asked for:** add one rule to CLAUDE.md, in my own words, without restructuring the file. All copy a user reads (landing page, UI labels, error messages, empty states) is run through the humanizer skill before it is committed. Copy that reads as model-written is a defect, not a matter of taste.
 - **Done:** a new final section, `## User-facing copy`, with the rule word for word. No other lines changed.
 - **Effect on tickets:** every ticket with UI text goes through the humanizer before its commit. Examples: "not supported" messages (09), the verdict line (05), "the document doesn't say" (08), and empty library states (10).
+
+### 21. `/impeccable init`: wrote `PRODUCT.md`
+- **What I asked for:** run `/impeccable:impeccable init`.
+- **Context:** no PRODUCT.md, DESIGN.md or UI code existed. Platform `web` and the stack were taken from CLAUDE.md; users, purpose, scope and terms from the PRD, ADRs and glossary. No image tool this session, so build path = code-first (nothing written to `.impeccable/config.json`). Live mode was skipped because there's no runnable app yet.
+- **Three questions, all answered with the recommended option:**
+  - **Positioning:** "every claim is checkable". A claim about the mechanism, not a comparison, because the research never checked competitors.
+  - **Voice:** plain, flat, numbers first, never an "AI lawyer".
+  - **Accessibility:** WCAG 2.2 AA; severity and confidence never conveyed by colour alone.
+- **Output:** `PRODUCT.md`. No visual direction recorded (init doesn't set one); DESIGN.md is left to new-work when the first surface is built.
+
+### 22. `/impeccable`: two surfaces designed, landing page built, DESIGN.md written
+- **What I asked for:**
+  - one direction round covering two surfaces, with me choosing on the page
+  - **landing page:** for the PRD reader; demonstrates contract → ranked flags with exact sentences; one action; claims nothing the spec excludes; no invented prices, customers or quotes. Build it code-first, then a finish review and DESIGN.md.
+  - **app shell:** surface brief only.
+- **Three questions first, all answered with the recommended option:**
+  - Reader follows the PRD (my "can't negotiate" wording conflicted with ADR 0002 and the counter-offers).
+  - **Paste approved** as part of feature 1. Recorded in PRD.md, the spec and ticket 01.
+  - **Next.js scaffolded** with next, react, react-dom and TypeScript only (+ @types). No CSS framework.
+- **Direction round:** the roll (seed:b6abf84f3ea35674) assigned Green-bar Printout. One Hatch Show Print challenger was competitive; five were declined, each donating a raise. No image generation, so the cards carried HTML sketches.
+- **I chose Tabbed Contract (the pick):** the contract itself is the hero, with sticky tabs at the risky sentences and tab length = severity.
+- **Surface briefs:**
+  - `.impeccable/surfaces/app-page-tsx.md`: landing, with the direction contract and the reviewer's ceiling notes
+  - `.impeccable/surfaces/app-app-layout-tsx.md`: shell, Operate mode, regions/states/world reach. Nothing built.
+- **Build:** `app/page.tsx`, `app/contract-demo.tsx` (client; tabs are aria-expanded buttons), `app/globals.css`, `app/layout.tsx` (Archivo + Source Serif 4, self-hosted via next/font).
+  - The sample agreement is labelled as invented, and $640 × 12 = $7,680 is worked out on the page.
+  - Captures use a Chrome DevTools-protocol script (no dependency) for true 390px emulation and opened-tab states.
+- **Humanizer pass on all copy.** It also caught a trust-rule break: the Delaware note claimed "means hiring counsel there", which is general legal knowledge. Rewritten to what the clause says.
+- **Finish review: fix → fix → (I funded round 3) → ship.** Fixes included:
+  - two more trust-rule copy breaks ("standard clause", "Most agreements are fine")
+  - eyebrow labels removed
+  - translucent tab roots attached to the paper
+  - steeper tab lengths, 232/164/110 (110, not 90, so "Low severity" fits; ADR 0004 bans a bare "Low")
+  - the mobile first screen now shows the High flag
+  - regressions fixed along the way: the $640 fee was hidden on phones; the High tab fell to 4.2:1 contrast (now full ink over the desk, ~6.2:1).
+  - The ship covers the scored items only.
+- **DESIGN.md + `.impeccable/design.json`** written by the documenter from the shipped build.
+  - Not repaired: an unused `--desk-raised` token, hard-coded #24553a/#8a2a12/#4a4d53, `width` animation on tabs, a duplicate padding-right in the 1180px rule.
+- **Open:** the CTA links to `/app`, which ticket 01 builds.

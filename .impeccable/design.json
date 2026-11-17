@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T01:00:00Z",
+  "title": "Design System: Redline",
+  "extensions": {
+    "colorMeta": {
+      "desk": {
+        "role": "neutral",
+        "displayName": "Charcoal Desk",
+        "canonical": "oklch(30.5% 0.008 264)",
+        "tonalRamp": [
+          "oklch(15% 0.001 264)",
+          "oklch(26% 0.002 264)",
+          "oklch(37% 0.004 264)",
+          "oklch(48% 0.006 264)",
+          "oklch(60% 0.008 264)",
+          "oklch(72% 0.006 264)",
+          "oklch(84% 0.004 264)",
+          "oklch(95% 0.002 264)"
+        ]
+      },
+      "desk-ink": {
+        "role": "neutral",
+        "displayName": "Desk Ink",
+        "canonical": "oklch(95.2% 0.010 94)",
+        "tonalRamp": [
+          "oklch(15% 0.001 94)",
+          "oklch(26% 0.003 94)",
+          "oklch(37% 0.005 94)",
+          "oklch(48% 0.007 94)",
+          "oklch(60% 0.010 94)",
+          "oklch(72% 0.007 94)",
+          "oklch(84% 0.005 94)",
+          "oklch(95% 0.003 94)"
+        ]
+      },
+      "desk-ink-soft": {
+        "role": "neutral",
+        "displayName": "Desk Ink Soft",
+        "canonical": "oklch(82.6% 0.013 92)",
+        "tonalRamp": [
+          "oklch(15% 0.002 92)",
+          "oklch(26% 0.004 92)",
+          "oklch(37% 0.007 92)",
+          "oklch(48% 0.010 92)",
+          "oklch(60% 0.013 92)",
+          "oklch(72% 0.010 92)",
+          "oklch(84% 0.007 92)",
+          "oklch(95% 0.004 92)"
+        ]
+      },
+      "desk-rule": {
+        "role": "neutral",
+        "displayName": "Desk Rule",
+        "canonical": "oklch(42.0% 0.011 264)",
+        "tonalRamp": [
+          "oklch(15% 0.002 264)",
+          "oklch(26% 0.003 264)",
+          "oklch(37% 0.006 264)",
+          "oklch(48% 0.008 264)",
+          "oklch(60% 0.011 264)",
+          "oklch(72% 0.008 264)",
+          "oklch(84% 0.006 264)",
+          "oklch(95% 0.003 264)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Bond Paper",
+        "canonical": "oklch(98.7% 0.004 106)",
+        "tonalRamp": [
+          "oklch(15% 0.001 106)",
+          "oklch(26% 0.001 106)",
+          "oklch(37% 0.002 106)",
+          "oklch(48% 0.003 106)",
+          "oklch(60% 0.004 106)",
+          "oklch(72% 0.003 106)",
+          "oklch(84% 0.002 106)",
+          "oklch(95% 0.001 106)"
+        ]
+      },
+      "paper-edge": {
+        "role": "neutral",
+        "displayName": "Paper Edge",
+        "canonical": "oklch(91.8% 0.011 95)",
+        "tonalRamp": [
+          "oklch(15% 0.002 95)",
+          "oklch(26% 0.004 95)",
+          "oklch(37% 0.006 95)",
+          "oklch(48% 0.008 95)",
+          "oklch(60% 0.011 95)",
+          "oklch(72% 0.008 95)",
+          "oklch(84% 0.006 95)",
+          "oklch(95% 0.003 95)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(21.8% 0.000 90)",
+        "tonalRamp": [
+          "oklch(15% 0.000 90)",
+          "oklch(26% 0.000 90)",
+          "oklch(37% 0.000 90)",
+          "oklch(48% 0.000 90)",
+          "oklch(60% 0.000 90)",
+          "oklch(72% 0.000 90)",
+          "oklch(84% 0.000 90)",
+          "oklch(95% 0.000 90)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "canonical": "oklch(40.2% 0.007 85)",
+        "tonalRamp": [
+          "oklch(15% 0.001 85)",
+          "oklch(26% 0.002 85)",
+          "oklch(37% 0.004 85)",
+          "oklch(48% 0.005 85)",
+          "oklch(60% 0.007 85)",
+          "oklch(72% 0.005 85)",
+          "oklch(84% 0.004 85)",
+          "oklch(95% 0.002 85)"
+        ]
+      },
+      "tab-high": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "oklch(70.5% 0.191 37)",
+        "tonalRamp": [
+          "oklch(15% 0.029 37)",
+          "oklch(26% 0.061 37)",
+          "oklch(37% 0.103 37)",
+          "oklch(48% 0.145 37)",
+          "oklch(60% 0.191 37)",
+          "oklch(72% 0.145 37)",
+          "oklch(84% 0.099 37)",
+          "oklch(95% 0.057 37)"
+        ]
+      },
+      "tab-medium": {
+        "role": "secondary",
+        "displayName": "Index Yellow",
+        "canonical": "oklch(87.9% 0.162 91)",
+        "tonalRamp": [
+          "oklch(15% 0.024 91)",
+          "oklch(26% 0.052 91)",
+          "oklch(37% 0.087 91)",
+          "oklch(48% 0.123 91)",
+          "oklch(60% 0.162 91)",
+          "oklch(72% 0.123 91)",
+          "oklch(84% 0.084 91)",
+          "oklch(95% 0.049 91)"
+        ]
+      },
+      "tab-low": {
+        "role": "secondary",
+        "displayName": "Sky Index",
+        "canonical": "oklch(83.7% 0.092 238)",
+        "tonalRamp": [
+          "oklch(15% 0.014 238)",
+          "oklch(26% 0.030 238)",
+          "oklch(37% 0.050 238)",
+          "oklch(48% 0.070 238)",
+          "oklch(60% 0.092 238)",
+          "oklch(72% 0.070 238)",
+          "oklch(84% 0.048 238)",
+          "oklch(95% 0.028 238)"
+        ]
+      },
+      "note-high": {
+        "role": "tertiary",
+        "displayName": "High Note Tint",
+        "canonical": "oklch(93.6% 0.034 43)",
+        "tonalRamp": [
+          "oklch(15% 0.005 43)",
+          "oklch(26% 0.011 43)",
+          "oklch(37% 0.019 43)",
+          "oklch(48% 0.026 43)",
+          "oklch(60% 0.034 43)",
+          "oklch(72% 0.026 43)",
+          "oklch(84% 0.018 43)",
+          "oklch(95% 0.010 43)"
+        ]
+      },
+      "note-medium": {
+        "role": "tertiary",
+        "displayName": "Medium Note Tint",
+        "canonical": "oklch(96.2% 0.062 95)",
+        "tonalRamp": [
+          "oklch(15% 0.009 95)",
+          "oklch(26% 0.020 95)",
+          "oklch(37% 0.033 95)",
+          "oklch(48% 0.047 95)",
+          "oklch(60% 0.062 95)",
+          "oklch(72% 0.047 95)",
+          "oklch(84% 0.032 95)",
+          "oklch(95% 0.019 95)"
+        ]
+      },
+      "note-low": {
+        "role": "tertiary",
+        "displayName": "Low Note Tint",
+        "canonical": "oklch(95.0% 0.028 235)",
+        "tonalRamp": [
+          "oklch(15% 0.004 235)",
+          "oklch(26% 0.009 235)",
+          "oklch(37% 0.015 235)",
+          "oklch(48% 0.022 235)",
+          "oklch(60% 0.028 235)",
+          "oklch(72% 0.022 235)",
+          "oklch(84% 0.015 235)",
+          "oklch(95% 0.008 235)"
+        ]
+      },
+      "highlighter": {
+        "role": "tertiary",
+        "displayName": "Highlighter",
+        "canonical": "oklch(94.8% 0.142 103)",
+        "tonalRamp": [
+          "oklch(15% 0.021 103)",
+          "oklch(26% 0.045 103)",
+          "oklch(37% 0.077 103)",
+          "oklch(48% 0.108 103)",
+          "oklch(60% 0.142 103)",
+          "oklch(72% 0.108 103)",
+          "oklch(84% 0.074 103)",
+          "oklch(95% 0.043 103)"
+        ]
+      },
+      "verified-green": {
+        "role": "tertiary",
+        "displayName": "Verified Green",
+        "canonical": "oklch(40.7% 0.071 157)",
+        "tonalRamp": [
+          "oklch(15% 0.011 157)",
+          "oklch(26% 0.023 157)",
+          "oklch(37% 0.038 157)",
+          "oklch(48% 0.054 157)",
+          "oklch(60% 0.071 157)",
+          "oklch(72% 0.054 157)",
+          "oklch(84% 0.037 157)",
+          "oklch(95% 0.021 157)"
+        ]
+      },
+      "dropped-rust": {
+        "role": "tertiary",
+        "displayName": "Dropped Rust",
+        "canonical": "oklch(42.9% 0.135 35)",
+        "tonalRamp": [
+          "oklch(15% 0.020 35)",
+          "oklch(26% 0.043 35)",
+          "oklch(37% 0.073 35)",
+          "oklch(48% 0.103 35)",
+          "oklch(60% 0.135 35)",
+          "oklch(72% 0.103 35)",
+          "oklch(84% 0.070 35)",
+          "oklch(95% 0.040 35)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single hero headline on the desk; 2.125rem on phones."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section statements on the desk."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Redline wordmark; the only use of the widened width axis (112%)."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Plain-English flag title inside a note."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Redline's voice on the desk and in notes, 34-44ch."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The sentence under the display line."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Severity tab labels and verification lines."
+      },
+      "doc-title": {
+        "displayName": "Document Title",
+        "purpose": "The agreement's title on the sheet."
+      },
+      "doc-body": {
+        "displayName": "Document Body",
+        "purpose": "The contract's own words: clauses, quoted slips, italic captions."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet",
+        "value": "0 1px 0 #e6e4dc, 0 24px 48px -16px rgba(0,0,0,0.55), 0 4px 10px rgba(0,0,0,0.25)",
+        "purpose": "The main document on the desk; paper-edge line gives thickness."
+      },
+      {
+        "name": "slip",
+        "value": "0 16px 32px -14px rgba(0,0,0,0.55), 0 2px 6px rgba(0,0,0,0.2)",
+        "purpose": "Smaller paper pieces on the desk."
+      },
+      {
+        "name": "note",
+        "value": "0 2px 4px rgba(0,0,0,0.2), 0 18px 32px -14px rgba(0,0,0,0.6)",
+        "purpose": "An opened flag beside the sheet on desktop; removed when inline at 1180px and down."
+      },
+      {
+        "name": "tab",
+        "value": "0 3px 8px -2px rgba(0,0,0,0.45)",
+        "purpose": "A tab lifting slightly off the desk."
+      },
+      {
+        "name": "cta",
+        "value": "0 2px 0 rgba(0,0,0,0.18), 0 10px 24px -8px rgba(0,0,0,0.5)",
+        "purpose": "Primary action at rest."
+      },
+      {
+        "name": "cta-hover",
+        "value": "0 2px 0 rgba(0,0,0,0.18), 0 14px 28px -8px rgba(0,0,0,0.55)",
+        "purpose": "Primary action on hover."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing: exponential ease-out for every physical move."
+      },
+      {
+        "name": "tab-out",
+        "value": "900ms ease-out, from translateX(-70%); delays 150 / 300 / 450ms (High, Medium, Low)",
+        "purpose": "Tabs slide out from under the paper once on load, in severity order. Persuade surfaces only."
+      },
+      {
+        "name": "tab-pull",
+        "value": "260ms ease-out on width and padding; +12px length",
+        "purpose": "A tab grows slightly when hovered or pulled open."
+      },
+      {
+        "name": "highlighter-sweep",
+        "value": "700ms ease-out, background-size 0% to 100%",
+        "purpose": "The highlighter draws across the cited sentence when its tab opens."
+      },
+      {
+        "name": "cta-slide",
+        "value": "220ms ease-out, translateX(4px)",
+        "purpose": "The primary action slides right on hover."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none",
+        "purpose": "Under prefers-reduced-motion every animation and transition is removed; content is visible by default."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "1180px",
+        "purpose": "At and below: single column; tabs sit under their clause, projecting into a 28px desk gutter; notes inline full width, no shadow."
+      },
+      {
+        "name": "phone",
+        "value": "640px",
+        "purpose": "At and below: sheet pad 20px; tab moves above its clause; note facts and lists to one column."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action: a heavier signal-orange tab that slides right on hover.",
+      "html": "<a href=\"#\" class=\"ds-cta\">Try it on your contract</a>",
+      "css": ".ds-cta{display:inline-block;background:var(--tab-high,#ff6b3d);color:var(--ink,#1a1a1a);font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-weight:700;font-size:1.1875rem;text-decoration:none;padding:18px 28px;border-radius:2px 6px 6px 2px;box-shadow:0 2px 0 rgba(0,0,0,0.18),0 10px 24px -8px rgba(0,0,0,0.5);transition:transform 220ms cubic-bezier(0.16,1,0.3,1),box-shadow 220ms cubic-bezier(0.16,1,0.3,1);} .ds-cta:hover{transform:translateX(4px);box-shadow:0 2px 0 rgba(0,0,0,0.18),0 14px 28px -8px rgba(0,0,0,0.55);} .ds-cta:focus-visible{outline:3px solid var(--tab-low);outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Header Link",
+      "kind": "nav",
+      "description": "Desk text link with a 2px signal-orange underline; the header's repeated action beside the wordmark.",
+      "html": "<nav class=\"ds-head\"><a href=\"#\" class=\"ds-wordmark\">Redline</a><a href=\"#\" class=\"ds-headlink\">Try it on your contract</a></nav>",
+      "css": ".ds-head{display:flex;justify-content:space-between;align-items:center;background:var(--desk,#2d2f33);color:var(--desk-ink,#f1efe8);padding:24px;font-family:var(--font-ui),Archivo,system-ui,sans-serif;} .ds-head a{color:inherit;text-underline-offset:0.2em;} .ds-wordmark{font-weight:800;font-stretch:112%;font-size:1.375rem;letter-spacing:-0.02em;text-decoration:none;} .ds-headlink{font-weight:600;text-decoration:underline;text-decoration-color:var(--tab-high,#ff6b3d);text-decoration-thickness:2px;} .ds-head a:focus-visible{outline:3px solid var(--tab-low);outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "High Severity Tab",
+      "kind": "custom",
+      "refersTo": "tab-high",
+      "description": "High severity index tab; length 232px encodes severity, the label names it. Root 18px translucent on paper, solid over the desk.",
+      "html": "<div class=\"ds-tabdemo\"><div class=\"ds-paperedge\"></div><button type=\"button\" class=\"ds-tab ds-tab-high\" aria-expanded=\"false\">High severity</button></div>",
+      "css": ".ds-tabdemo{position:relative;background:var(--desk,#2d2f33);height:60px;width:300px;} .ds-paperedge{position:absolute;left:0;top:0;bottom:0;width:60px;background:var(--paper,#fbfbf8);} .ds-tab{position:absolute;top:13px;left:42px;height:34px;width:232px;padding:0 10px 0 20px;border:0;border-radius:0 4px 4px 0;font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-size:0.8125rem;font-weight:700;color:var(--ink,#1a1a1a);text-align:left;white-space:nowrap;cursor:pointer;box-shadow:0 3px 8px -2px rgba(0,0,0,0.45);background:linear-gradient(to right,rgba(255,107,61,0.7) 0 18px,var(--tab-high) 18px);transition:width 260ms cubic-bezier(0.16,1,0.3,1),padding 260ms cubic-bezier(0.16,1,0.3,1);} .ds-tab-high:hover,.ds-tab-high[aria-expanded=\"true\"]{width:244px;padding-right:22px;} .ds-tab:focus-visible{outline:3px solid var(--tab-low);outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Medium Severity Tab",
+      "kind": "custom",
+      "refersTo": "tab-medium",
+      "description": "Medium severity index tab; length 164px encodes severity, the label names it. Root 18px translucent on paper, solid over the desk.",
+      "html": "<div class=\"ds-tabdemo\"><div class=\"ds-paperedge\"></div><button type=\"button\" class=\"ds-tab ds-tab-medium\" aria-expanded=\"false\">Medium severity</button></div>",
+      "css": ".ds-tabdemo{position:relative;background:var(--desk,#2d2f33);height:60px;width:300px;} .ds-paperedge{position:absolute;left:0;top:0;bottom:0;width:60px;background:var(--paper,#fbfbf8);} .ds-tab{position:absolute;top:13px;left:42px;height:34px;width:164px;padding:0 10px 0 20px;border:0;border-radius:0 4px 4px 0;font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-size:0.8125rem;font-weight:700;color:var(--ink,#1a1a1a);text-align:left;white-space:nowrap;cursor:pointer;box-shadow:0 3px 8px -2px rgba(0,0,0,0.45);background:linear-gradient(to right,rgba(255,210,63,0.7) 0 18px,var(--tab-medium) 18px);transition:width 260ms cubic-bezier(0.16,1,0.3,1),padding 260ms cubic-bezier(0.16,1,0.3,1);} .ds-tab-medium:hover,.ds-tab-medium[aria-expanded=\"true\"]{width:176px;padding-right:22px;} .ds-tab:focus-visible{outline:3px solid var(--tab-low);outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Low Severity Tab",
+      "kind": "custom",
+      "refersTo": "tab-low",
+      "description": "Low severity index tab; length 110px encodes severity, the label names it. Root 18px translucent on paper, solid over the desk.",
+      "html": "<div class=\"ds-tabdemo\"><div class=\"ds-paperedge\"></div><button type=\"button\" class=\"ds-tab ds-tab-low\" aria-expanded=\"false\">Low severity</button></div>",
+      "css": ".ds-tabdemo{position:relative;background:var(--desk,#2d2f33);height:60px;width:300px;} .ds-paperedge{position:absolute;left:0;top:0;bottom:0;width:60px;background:var(--paper,#fbfbf8);} .ds-tab{position:absolute;top:13px;left:42px;height:34px;width:110px;padding:0 10px 0 20px;border:0;border-radius:0 4px 4px 0;font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-size:0.8125rem;font-weight:700;color:var(--ink,#1a1a1a);text-align:left;white-space:nowrap;cursor:pointer;box-shadow:0 3px 8px -2px rgba(0,0,0,0.45);background:linear-gradient(to right,rgba(143,211,255,0.7) 0 18px,var(--tab-low) 18px);transition:width 260ms cubic-bezier(0.16,1,0.3,1),padding 260ms cubic-bezier(0.16,1,0.3,1);} .ds-tab-low:hover,.ds-tab-low[aria-expanded=\"true\"]{width:122px;padding-right:22px;} .ds-tab:focus-visible{outline:3px solid var(--tab-low);outline-offset:3px;border-radius:2px;}"
+    },
+    {
+      "name": "Flag Note",
+      "kind": "card",
+      "refersTo": "note-high",
+      "description": "An opened flag: flat tinted paper in its tab's hue with title, plain sentence, facts and the verbatim check.",
+      "html": "<div class=\"ds-note\"><p class=\"ds-note-title\">Renews for a year unless you cancel 90 days early</p><p class=\"ds-note-says\">Miss the notice date and you owe another twelve months.</p><dl class=\"ds-facts\"><div><dt>Exposure</dt><dd class=\"ds-num\">$640 × 12 = $7,680</dd></div><div><dt>Confidence</dt><dd>High confidence</dd></div><div><dt>Ask for</dt><dd>Thirty days' notice instead of ninety.</dd></div></dl><p class=\"ds-verified\"><svg aria-hidden=\"true\" viewBox=\"0 0 16 16\" width=\"16\" height=\"16\"><path d=\"M3 8.5l3 3 7-7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg> Quoted word for word from section 3</p></div>",
+      "css": ".ds-note{width:330px;padding:18px 20px 16px;background:var(--note-high,#ffe3d8);color:var(--ink,#1a1a1a);font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-size:0.9375rem;line-height:1.45;box-shadow:0 2px 4px rgba(0,0,0,0.2),0 18px 32px -14px rgba(0,0,0,0.6);} .ds-note-title{margin:0;font-weight:800;font-size:1.0625rem;letter-spacing:-0.01em;line-height:1.25;} .ds-note-says{margin:6px 0 12px;} .ds-facts{margin:0;display:grid;gap:6px;} .ds-facts div{display:grid;grid-template-columns:6.5rem 1fr;gap:8px;} .ds-facts dt{font-weight:600;color:var(--ink-soft,#4a4844);} .ds-facts dd{margin:0;} .ds-num{font-variant-numeric:tabular-nums;font-weight:700;} .ds-verified{margin:12px 0 0;padding-top:10px;border-top:1px solid rgba(26,26,26,0.15);display:flex;align-items:center;gap:6px;font-size:0.8125rem;font-weight:600;color:#24553a;}"
+    },
+    {
+      "name": "Highlighted Source Sentence",
+      "kind": "custom",
+      "refersTo": "sheet",
+      "description": "Contract text on bond paper; the cited sentence takes a multiply highlighter sweep when its tab opens.",
+      "html": "<div class=\"ds-sheet\"><p><span class=\"ds-num\">3.</span> <strong>Term and renewal.</strong> The initial term is twelve months. <mark class=\"ds-mark\" tabindex=\"0\">This Agreement renews automatically for successive twelve-month terms unless either party gives written notice at least ninety days before the end of the term.</mark></p></div>",
+      "css": ".ds-sheet{width:420px;background:var(--paper,#fbfbf8);color:var(--ink,#1a1a1a);padding:32px 44px;font-family:var(--font-doc),'Source Serif 4',Georgia,serif;font-size:0.9375rem;line-height:1.6;box-shadow:0 1px 0 #e6e4dc,0 24px 48px -16px rgba(0,0,0,0.55),0 4px 10px rgba(0,0,0,0.25);} .ds-num{font-variant-numeric:tabular-nums;} .ds-mark{color:inherit;background-color:transparent;background-image:linear-gradient(#fff27a,#fff27a);background-repeat:no-repeat;background-size:0% 100%;transition:background-size 700ms cubic-bezier(0.16,1,0.3,1);mix-blend-mode:multiply;padding:0 1px;-webkit-box-decoration-break:clone;box-decoration-break:clone;} .ds-sheet:hover .ds-mark,.ds-mark:focus-visible{background-size:100% 100%;outline:none;}"
+    },
+    {
+      "name": "Paper Slip",
+      "kind": "card",
+      "refersTo": "slip",
+      "description": "A small paper piece on the desk holding one quote in serif and its verification result.",
+      "html": "<div class=\"ds-desk\"><div class=\"ds-slip\"><p class=\"ds-quote\">“This Agreement renews automatically for successive twelve-month terms…”</p><p class=\"ds-result ds-pass\">Found in section 3. Shown.</p></div><div class=\"ds-slip\"><p class=\"ds-quote ds-struck\">“Provider may end this Agreement at any time without notice.”</p><p class=\"ds-result ds-fail\">Not in the document. Dropped.</p></div></div>",
+      "css": ".ds-desk{background:var(--desk,#2d2f33);padding:24px;display:grid;gap:24px;} .ds-slip{background:var(--paper,#fbfbf8);color:var(--ink,#1a1a1a);padding:22px 26px;box-shadow:0 16px 32px -14px rgba(0,0,0,0.55),0 2px 6px rgba(0,0,0,0.2);} .ds-slip+.ds-slip{margin-left:40px;} .ds-quote{margin:0;font-family:var(--font-doc),'Source Serif 4',Georgia,serif;font-size:1.0625rem;} .ds-struck{color:var(--ink-soft,#4a4844);text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--ink,#1a1a1a);} .ds-result{margin:12px 0 0;font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-weight:700;font-size:0.9375rem;} .ds-pass{color:#24553a;} .ds-fail{color:#8a2a12;}"
+    },
+    {
+      "name": "Folded Label",
+      "kind": "chip",
+      "refersTo": "folded-label",
+      "description": "Sky tab-shaped label counting folded low-severity flags; always names severity in words.",
+      "html": "<p class=\"ds-folded\">2 low-severity flags, folded</p>",
+      "css": ".ds-folded{display:inline-block;margin:0;background:var(--tab-low,#8fd3ff);color:var(--ink,#1a1a1a);padding:6px 14px;font-family:var(--font-ui),Archivo,system-ui,sans-serif;font-size:0.875rem;font-weight:700;border-radius:0 4px 4px 0;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tabbed Contract",
+    "overview": "The document is the hero and the interface. A bond-white sheet, set in a document serif, lies on a charcoal desk. Every risky sentence gets a sticky index tab on the sheet's right edge. The tab's length shows severity and its label names it. Pulling a tab sweeps a highlighter across its sentence and opens a flat tinted note beside the paper. Anything Redline says can be checked against the page because it sits next to the sentence it came from.\n\nThe world has three materials: desk, paper and the inks on them (tab ink, highlighter, printed type). Depth comes from paper lying on the desk, never from interface chrome. Density is that of a real document read at a desk: generous measure on the desk, tight measure on the sheet. Motion is physical and happens once: tabs slide out from under the paper in severity order, and the highlighter draws across its sentence.\n\nThe world rejects the category's split hero with a dashboard screenshot and the row of feature cards below it. On signed-in Operate surfaces (the app shell, brief only and not yet built) the same world applies with less scale and motion. The document stays in the centre of the screen, flags remain tabs on its edge, and pulling a tab still highlights the sentence and opens the flag. Display type steps down to headline or title scale, and the load-time tab slide is dropped in favour of the pull interaction alone. These surfaces use the tokens below as they are; add new tokens only when that build needs them.",
+    "keyCharacteristics": [
+      "A charcoal desk ground with bond-white paper on it; no other surfaces.",
+      "Severity encoded by tab length (232 / 164 / 110px) plus a word label, never by colour alone.",
+      "Grotesque (Archivo) for everything Redline says; serif (Source Serif 4) for everything the contract says.",
+      "One highlighter stroke per open flag, blended with multiply so the printed type stays crisp.",
+      "Figures in tabular numerals.",
+      "Motion is one-shot and physical, and it is fully removed under reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The Two Surfaces Rule",
+        "body": "Content sits either on the desk or on paper. Notes are paper in a tab's tint. Do not add a third surface (no cards, panels or glass).",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Means Severity Rule",
+        "body": "Orange, yellow and sky mean High, Medium and Low wherever they appear. Do not use them for decoration. The primary action shares orange because it is itself a tab to pull.",
+        "section": "colors"
+      },
+      {
+        "name": "The Colour Is Never Alone Rule",
+        "body": "Every severity or confidence colour has a word label beside it (\"High severity\", \"Low confidence\"), and severity also has tab length. A bare \"Low\" never appears.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Serif is only for the document's own words, and the grotesque is only for Redline's. Never set Redline's analysis in the serif, and never set a contract quotation in the grotesque.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Clause numbers, exposure figures and page folios use tabular numerals. Exposure is shown worked out (\"$640 × 12 = $7,680\") in bold.",
+        "section": "typography"
+      },
+      {
+        "name": "The Margin Is For Tabs Rule",
+        "body": "The space past the paper's right edge belongs to tabs and their notes. Do not put other content there.",
+        "section": "layout"
+      },
+      {
+        "name": "The Stuck Tab Rule",
+        "body": "A tab's first 18px lies on the paper in its ink at 70% opacity, so the paper shows through. Past the paper edge, over the desk, the ink is solid. The change is a hard stop, not a fade.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** put the document at the centre of every surface that shows analysis, with flags as tabs on its right edge.",
+      "**Do** encode severity as tab length (232 / 164 / 110px) plus the full word label, every time.",
+      "**Do** quote the source sentence in the document serif and highlight it with the highlighter in multiply.",
+      "**Do** keep tab ink at 70% over the paper and solid over the desk, with a hard stop at 18px.",
+      "**Do** use the sky focus ring (3px, 3px offset) on every interactive element on desk and paper.",
+      "**Do** strip all animation and transition under `prefers-reduced-motion: reduce`. Content is visible by default.",
+      "**Do** step scale and motion down on Operate surfaces while keeping the sheet, tabs and pull-to-highlight."
+    ],
+    "donts": [
+      "**Don't** use orange, yellow or sky for anything that isn't severity (the primary action is the one exception, because it is a tab).",
+      "**Don't** show a bare \"Low\", \"Medium\" or \"High\". Say severity or confidence.",
+      "**Don't** add cards, panels, glass, or blended or decorative gradients. The only gradient allowed is the tab's hard-stop two-zone fill.",
+      "**Don't** round paper. Radius belongs only to the free end of a tab and to the primary action.",
+      "**Don't** set Redline's own words in the serif or contract text in the grotesque.",
+      "**Don't** open the page with a split hero showing a dashboard screenshot over a row of feature cards."
+    ]
+  }
+}

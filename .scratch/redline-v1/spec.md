@@ -102,7 +102,7 @@ Every claim on screen can be checked against one quoted sentence of the user's o
 **Modules**
 - **Extraction (browser).**
   - Input: a user-selected file. Output: either extracted text with its source format, or "unsupported" with a reason (scanned/image-only, encrypted, corrupt, wrong type).
-  - Supported: PDF with a text layer, DOCX, plain text.
+  - Supported: PDF with a text layer, DOCX, plain text, and pasted text (paste approved 2026-11-18 as part of feature 1; same verbatim rules, nothing but the text is stored).
   - A PDF counts as scanned/image-only when it yields almost no text relative to its page count. No OCR fallback, ever.
   - The file itself is never sent to the server or stored.
 - **Analysis (server). The one deep module and the main test seam.** Two operations:

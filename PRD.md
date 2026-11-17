@@ -37,7 +37,7 @@ The FTC received nearly 70 complaints a day about negative-option and recurring-
 
 ## 3. What v1 does
 
-1. **Upload and parse in the browser.**
+1. **Upload and parse in the browser, or paste the text** (paste approved 2026-11-18).
    - Only the extracted text is stored, never the file.
    - A scanned or image-only file gets a clear "not supported" message. No OCR.
 2. **Plain-English summary.**
