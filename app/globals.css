@@ -1262,7 +1262,8 @@ mark.on {
 }
 
 .model-id {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
   font-size: 0.875rem;
   overflow-wrap: anywhere;
 }
@@ -1314,6 +1315,75 @@ mark.on {
 
 .name-row {
   margin-top: var(--space-3);
+}
+
+/* Red lines (ticket 07): the editor list on the desk, the snapshot a report
+   ran with, and the matched red line on a flag. Desk and paper only. */
+.red-line-list {
+  margin-top: var(--space-3);
+}
+
+.red-line-item {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.red-line-text {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.red-line-actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.red-line-actions .text-button {
+  margin-top: 0;
+}
+
+.red-line-edit,
+.red-line-confirm {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.red-line-input {
+  max-width: 40rem;
+}
+
+.red-line-add {
+  margin-top: var(--space-4);
+}
+
+.red-line-error {
+  margin-top: var(--space-1);
+}
+
+.red-line-snapshot {
+  margin-bottom: var(--space-3);
+}
+
+.red-line-snapshot .field-note {
+  margin-bottom: 4px;
+}
+
+.red-line-snapshot-list {
+  margin: 0;
+  padding-left: var(--space-3);
+  color: var(--desk-ink);
+}
+
+.red-line-match {
+  font-weight: 700;
+}
+
+.doc-recheck {
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+.doc-recheck .plain-button {
+  margin-top: 0;
 }
 
 @media (max-width: 640px) {

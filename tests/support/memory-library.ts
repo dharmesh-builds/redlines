@@ -7,13 +7,13 @@ import type { DocumentRow, LibraryRepository, ReportMeta, ReportRow } from "../.
 // the library removes reports itself.
 
 type StoredDocument = DocumentRow & { userId: string; text: string };
-type StoredReport = ReportRow & { userId: string };
+type StoredReport = ReportRow & { userId: string; redLines: string[] };
 
 export type MemoryLibrary = LibraryRepository & {
   documents: StoredDocument[];
   reports: StoredReport[];
   addDocument(userId: string, doc: { id: string; name: string; createdAt: string; text?: string }): void;
-  addReport(userId: string, report: { id: string; documentId: string; modelId: string; createdAt: string; payload: unknown }): void;
+  addReport(userId: string, report: { id: string; documentId: string; modelId: string; createdAt: string; payload: unknown; redLines?: string[] }): void;
   unreachable: boolean;
 };
 
@@ -26,7 +26,31 @@ export function memoryLibrary(): MemoryLibrary {
       lib.documents.push({ userId, text: "", ...doc });
     },
     addReport(userId, report) {
-      lib.reports.push({ userId, ...report });
+      lib.reports.push({ userId, redLines: [], ...report });
+    },
+    async createDocument(userId, doc) {
+      check();
+      const id = crypto.randomUUID();
+      lib.documents.push({ userId, id, name: doc.name, text: doc.text, createdAt: nextTime() });
+      return id;
+    },
+    async readDocumentText(userId, documentId) {
+      check();
+      return lib.documents.find((d) => d.userId === userId && d.id === documentId)?.text ?? null;
+    },
+    async saveReport(userId, report) {
+      check();
+      const id = crypto.randomUUID();
+      lib.reports.push({
+        userId,
+        id,
+        documentId: report.documentId,
+        modelId: report.modelId,
+        createdAt: nextTime(),
+        payload: structuredClone(report.payload),
+        redLines: [...report.redLines],
+      });
+      return id;
     },
     async listDocuments(userId) {
       check();
@@ -59,6 +83,13 @@ export function memoryLibrary(): MemoryLibrary {
       return lib.documents.length < before;
     },
   };
+  // Strictly increasing timestamps, so "latest report" is well defined even
+  // when two are saved in the same millisecond.
+  let clock = Date.parse("2026-11-18T12:00:00Z");
+  function nextTime() {
+    clock += 1000;
+    return new Date(clock).toISOString();
+  }
   function check() {
     if (lib.unreachable) throw new Error("connect ECONNREFUSED");
   }

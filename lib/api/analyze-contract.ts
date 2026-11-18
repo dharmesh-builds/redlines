@@ -14,4 +14,5 @@ export const ANALYZE_ERRORS = {
   modelOutput:
     "The analysis came back in a form Redline couldn't check, so nothing is shown. Try again.",
   saveFailed: "Redline couldn't save this agreement to your account, so it didn't check it. Try again.",
+  redLinesFailed: "Redline couldn't load your red lines, so it didn't check the agreement. Try again in a minute.",
 } as const;

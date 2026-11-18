@@ -26,6 +26,12 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
   - `/app/documents/[id]` shows the latest saved report and which model made it, without running the analysis again. Deleting asks you to confirm on the page itself.
   - The API is `GET /api/documents`, plus `GET` and `DELETE /api/documents/[id]`.
   - Tested against an in-memory stand-in for the database, never a real Supabase.
+- **07 Red lines: done.** 203 tests pass.
+  - `/app/red-lines` lets you add, edit and delete your own red lines.
+  - A clause that matches one is raised to High and shows which red line it matched.
+  - Each report keeps a copy of the red lines it was checked against. "Check again" makes a new report and keeps the old one.
+  - The migration is `20261118000200_red_lines.sql`.
+  - T5 is tested: adding a red line never removes a flag or lowers a severity.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -67,6 +73,11 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 33. **Reports saved by an earlier version get a plain note instead of a partial display:** "made by an older version… check the agreement again". A half-shown report could quietly leave out checks the reader expects. The version number is stored inside the saved report, so no extra migration is needed.
 34. **The library reads the database through a small interface,** so its logic can be tested against an in-memory version. Real sign-in isn't faked anywhere in the app itself.
 35. **Dates show in UTC, British style ("17 Nov 2026").** A pasted document is named after its first line unless you give it a name. An uploaded file keeps its file name.
+36. **Red-line limits:** up to 300 characters each and 30 per person. Duplicates are refused, ignoring case and extra spaces, and the database enforces this too.
+37. **A red-line match must quote one of your red lines exactly** (ignoring case and spaces). The model can't make up a red line. If you're signed in and your red lines can't be loaded, the analysis stops with an error rather than quietly running without them.
+38. **Reports are now version 2.** Reports saved before red lines existed show the "older version" note, with a button to check the agreement again.
+39. **Only a document's latest report is shown.** Earlier ones stay in the database, but no screen lists them. A history view would be new scope, so it needs your approval.
+40. **Fonts.** The model ID was shown in a monospace system font, which DESIGN.md doesn't allow. The design checker caught it, and I switched it to the interface font.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)

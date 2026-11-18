@@ -24,6 +24,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 <Link href="/app" className="head-link">
                   Library
                 </Link>
+                <Link href="/app/red-lines" className="head-link">
+                  Red lines
+                </Link>
                 <Link href="/analyze" className="head-link">
                   Check an agreement
                 </Link>

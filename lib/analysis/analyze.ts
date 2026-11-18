@@ -23,6 +23,7 @@ import { createVerifier } from "./verbatim";
 import { buildSummary, verifyIncorporatedTerms, type Summary } from "./summary";
 import { computeVerdict, type Verdict } from "./verdict";
 import { checkCounterOffer, type CounterOfferShown } from "./counter-offer";
+import { cleanRedLines, matchRedLine, withRedLine } from "./red-lines";
 
 export type { Exposure, Severity, ShownFigure, TwelveMonthFee };
 export type { Confidence, ConfidenceLevel, ConfidenceReason } from "./confidence";
@@ -42,7 +43,14 @@ export type { CounterOfferProblem, CounterOfferShown } from "./counter-offer";
 // document. Severity, exposure and confidence are computed by code.
 export type Flag = {
   clauseType: ClauseType;
+  // The severity shown: the higher of `builtInSeverity` and the red-line
+  // severity (High when `matchedRedLine` is set). ADR 0003.
   severity: Severity;
+  // What the money-exposure rules alone give this clause.
+  builtInSeverity: Severity;
+  // The user's red line this clause matches, exactly as the user wrote it,
+  // or null. Only a red line the user supplied can appear here.
+  matchedRedLine: string | null;
   exposure: Exposure;
   confidence: Confidence;
   figures: ShownFigure[];
@@ -56,6 +64,9 @@ export type Flag = {
 
 export type Report = {
   modelId: string;
+  // The red lines this analysis ran with (the snapshot a saved report keeps),
+  // trimmed and without duplicates. Empty when it ran with none.
+  redLines: string[];
   // The plain-English summary, deadlines, incorporated-term references and
   // what the document doesn't state. Every quote in it is verified.
   summary: Summary;
@@ -79,6 +90,10 @@ export type Report = {
  * from checks against the document (ADR 0004, ADR 0006). Each kept flag's
  * drafted counter-offer is checked by code and shown only if it passes; a
  * failed draft never removes the flag (see counter-offer.ts).
+ * A flag the model says matches one of `redLines` is raised to High, but only
+ * if the reported red line is one of those supplied (ADR 0003). Red lines
+ * never lower a severity or remove a flag, and a red-line flag passes the
+ * same quote checks as any other.
  * Throws ModelOutputError if the model's answer is not in the agreed shape,
  * so no report is ever built from it.
  */
@@ -87,9 +102,10 @@ export async function analyze(
   redLines: readonly string[],
   model: ModelPort,
 ): Promise<Report> {
+  const lines = cleanRedLines(redLines);
   const response = await model.generate({
     system: ANALYSIS_SYSTEM_PROMPT,
-    prompt: analysisPrompt(documentText, redLines),
+    prompt: analysisPrompt(documentText, lines),
     schemaName: MODEL_OUTPUT_SCHEMA_NAME,
     schema: modelOutputSchema,
   });
@@ -107,6 +123,7 @@ export async function analyze(
     // Where each verified incorporated-term reference sits. A flag quoting one
     // of these sentences refers to outside terms, whatever the model said.
     outsideAt: new Set(incorporated.map((t) => t.start)),
+    redLines: lines,
   };
   const verified: { flag: Omit<Flag, "counterOffer">; draft: CandidateFlag["counterOffer"] }[] = [];
 
@@ -130,6 +147,7 @@ export async function analyze(
   });
   return {
     modelId: response.modelId,
+    redLines: lines,
     summary,
     verdict: computeVerdict(flags, summary.incorporatedTerms),
     flags,
@@ -143,11 +161,12 @@ type FlagContext = {
   line: TwelveMonthFee | null;
   doc: DocumentIndex;
   outsideAt: Set<number>;
+  redLines: readonly string[];
 };
 
 function verifyFlag(
   candidate: CandidateFlag,
-  { verifier, line, doc, outsideAt }: FlagContext,
+  { verifier, line, doc, outsideAt, redLines }: FlagContext,
 ): Omit<Flag, "counterOffer"> | null {
   if (candidate.sourceSentences.length === 0) return null;
 
@@ -167,7 +186,8 @@ function verifyFlag(
     figures.push(shown);
   }
 
-  const { exposure, severity } = assess(candidate, figures, line);
+  const { exposure, severity: builtInSeverity } = assess(candidate, figures, line);
+  const matchedRedLine = matchRedLine(candidate.matchedRedLine, redLines);
   const confidence = assessConfidence(
     {
       claimedUndefinedTerms: candidate.undefinedTerms,
@@ -179,7 +199,9 @@ function verifyFlag(
   );
   return {
     clauseType: candidate.clauseType,
-    severity,
+    severity: withRedLine(builtInSeverity, matchedRedLine),
+    builtInSeverity,
+    matchedRedLine,
     exposure,
     confidence,
     figures: figures.map(({ symbol: _symbol, ...figure }) => figure),

@@ -1,11 +1,28 @@
 import Link from "next/link";
 import { formatSavedDate, type DocumentDetail } from "../../../../../lib/library/library";
+import { redLineKey } from "../../../../../lib/analysis/red-lines";
 import { ReportView } from "../../../analyze/analyze-form";
 import { DeleteDocument } from "./delete-document";
+import { RecheckDocument } from "./recheck-document";
+
+function sameRedLines(a: readonly string[], b: readonly string[]): boolean {
+  const keys = (lines: readonly string[]) => [...new Set(lines.map(redLineKey))].sort().join("\n");
+  return keys(a) === keys(b);
+}
 
 // One saved agreement: its latest report exactly as saved, the model it was
-// produced with, and a way to delete it.
-export function DocumentView({ detail }: { detail: DocumentDetail }) {
+// produced with, the red lines it ran with, a way to check it again with the
+// current red lines, and a way to delete it.
+export function DocumentView({
+  detail,
+  currentRedLines = null,
+  rechecked = false,
+}: {
+  detail: DocumentDetail;
+  // The reader's red lines now, or null if they couldn't be read.
+  currentRedLines?: readonly string[] | null;
+  rechecked?: boolean;
+}) {
   const back = (
     <p className="field-note doc-back">
       <Link href="/app">Back to your library</Link>
@@ -39,6 +56,8 @@ export function DocumentView({ detail }: { detail: DocumentDetail }) {
   }
 
   const { document, report } = detail;
+  const current = report?.content.kind === "current" ? report.content.report : null;
+  const outOfDate = current !== null && currentRedLines !== null && !sameRedLines(current.redLines, currentRedLines);
   return (
     <section className="app-panel app-panel-wide" aria-labelledby="doc-title">
       {back}
@@ -51,6 +70,13 @@ export function DocumentView({ detail }: { detail: DocumentDetail }) {
           the model <code className="model-id">{report.meta.modelId}</code>.
         </p>
       ) : null}
+      {rechecked ? (
+        <p className="field-note library-notice" role="status">
+          Checked again with your current red lines. Earlier reports are still saved.
+        </p>
+      ) : null}
+      {outOfDate ? <p className="field-note red-line-stale">Your red lines have changed since this check.</p> : null}
+      <RecheckDocument documentId={document.id} />
 
       {!report ? (
         <div className="library-state">
@@ -69,7 +95,7 @@ export function DocumentView({ detail }: { detail: DocumentDetail }) {
           </p>
         </div>
       ) : (
-        <ReportView report={report.content.report} saved={false} />
+        <ReportView report={report.content.report} saved={false} showRedLines />
       )}
 
       <DeleteDocument documentId={document.id} name={document.name} />

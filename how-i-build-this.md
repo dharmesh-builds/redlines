@@ -534,3 +534,14 @@ Status: an unvalidated hypothesis.
   - The documents API routes, with a repository port (Supabase in production, in-memory in tests), versioned report payloads, and naming defaults.
 - **Verified here:** tsc clean; 168/168; build OK; no new deps; no migration change.
 - **Decision:** old payloads get an "older version, check again" note instead of partial rendering.
+
+### 39. Ticket 07 (red lines) done
+- **Subagent built:**
+  - The `red_lines` migration (owner RLS, a 300-char check, a unique index on the normalized text).
+  - The `/app/red-lines` editor and its CRUD API (with a repository port).
+  - `lib/analysis/red-lines.ts`: an exact-match-only `matchedRedLine`; final severity = max(built-in, High on a match); red-line-only flags still need a verified quote.
+  - A per-report red-lines snapshot, and `POST /api/documents/[id]/reports` to re-check and save a new report.
+  - Payload version 2.
+- **Verified here:** tsc clean; 203/203; build OK; no new deps; fixtures untouched; 5 RLS lines in the new migration.
+- **T5:** checked by the subagent by breaking the severity rule (4/5 payloads failed), then restored.
+- **Design hook:** `.model-id` used a monospace stack not in DESIGN.md. Switched it to `--font-ui` with tabular numbers.

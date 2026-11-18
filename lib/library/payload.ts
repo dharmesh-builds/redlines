@@ -7,7 +7,9 @@ import type { Report } from "../analysis";
 // a half-rendered report could hide a check the reader expects to see.
 //
 // Bump REPORT_PAYLOAD_VERSION whenever the shape of `Report` changes.
-export const REPORT_PAYLOAD_VERSION = 1;
+// 2: red lines (ticket 07). Reports carry the red lines they ran with, and
+//    each flag its built-in severity and matched red line.
+export const REPORT_PAYLOAD_VERSION = 2;
 
 export type StoredReportPayload = Report & { payloadVersion: number };
 
@@ -27,6 +29,7 @@ function hasCurrentShape(p: Record<string, unknown>): boolean {
   const summary = p.summary;
   const verdict = p.verdict;
   if (typeof p.modelId !== "string") return false;
+  if (!Array.isArray(p.redLines) || !p.redLines.every((l) => typeof l === "string")) return false;
   if (typeof p.droppedFlagCount !== "number" || typeof p.candidateFlagCount !== "number") return false;
   if (!isObject(verdict) || typeof verdict.present !== "boolean") return false;
   if (
@@ -44,6 +47,8 @@ function hasCurrentShape(p: Record<string, unknown>): boolean {
     (f) =>
       isObject(f) &&
       typeof f.severity === "string" &&
+      typeof f.builtInSeverity === "string" &&
+      (f.matchedRedLine === null || typeof f.matchedRedLine === "string") &&
       isObject(f.exposure) &&
       isObject(f.confidence) &&
       isObject(f.counterOffer) &&

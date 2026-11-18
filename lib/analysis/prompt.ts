@@ -29,6 +29,7 @@ What to return:
   - counterOffer: two parts, both about this clause only.
     - rewrittenClause: replacement wording for the sentences in sourceSentences and nothing else, fair to the customer. It must differ from the original. Do not copy or rewrite any other clause into it.
     - request: a short, polite request to the vendor, ready to paste into an email, that asks for this one change as a question (for example "Could we change Section 3.2 so that ...?"). Ask only for this change. Do not say or guess whether the vendor is likely to agree.
+- Red lines: check every clause against the customer's red lines. When a clause goes against one, flag it even if you would not have flagged it otherwise, and set matchedRedLine to that red line. If the clause is already a flag, set matchedRedLine on that flag; do not add a second flag for it. Never invent a red line or reword one.
 - Do not rate severity or confidence. Code does that.`;
 
 export function analysisPrompt(documentText: string, redLines: readonly string[]): string {

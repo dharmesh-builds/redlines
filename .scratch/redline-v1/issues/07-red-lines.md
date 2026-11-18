@@ -9,10 +9,10 @@ Red lines never lower or hide a flag (ADR 0003). Each report records the red lin
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Red lines table with row-level security; user can add, edit and delete
-- [ ] `analyze` receives the user's red lines; a match must cite a verified source sentence
-- [ ] Final severity = the higher of built-in and red-line severity
-- [ ] Report stores and shows its red-lines snapshot; a re-run action produces a new report
-- [ ] T5: over several scripted outputs, adding any red line never removes a flag or lowers a severity
+- [x] Red lines table with row-level security; user can add, edit and delete
+- [x] `analyze` receives the user's red lines; a match must cite a verified source sentence
+- [x] Final severity = the higher of built-in and red-line severity
+- [x] Report stores and shows its red-lines snapshot; a re-run action produces a new report
+- [x] T5: over several scripted outputs, adding any red line never removes a flag or lowers a severity

@@ -24,6 +24,43 @@ function fail(action: string, error: { message: string }): never {
 
 export function supabaseLibraryRepository(supabase: SupabaseClient): LibraryRepository {
   return {
+    async createDocument(userId, doc) {
+      const { data, error } = await supabase
+        .from("documents")
+        .insert({ user_id: userId, name: doc.name, text: doc.text })
+        .select("id")
+        .single();
+      if (error || !data) fail("save the document", error ?? { message: "no row returned" });
+      return (data as { id: string }).id;
+    },
+
+    async readDocumentText(userId, documentId) {
+      const { data, error } = await supabase
+        .from("documents")
+        .select("text")
+        .eq("user_id", userId)
+        .eq("id", documentId)
+        .maybeSingle();
+      if (error) fail("read the document text", error);
+      return data ? (data as { text: string }).text : null;
+    },
+
+    async saveReport(userId, report) {
+      const { data, error } = await supabase
+        .from("reports")
+        .insert({
+          user_id: userId,
+          document_id: report.documentId,
+          payload: report.payload,
+          model_id: report.modelId,
+          red_lines: report.redLines,
+        })
+        .select("id")
+        .single();
+      if (error || !data) fail("save the report", error ?? { message: "no row returned" });
+      return (data as { id: string }).id;
+    },
+
     async listDocuments(userId) {
       const { data, error } = await supabase
         .from("documents")

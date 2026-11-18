@@ -13,7 +13,7 @@ export type SavingMode =
   | { kind: "anonymous" }
   | { kind: "unavailable" };
 
-type Result = { report: Report; saved: boolean; documentId?: string };
+type Result = { report: Report; saved: boolean; documentId?: string; showRedLines?: boolean };
 
 const NETWORK_ERROR = "Redline couldn't reach the server. Check your connection and try again.";
 
@@ -156,7 +156,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
         </p>
       </form>
 
-      {result ? <ReportView {...result} /> : null}
+      {result ? <ReportView {...result} showRedLines={result.saved} /> : null}
     </>
   );
 }
@@ -170,6 +170,28 @@ const SEVERITY_LABEL: Record<Severity, string> = {
   medium: "Medium severity",
   low: "Low severity",
 };
+
+const SEVERITY_WORD: Record<Severity, string> = { high: "High", medium: "Medium", low: "Low" };
+
+/** The red lines a report ran with: its snapshot, shown as saved. */
+export function RedLineSnapshot({ redLines }: { redLines: readonly string[] }) {
+  return (
+    <div className="red-line-snapshot">
+      {redLines.length === 0 ? (
+        <p className="field-note">No red lines were set when this check ran.</p>
+      ) : (
+        <>
+          <p className="field-note">Checked against your red lines:</p>
+          <ul className="red-line-snapshot-list">
+            {redLines.map((line, i) => (
+              <li key={i}>{line}</li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
 
 // The summary, its deadlines and the outside documents it pulls in. Every item
 // quotes the sentence it rests on, checked word for word (ADR 0001).
@@ -259,8 +281,9 @@ function SummaryView({ summary }: { summary: Summary }) {
   );
 }
 
-export function ReportView({ report, saved, documentId }: Result) {
+export function ReportView({ report, saved, documentId, showRedLines = false }: Result) {
   const { flags, droppedFlagCount, verdict } = report;
+  const snapshot = showRedLines ? <RedLineSnapshot redLines={report.redLines} /> : null;
   const dropped =
     droppedFlagCount > 0 ? (
       <p className="report-dropped">
@@ -306,6 +329,7 @@ export function ReportView({ report, saved, documentId }: Result) {
         ) : null}
         {dropped}
         {savedNote}
+        {snapshot}
         <SummaryView summary={report.summary} />
       </section>
     );
@@ -313,6 +337,7 @@ export function ReportView({ report, saved, documentId }: Result) {
 
   return (
     <section className="report" aria-label="Report">
+      {snapshot}
       <SummaryView summary={report.summary} />
 
       <h2 id="report-title" className="app-subtitle report-flags-title">
@@ -353,6 +378,20 @@ function FlagItem({ flag, id }: { flag: Flag; id: string }) {
           </blockquote>
         ))}
         <dl className="note-facts">
+          {flag.matchedRedLine ? (
+            <div>
+              <dt>Your red line</dt>
+              <dd>
+                <q className="red-line-match">{flag.matchedRedLine}</q>
+                {flag.builtInSeverity !== flag.severity ? (
+                  <span className="figure-source reason">
+                    Marked {SEVERITY_WORD[flag.severity]} because this clause goes against your red line. On cost
+                    alone, Redline would rate it {SEVERITY_WORD[flag.builtInSeverity]}.
+                  </span>
+                ) : null}
+              </dd>
+            </div>
+          ) : null}
           <div>
             <dt>Exposure</dt>
             <dd>{exposure.statement}</dd>
