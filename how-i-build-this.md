@@ -696,3 +696,12 @@ Status: an unvalidated hypothesis.
 - **Results:** acting as the owner (`authenticated`, sub = owner): 1. Another reader (`authenticated`, sub = new random uuid): 0. Visitor (`anon`, no claims): 0, not refused (anon has table grants but no policy). Afterwards `documents` total = 0, no leftover test rows.
 - **Why:** all four `documents_*_own` policies are `to authenticated` with `user_id = auth.uid()`. anon matches no policy, so RLS's default deny returns nothing.
 - **Not covered:** `reports` and `red_lines` (same policy shape, not tested), and a real end-to-end save, which needs a completed sign-in.
+
+## Production settings on Vercel, README, push, rebuild (2026-11-18)
+- **Asked:** pasted steps: link the folder, pipe 4 settings from `.env.local` to Vercel production, add the README section, commit "Record the settings production needs", push to main, wait for the deploy.
+- **Link:** the steps said to use the folder's name (`redline`), but that Vercel project is an old one tied to a different repo (`dharmeshmanglaniiitr-ship-it/redline`). Linked to `redlines` instead: it's the live site and is connected to this repo's origin (`dharmesh-builds/redlines`), so pushes deploy it. `vercel link` also added a `VERCEL_OIDC_TOKEN` to `.env.local` and a `.env*` line to `.gitignore` (left uncommitted).
+- **Settings:** all four were present locally. Each was piped `grep | cut | env add NAME production --force`; no value was printed. NEXT_PUBLIC ones with `--no-sensitive`, so they're now "Config", updated just now. OpenRouter ones: Vercel replied "Overrode" (rerun to see the reply), but `env ls` still shows 7h, which looks like the original creation date. Supabase's publishable key on Vercel now matches local.
+- **README:** created (none existed) with the production address at the top and a "Production settings" section, names only.
+- **Push:** owner's request in chat. Secret scan of `origin/main..HEAD` found nothing (only the text `sb_publishable_…`). Pushed `ff3ce47..b390fc8` (README commit plus 10 log commits).
+- **Deploy:** `redlines-ifvgi8ll6-dharmesh9.vercel.app`, created 20:42 IST right after the push, Ready in 15 s, aliased to `https://redlines-seven.vercel.app`. Live `/` and `/sign-in` return 200.
+- **Not verified:** a real sign-in or analysis on the live site.
