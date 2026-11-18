@@ -579,3 +579,14 @@ Status: an unvalidated hypothesis.
 - **Verified here:** tsc clean; 247/247; the static test passes (4); `test:isolation` exits 1 with no env set.
 - **Blocked:** no Docker and no test project, so the real suite has never executed. Marked blocked rather than done; criteria left unticked.
 - I committed only ticket 11's paths; the ticket 12 agent is still working.
+
+### 44. Ticket 12 (eval) done; real eval run; final report
+- **Subagent built:**
+  - `npm run eval` (a Vitest eval config, outside `npm test`).
+  - Pure metric functions (Q1/Q2/Q3/Q5), with an independent T1 re-check of every quote.
+  - The label format documented in `tests/eval/README.md`.
+  - A third provisional fixture (an order form).
+- **Verified here:** tsc clean; 265/265; build OK; all 3 sidecars verbatim (47 sentences).
+- **Real eval (3 calls):** T1 0 failures; Q1 3/3; Q2 6/8 (FAIL); Q3 6/16 false alarms; Q5 4/4.
+- **Key finding:** a verified quote can carry a wrong deadline direction ("after" vs "before"). The verbatim check can't catch it; only the eval does.
+- **BUILD-REPORT.md rewritten in full:** 11 done, 11 blocked, 13 human; 32 decisions; unverified items; first commands.

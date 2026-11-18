@@ -1,130 +1,144 @@
-# Build report: unattended v1 build
+# Build report: unattended v1 build (2026-11-18)
 
-Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it stops partway through, it still shows where things stood.
+## In one paragraph
+Eleven of the thirteen tickets are done. Ticket 11 is **blocked**: its isolation tests are written, but they need a real Supabase database, and none was available. Ticket 13 is a **human task** and wasn't built.
+- `npm run build` passes.
+- `npm test` passes: 23 files, 265 tests, with no API key needed.
+- `npm run smoke` ran once against the real model: 11 flags came back and all 11 passed the word-for-word check.
+- `npm run eval` also ran once against the real model and **failed**. It found every High clause, but it got 2 of 8 deadlines wrong and raised a fair number of false alarms. Details below.
 
 ## Ticket status
-- **01 Walking skeleton: done.** 42 tests pass, and the typecheck and build are clean.
-  - Public `/analyze` lets anyone paste text or pick a .txt file, without signing in. When you're signed in, the document and report are saved.
-  - Other pages and routes: `/sign-in` (email link), `/auth/callback`, `/auth/sign-out`, and the `POST /api/analyze` route.
-  - The migration is `supabase/migrations/20261118000100_documents_reports.sql`.
-  - Sign-in and the database rules are built but couldn't be tried out: no Supabase was available.
-- **02 Severity and exposure: done.** 65 tests pass.
-  - Severity, exposure and ranking are all worked out by code from quoted figures.
-  - Whenever an amount is calculated, the sum is shown, e.g. "$750 × 12 = $9,000".
-- **03 Confidence labels: done.** 93 tests pass. Confidence comes from checks against the document's text, never from the model's own rating. A Low or Medium label shows its reason.
-- **04 Summary, deadlines and incorporated terms: done.** 111 tests pass.
-  - The report opens with a summary, then deadlines, then the outside documents the contract refers to. Each of those is marked "Redline hasn't read this document".
-  - Every item is checked word for word against the contract, the same way flags are.
-- **05 Verdict line: done.** 123 tests pass.
-  - When nothing is High or Medium, the report opens with "Nothing in this document costs you money beyond what you agreed to."
-  - It names each outside document as unread, and the Low flags sit in a fold underneath.
-- **06 Counter-offers: done.** 145 tests pass.
-  - Each flag shows the original sentences, the proposed rewrite, and a short email to the vendor. Both the rewrite and the email have a Copy button.
-  - Gap: the copy click isn't tested in a simulated browser, because the testing library needed for that wasn't approved. See QUESTIONS.md #1.
-- **10 Library: done.** 168 tests pass.
-  - `/app` lists your saved documents, newest first.
-  - `/app/documents/[id]` shows the latest saved report and which model made it, without running the analysis again. Deleting asks you to confirm on the page itself.
-  - The API is `GET /api/documents`, plus `GET` and `DELETE /api/documents/[id]`.
-  - Tested against an in-memory stand-in for the database, never a real Supabase.
-- **07 Red lines: done.** 203 tests pass.
-  - `/app/red-lines` lets you add, edit and delete your own red lines.
-  - A clause that matches one is raised to High and shows which red line it matched.
-  - Each report keeps a copy of the red lines it was checked against. "Check again" makes a new report and keeps the old one.
-  - The migration is `20261118000200_red_lines.sql`.
-  - T5 is tested: adding a red line never removes a flag or lowers a severity.
-- **08 Question box: done.** 231 tests pass.
-  - An answer is shown only if every sentence it quotes is checked word for word. Otherwise the box says "Nothing in this agreement answers that question."
-  - Answers aren't saved.
-  - Routes: `POST /api/ask` (public, unsaved text) and `POST /api/documents/[id]/questions` (signed in, reads the saved text).
-- **09 PDF and Word files: done.** 243 tests pass.
-  - PDF files with real text, Word (.docx) files and plain text are read in your browser.
-  - Before the check runs, you see the text exactly as it came out of the file.
-  - Scanned, password-protected, damaged and wrong-type files are turned away with the reason. There is no OCR.
-  - The test files are made by `tests/fixtures/files/generate.mjs`, using only what ships with Node.
-- **11 Per-user isolation tests: BLOCKED.** The tests are written, but they need a real Supabase to run against, and there isn't one here. This machine has no Docker for a local Supabase, and you asked for no live project during this run.
-  - `npm run test:isolation` creates two users and checks that user B can't read, change, delete or forge user A's documents, reports or red lines. It also checks that the "users see only their own rows" rule is switched on for all three tables. If its connection settings are missing, it stops with a clear message instead of passing.
-  - What does run in `npm test`: a check of the migration files that fails if any table is missing that rule, or if a policy stops checking the signed-in user. I confirmed it fails when I delete one of those lines.
-  - None of ticket 11's three checkboxes is ticked. All three need the real run.
+| # | Ticket | Status | Notes |
+|---|---|---|---|
+| 01 | Walking skeleton | done | Public `/analyze` (paste or upload; works without an account), email-link `/sign-in`, `/auth/callback`, `/auth/sign-out`, `POST /api/analyze`, and the migration `20261118000100_documents_reports.sql` |
+| 02 | Severity and exposure | done | Worked out by code from quoted figures. Any sum is shown, e.g. "$750 × 12 = $9,000" |
+| 03 | Confidence labels | done | Based on checks against the text, never the model's own rating. A Low or Medium label shows its reason |
+| 04 | Summary, deadlines, incorporated terms | done | Each item checked word for word; outside documents marked "Redline hasn't read this document" |
+| 05 | Verdict line | done | Only when nothing is High or Medium; names the unread outside documents; Low flags folded underneath |
+| 06 | Counter-offers | done | Original, then rewrite, then an email to the vendor, with copy buttons. The click isn't tested in a simulated browser (see QUESTIONS.md #1) |
+| 07 | Red lines | done | `/app/red-lines` editor. A match raises a flag to High and never lowers one. Each report keeps the red lines it ran with; re-checking makes a new report. Migration `20261118000200_red_lines.sql` |
+| 08 | Question box | done | Answers only from sentences checked word for word; otherwise "Nothing in this agreement answers that question." Nothing is stored |
+| 09 | PDF and DOCX extraction | done | Read in the browser. Scanned, password-protected, damaged and wrong-type files are refused with a reason. No OCR |
+| 10 | Library | done | `/app` list, `/app/documents/[id]` saved report showing which model made it, delete with an on-page confirmation |
+| 11 | Per-user isolation tests | **blocked** | `npm run test:isolation` is written but has never run: no Docker for a local Supabase, and no test project. A check of the migration files does run in `npm test` |
+| 12 | Eval harness | done | `npm run eval`; 3 sample contracts, all marked provisional; the label format is in `tests/eval/README.md` |
+| 13 | Labelled fixture set | not started | Marked `ready-for-human`: a person has to label real contracts |
+
+## Real-model results
+### Smoke run (`npm run smoke`, 16:34 IST)
+**The first attempt failed with OpenRouter 402.**
+- The adapter set no output limit, so OpenRouter set aside the model's full 131,072-token maximum against the key's $5 spending limit, and refused.
+- **Every real analysis would have failed the same way.**
+- Fixed by capping output at 16,000 tokens (`MAX_OUTPUT_TOKENS` in `lib/model/openrouter.ts`), with a test that checks it.
+
+**The second attempt passed.**
+- Model `z-ai/glm-5.3-flash`, served by Fireworks, about 23 seconds.
+- **11 candidates, 11 verified, 0 dropped.**
+- All 7 planted clauses were found.
+- The early-termination fee came back Medium ("$2,250 … less than $750 × 12 = $9,000"), and all three boilerplate clauses Low.
+
+### Eval (`npm run eval`, 16:40 IST, 3 sample contracts)
+| Measure | Result |
+|---|---|
+| T1: quotes that failed the word-for-word check | 0 |
+| Q1: High clauses flagged High | 3/3 (100%) |
+| Q2: deadlines stated exactly | 6/8 (75%), which is a **FAIL** |
+| Q3: false alarms (tracked, never fails the run) | 6/16 flags (38%) |
+| Q5: outside documents found | 4/4 (100%) |
+
+### What a reviewer should look at
+These are about the quality of the model's reading. Changing prompts or product behaviour beyond the tickets needs your approval, so none of them is fixed.
+1. **A deadline in the wrong direction.** On the clean contract the model said "30 days *after* the agreement ends", but the contract says notice is due 30 days *before*. The quote is real, so the word-for-word check can't catch it. **This is the most important finding:** a cited deadline can still be wrong.
+2. **A vague reference point.** One deadline came back as "30 days after receiving written notice describing it" instead of "…notice of a material breach".
+3. **The auto-renewal shows "No limit"** even though its $9,000 is stated. The severity (High) is right; the line explaining the amount is wrong.
+4. **The price increase came back High, not Medium.** The model didn't treat "will not exceed Vendor's standard list price" as a cap.
+5. **False alarms at High:**
+   - the 15-day invoice-dispute window
+   - taxes
+   - suspension for non-payment
+   - "fees already invoiced remain payable"
+   - on the order form, payment terms and the clause that pulls in the master agreement.
+6. **A duplicate flag:** the indemnity sentence was flagged twice, once as indemnity and once as liability. Nothing removes duplicates yet.
 
 ## Decisions made in your absence
-1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
-2. **CONTEXT.md doesn't exist.** `GLOSSARY.md` holds the domain vocabulary, so I read that instead.
-3. **DESIGN.md and the Next.js app already existed,** so I skipped the "write DESIGN.md" and "create the app" steps.
-4. **Supabase.** A Supabase project *does* exist (`supabase-gray-ferry`, set up earlier on 2026-11-18, with the URL and publishable key in `.env.local`). I followed your prompt anyway: every table is written as a migration file under `supabase/migrations/` and none is applied. The app is built to run without the Supabase variables.
-5. **Provider pin.** Before using it, I checked that Fireworks actually serves the model in `OPENROUTER_MODEL`. It does, and it supports `response_format`, `structured_outputs` and `reasoning_effort`, so `allow_fallbacks: false` won't make every call fail.
-6. **No new dependencies for the model call or the model-output check.** The model call uses plain `fetch` (no OpenAI SDK). The model output is checked by a small hand-written validator instead of a schema library. Both avoid the approval gate in CLAUDE.md.
-7. **Sign-in versus pasted documents.** Ticket 01 says a *signed-in* user uploads. Your prompt says pasting and analysing must work without Supabase. So both work:
-   - Anyone can paste or upload and get an analysis, but nothing is stored.
-   - When you're signed in, the document and report are saved.
-8. **Push.** CLAUDE.md says never push. Your prompt (step 9) explicitly asks for one push at the end, so I treated that as your approval. I'll push only once the build and tests pass.
-9. **Ticket 13 (labelled fixture set) is marked `ready-for-human`,** because it needs a person to label real contracts. I didn't build it. Ticket 12's seed fixtures stand in for it, marked provisional.
-10. **No "Learn by Doing" handoffs.** The session's learning mode normally hands small pieces of code to you. You're away, so I wrote everything.
-12. **The price-increase fixture is Medium, not High.** ADR 0003 calls an uncapped increase High, and the prompt asked for one Medium (unquantified) clause. So the fixture's renewal increase states a cap with no figure ("not exceed Vendor's standard list price"). That makes it unquantified, and therefore Medium.
-13. **Auto-renewal fixture sits on the line.** Its renewal fee is exactly 12 months of fees ($9,000 against $750/month), which tests the "at least 12 months" edge.
-14. **Shortest paste accepted: 200 characters (about 2–3 sentences); longest: 200,000.** Chosen by the ticket 01 agent.
-15. **The landing page's "Try it" link now goes to `/analyze`.** `/app` needs an account, and pasting must not.
-16. **Without Supabase, the proxy now sends `/app/*` to `/sign-in`.** Before, those pages loaded with no protection at all.
-17. **The smoke script runs through Vitest with its own config** (`vitest.smoke.config.mts`), so it needed no new dependency, and `npm test` doesn't pick it up.
-18. **New fields in what the model returns (ticket 02).**
-    - The periodic fee is stated once for the whole contract, not once per flag.
-    - Each figure carries a `unit` and a `per` (e.g. dollars per month).
-    - Each flag says whether the clause costs money at all. Without that, a no-money clause with no cap would rank High.
-19. **A quoted amount must actually appear in its sentence.** A figure whose number isn't written in digits in its verified sentence drops the whole flag, the same as a misquote.
-20. **The amount at stake is the largest one the flag's own figures support.** Within High, uncapped flags come first. Within each level, larger amounts come first.
-21. **Removed a thick coloured side border from the form error message** (`.form-error` in `app/globals.css`). The design checker flagged it as a known tell of AI-made screens, and DESIGN.md doesn't call for it.
-22. **Whether a clause "spans several clauses" is worked out by code, not taken from the model.** Code checks where the quoted sentences sit in the stored text: quotes from two different numbered clauses count as spanning. A yes/no from the model would have been one more claim nobody can check.
-23. **A term the model calls "undefined" is checked against the document first.** If the document defines it ("X" means…, (the "X"), or an order-form line starting with it), the flag doesn't lose confidence.
-24. **Medium confidence also shows a reason.** DESIGN.md asks for a reason whenever confidence isn't High.
-25. **Deadlines always read "N days before" or "N days after" something.** The model gives "before" or "after" plus a short reference point, rather than free text that couldn't be relied on to read that way.
-26. **A deadline is kept only if its number is written in digits next to "day(s)" in the quoted sentence.** "Sixty (60) days" and "30-day" count. A number written only in words is dropped.
-27. **"The document doesn't say…" notes come from code, from a fixed list.** The model can't add one, because there would be nothing to quote. Today there is one such note: an auto-renewal with no stated regular fee.
-28. **Verdict wording for several outside documents.** With more than one, it reads "It also refers to X and Y. Redline hasn't read them." A "which" after a list could be read as covering only the last item.
-29. **Outside documents are named the way the model describes them.** Only the sentence behind each one is checked. With the test fixture this reads a little stiffly ("refers to Acceptable Use Policy at https://…"). Worth checking with real output.
-30. **A counter-offer that fails its checks drops the counter-offer, not the flag.** The flag shows "Redline couldn't draft a counter-offer for this clause." ADR 0001 drops a flag only when its citation fails, and a verified risk shouldn't vanish because the drafting went wrong.
-31. **"Changes only that clause" is checked mechanically.** A rewrite or request that contains another flag's verified sentence word for word is rejected. A request must contain a real ask: a question, "please", "could/would/can you", and the like.
-32. **The model is told never to guess whether the vendor will agree.** A test checks the prompt for this.
-33. **Reports saved by an earlier version get a plain note instead of a partial display:** "made by an older version… check the agreement again". A half-shown report could quietly leave out checks the reader expects. The version number is stored inside the saved report, so no extra migration is needed.
-34. **The library reads the database through a small interface,** so its logic can be tested against an in-memory version. Real sign-in isn't faked anywhere in the app itself.
-35. **Dates show in UTC, British style ("17 Nov 2026").** A pasted document is named after its first line unless you give it a name. An uploaded file keeps its file name.
-36. **Red-line limits:** up to 300 characters each and 30 per person. Duplicates are refused, ignoring case and extra spaces, and the database enforces this too.
-37. **A red-line match must quote one of your red lines exactly** (ignoring case and spaces). The model can't make up a red line. If you're signed in and your red lines can't be loaded, the analysis stops with an error rather than quietly running without them.
-38. **Reports are now version 2.** Reports saved before red lines existed show the "older version" note, with a button to check the agreement again.
-39. **Only a document's latest report is shown.** Earlier ones stay in the database, but no screen lists them. A history view would be new scope, so it needs your approval.
-40. **Fonts.** The model ID was shown in a monospace system font, which DESIGN.md doesn't allow. The design checker caught it, and I switched it to the interface font.
-41. **The question box works without an account too.** On an unsaved analysis, the browser sends back the exact text it just analysed, with the same length limits as the analysis. Your prompt only requires an account for the library and red lines. Signed in, questions are checked against the saved text, and any text the browser sends is ignored.
-42. **Questions are limited to 500 characters.** The prompt treats the question as something to look up, never as instructions. It rules out outside legal knowledge and questions about enforceability, legality or market norms.
-43. **Earlier answers stay on the page for that visit only,** newest first.
-44. **Text read from a file is shown read-only.** A quote must point at words that came out of the file, not words someone typed afterwards. To change it, remove the file and paste instead.
-45. **A PDF counts as a scan if it averages fewer than 20 characters of text per page.** Known gap: a PDF with only some scanned pages can pass, and the missing pages aren't reported.
-46. **"Password-protected" means a PDF you can't open without a password.** A PDF that only blocks copying or printing is read normally.
-47. **The file's contents decide its type, not its name.** A .pdf or .docx that doesn't match its format is reported as damaged.
-48. **The older ("legacy") build of the PDF reader is used everywhere.** The modern build needs a feature that Node 24 and older Safari lack.
-49. **Checking that the rule is switched on, without a new dependency.** A test-only database function in `supabase/seed.sql` reports whether each table has the rule on, so no Postgres client is needed. A local Supabase loads that file when it starts. `db push` never applies it, and neither do your hand-run migrations.
-50. **The isolation tests read their own settings:** `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY` and `SUPABASE_TEST_SERVICE_ROLE_KEY`. They refuse to run against the app's own live project.
-51. **I ran `npx supabase init`, which created `supabase/config.toml`.** It points sign-in at localhost:3000 and its `/auth/callback`, and turns off email confirmation, but only for the local test stack.
-11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
+**How the run was handled**
+1. The `mattpocock-skills:implement` skill isn't installed, so I followed your prompt's steps directly. There's no CONTEXT.md, so I read `GLOSSARY.md` instead. DESIGN.md and the Next.js app already existed, so I skipped those steps.
+2. **Supabase.** A project *does* exist (`supabase-gray-ferry`, with its URL and publishable key in `.env.local`, set up earlier that day). I followed your prompt anyway: tables exist only as migration files, nothing was applied, and the app runs without the Supabase settings.
+3. **Before relying on the Fireworks pin,** I checked that Fireworks serves `OPENROUTER_MODEL` and supports structured output and reasoning effort. It does.
+4. **No new dependencies.** Plain `fetch` calls OpenRouter, a hand-written checker validates what the model returns, and the smoke, eval and isolation scripts run through Vitest with their own configs. The ticket 06 agent asked to install `happy-dom` and was blocked by a permission prompt. I logged it in QUESTIONS.md and didn't install it myself.
+5. **Analysis doesn't need an account.** Anyone can paste or upload and get an analysis, but nothing is saved. Signed in, the document and its report are saved. The question box works both ways. When signed in, it reads only the saved text.
+6. **Push.** CLAUDE.md says never push, but your prompt asked for one push at the end. I pushed once, after the build and tests passed.
+7. **No "Learn by Doing" handoffs.** You were away, so I wrote everything myself.
+8. **Ticket statuses:** `done`, `blocked` (with the reason on the ticket), or left as `ready-for-human` for ticket 13.
+9. **When a usage limit cut off the ticket 09 agent,** you re-ran the prompt. I checked every ticket's status and sent the same agent back to finish from where it stopped.
+10. **I ran tickets 11 and 12 at the same time.** Both were unblocked, they sit on different seams, and neither touches a screen.
 
-## Couldn't be verified (Supabase or the key missing)
-- **Ticket 11's isolation suite has never run.** It needs `npx supabase start` (Docker) or a separate test project. See `supabase/README.md`.
-- **Sign-in by email link, the auth callback, and saving documents and reports (ticket 01).** All of this is written against the real Supabase client, but none of it ran against a real project. The migration wasn't applied.
-- **Known issue the ticket 01 agent found and left alone:** in `app/globals.css`, `:root` sets `--lift: var(--lift)`, which refers to itself, so dark-mode shadows don't render. Fixing it changes how the landing page looks, so it's yours to decide.
+**Test contracts**
+11. The price-increase clause in the test contract states a cap with no figure, so its expected rating is Medium (unquantified). That squares your "Medium" with ADR 0003, which rates an uncapped increase High.
+12. The auto-renewal is set exactly on the 12-month line ($9,000 against $750 a month), to test the "at least 12 months" edge.
 
-## Real-model smoke run (2026-11-18, 16:34 IST)
-**First attempt failed with OpenRouter 402.** The adapter set no `max_tokens`, so OpenRouter set aside the model's full 131,072-token output limit against the key's $5 credit limit and refused the call. **Every real analysis would have failed the same way.** I fixed it by capping output at 16,000 tokens (`MAX_OUTPUT_TOKENS` in `lib/model/openrouter.ts`, with a test assertion).
+**Analysis rules**
+13. **Text length.** Pasted text must be 200 to 200,000 characters. Questions are limited to 500.
+14. **New fields in what the model returns:**
+    - one regular fee for the whole contract, with its sentence
+    - each figure has a `unit` and a `per`
+    - each flag says whether the clause costs money at all
+    - each deadline says `before` or `after`.
+15. **A figure or deadline is dropped unless its number is written in digits in its own quoted sentence.** A failed figure drops the whole flag.
+16. **The amount at stake is the largest one the flag's own figures support.** Within High, uncapped flags come first. Within each level, larger amounts come first.
+17. **Confidence:**
+    - "Spans several clauses" is worked out from where the quotes sit in the text, not from a yes/no answer by the model.
+    - A term the model calls "undefined" is checked against definitions in the text before it lowers confidence.
+    - Medium confidence shows a reason too.
+18. **"The document doesn't say…" notes come only from code,** from a fixed list. Today there's one: an auto-renewal with no stated fee. The model can't add notes, because there would be nothing to quote.
+19. **Verdict wording.** With several outside documents it reads "It also refers to X and Y. Redline hasn't read them." Each outside document is named as the model describes it. With the test contract that reads a bit stiffly.
+20. **Counter-offers:**
+    - A counter-offer that fails its checks is dropped and the flag stays, with "Redline couldn't draft a counter-offer for this clause."
+    - A rewrite or email that quotes another flag's sentence is rejected.
+    - The model is told never to guess whether the vendor will agree.
+21. **Red lines:**
+    - Up to 300 characters each and 30 per person. Duplicates are refused.
+    - A match only counts if it quotes one of your red lines exactly.
+    - If you're signed in and your red lines can't be loaded, the analysis stops rather than running without them.
+22. **Saved reports carry a version number (now 2).** Older reports show "made by an older version, check again" instead of half-rendering. Only a document's latest report is shown, and a history screen would need your approval.
+23. **Library.** Dates show in UTC, e.g. "17 Nov 2026". A pasted document is named after its first line unless you name it; an uploaded file keeps its file name. The library logic is tested against an in-memory stand-in, and real sign-in isn't faked anywhere in the app.
 
-**Second attempt passed.** Results:
-- **Model:** `z-ai/glm-5.3-flash` (via fireworks), about 23 seconds.
-- **Candidates 11, verified 11, dropped 0.** Every quote matched the contract word for word.
-- **Found all 7 planted clauses.**
-- **Severity right:** the indemnity, unilateral change and auto-renewal came back High; the early-termination fee Medium ("$2,250 … less than $750 × 12 = $9,000"); the arbitration, class-action waiver and governing law Low.
-- **Problems a reviewer should look at.** These are model-quality issues, which the ticket 12 eval measures. I didn't fix them, because changing prompt or product behaviour beyond the tickets needs your approval:
-  1. **The auto-renewal shows "No limit" even though the clause states $9,000.** Its severity (High) is still right, but the exposure line is wrong. The model probably marked `capStated: false` and left out the fee as a figure.
-  2. **The price increase came back High (no limit), not Medium.** The model didn't treat "will not exceed Vendor's standard list price" as a cap. That's arguable either way.
-  3. **Two false alarms at High:** the 15-day invoice-dispute window, and taxes plus suspension. The model said they cost money with no cap. Both match PRD call 6 ("more false alarms than misses"), but ranking them High is too strong.
-  4. **A duplicate:** the indemnity sentence was flagged twice, once as `indemnity` and once as `liability`. There's no step that removes duplicate flags. Removing flags that quote identical sentences would be a small code change, but it needs a decision.
+**Files**
+24. **Text read from a file is read-only,** so a quote always points at words that came out of the file.
+25. **Scans:** a PDF averaging under 20 characters per page counts as a scan. Known gap: a PDF with only some scanned pages can get through.
+26. **"Password-protected"** means a PDF that won't open without a password. Copy- or print-locked PDFs are read normally.
+27. **A file's type is decided by its contents, not its name.** The older ("legacy") build of the PDF reader is used everywhere, because the modern build needs a feature Node 24 and older Safari lack.
 
-## Interruptions
-- **The ticket 09 agent was cut off partway** by the 5-hour usage limit (reset 4:30pm IST). You re-ran the build prompt, I checked every ticket's Status line, and I sent the same agent back to finish from where it stopped. Nothing else was lost.
+**Isolation tests and Supabase setup**
+28. **The isolation tests read test-only settings** (`SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY`, `SUPABASE_TEST_SERVICE_ROLE_KEY`), and refuse to run against the app's own project.
+29. **Checking that the "own rows only" rule is switched on.** A test-only database function in `supabase/seed.sql` reports it. A local Supabase loads that file; your hand-run migrations and `db push` never apply it.
+30. **I ran `npx supabase init`,** which created `supabase/config.toml` for a local Supabase only: localhost sign-in addresses, and email confirmation off.
+
+**Landing page and design**
+31. The landing page's "Try it" link now goes to `/analyze`. Without Supabase settings, `/app` sends visitors to `/sign-in`, which says sign-in isn't set up yet.
+32. **Two design-checker findings fixed:** a thick coloured side border on the form error, and a monospace font on the model ID, which DESIGN.md doesn't allow.
+
+## Couldn't be verified
+- **Anything that needs a real Supabase:**
+  - email-link sign-in and the callback
+  - saving documents, reports and red lines
+  - the two migrations
+  - the rule that each user sees only their own rows
+  - ticket 11's suite.
+- **No screen has been looked at in a browser.** The build brief ruled out anything that opens a browser and waits. Screens were checked by rendering them in tests only.
+- **The copy-button click** isn't tested with a real browser environment (QUESTIONS.md #1).
+- **A known problem left alone:** in `app/globals.css`, `:root` sets `--lift: var(--lift)`, which refers to itself, so dark-mode shadows don't render. Fixing it changes how the landing page looks, so it's yours to decide.
 
 ## First commands when you sit down
-(filled in at the end)
+```bash
+cd ~/AI/builds/redline
+npm install            # picks up the Supabase CLI dev dependency
+npm test && npm run build
+npm run dev            # open http://localhost:3000/analyze, paste tests/fixtures/adhesion-contract.txt
+npm run smoke          # one real model call, prints flags with their sentences
+```
+Then, when you're ready for Supabase:
+1. Apply `supabase/migrations/*.sql` in filename order (Supabase dashboard → SQL editor), or use `npx supabase login`, `npx supabase link --project-ref lejzoxpsosqfqazwwgfr` and `npx supabase db push`, which needs the database password. See `supabase/README.md`.
+2. Run the isolation suite against a separate test project, or a local one with Docker, using the `SUPABASE_TEST_*` settings: `npm run test:isolation`.
+3. Read `QUESTIONS.md`, and the "What a reviewer should look at" list above.
+4. `npm run eval` after any prompt change. It costs a few cents per run.
