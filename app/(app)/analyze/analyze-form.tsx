@@ -231,7 +231,47 @@ function SummaryView({ summary }: { summary: Summary }) {
 }
 
 export function ReportView({ report, saved }: Result) {
-  const { flags, droppedFlagCount } = report;
+  const { flags, droppedFlagCount, verdict } = report;
+  const dropped =
+    droppedFlagCount > 0 ? (
+      <p className="report-dropped">
+        {droppedFlagCount} more {droppedFlagCount === 1 ? "was" : "were"} dropped because{" "}
+        {droppedFlagCount === 1 ? "its quoted sentence isn't" : "their quoted sentences aren't"} in your text.
+      </p>
+    ) : null;
+  const savedNote = saved ? <p className="field-note">Saved to your account.</p> : null;
+  const list = (
+    <ol className="flag-list">
+      {flags.map((flag, i) => (
+        <FlagItem key={i} flag={flag} id={`flag-${i}`} />
+      ))}
+    </ol>
+  );
+
+  // No High or Medium flag: the verdict leads, and any Low flags are folded
+  // under it, still one keypress away (ADR 0005).
+  if (verdict.present) {
+    return (
+      <section className="report" aria-label="Report">
+        <div className="verdict-sheet report-verdict">
+          <p className="verdict">{verdict.text}</p>
+        </div>
+        {flags.length > 0 ? (
+          <details className="low-fold">
+            <summary className="folded">{plural(flags.length, "low-severity flag", "low-severity flags")}</summary>
+            <p className="app-subtitle report-flags-title">
+              Each quotes the sentence it comes from, checked word for word against your text.
+            </p>
+            {list}
+          </details>
+        ) : null}
+        {dropped}
+        {savedNote}
+        <SummaryView summary={report.summary} />
+      </section>
+    );
+  }
+
   return (
     <section className="report" aria-label="Report">
       <SummaryView summary={report.summary} />
@@ -241,19 +281,9 @@ export function ReportView({ report, saved }: Result) {
           ? "Redline found no clause to flag in this text."
           : `${plural(flags.length, "flag", "flags")}, most costly first. Each quotes the sentence it comes from, checked word for word against your text.`}
       </h2>
-      {droppedFlagCount > 0 ? (
-        <p className="report-dropped">
-          {droppedFlagCount} more {droppedFlagCount === 1 ? "was" : "were"} dropped because{" "}
-          {droppedFlagCount === 1 ? "its quoted sentence isn't" : "their quoted sentences aren't"} in your text.
-        </p>
-      ) : null}
-      {saved ? <p className="field-note">Saved to your account.</p> : null}
-
-      <ol className="flag-list">
-        {flags.map((flag, i) => (
-          <FlagItem key={i} flag={flag} id={`flag-${i}`} />
-        ))}
-      </ol>
+      {dropped}
+      {savedNote}
+      {list}
     </section>
   );
 }

@@ -15,6 +15,7 @@ export {
   type Severity,
   type ShownFigure,
   type TwelveMonthFee,
+  type Verdict,
 } from "./analyze";
 export { appearsVerbatim } from "./verbatim";
 export type { ModelPort, ModelRequest, ModelResponse } from "./model-port";

@@ -21,6 +21,7 @@ import { assessConfidence, indexDocument, type Confidence, type DocumentIndex } 
 import { ANALYSIS_SYSTEM_PROMPT, analysisPrompt } from "./prompt";
 import { createVerifier } from "./verbatim";
 import { buildSummary, verifyIncorporatedTerms, type Summary } from "./summary";
+import { computeVerdict, type Verdict } from "./verdict";
 
 export type { Exposure, Severity, ShownFigure, TwelveMonthFee };
 export type { Confidence, ConfidenceLevel, ConfidenceReason } from "./confidence";
@@ -32,6 +33,7 @@ export type {
   Summary,
   SummaryPointShown,
 } from "./summary";
+export type { Verdict } from "./verdict";
 
 // A flag as the reader sees it. Every source sentence, and the sentence behind
 // every figure, has passed the verbatim check and is given as it reads in the
@@ -51,6 +53,9 @@ export type Report = {
   // The plain-English summary, deadlines, incorporated-term references and
   // what the document doesn't state. Every quote in it is verified.
   summary: Summary;
+  // Present only when no flag is High or Medium. Computed by code from the
+  // verified flags; names every verified incorporated-term reference as unread.
+  verdict: Verdict;
   // Ranked: High, then Medium (unquantified first), then Low.
   flags: Flag[];
   // How many flags the model proposed, and how many were dropped because a
@@ -104,12 +109,14 @@ export async function analyze(
   const flags = rank(verified);
 
   const candidateFlagCount = result.value.candidateFlags.length;
+  const summary = buildSummary(result.value, verifier, incorporated, {
+    line,
+    hasAutoRenewalFlag: flags.some((f) => f.clauseType === "auto_renewal"),
+  });
   return {
     modelId: response.modelId,
-    summary: buildSummary(result.value, verifier, incorporated, {
-      line,
-      hasAutoRenewalFlag: flags.some((f) => f.clauseType === "auto_renewal"),
-    }),
+    summary,
+    verdict: computeVerdict(flags, summary.incorporatedTerms),
     flags,
     candidateFlagCount,
     droppedFlagCount: candidateFlagCount - flags.length,

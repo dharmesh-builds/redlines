@@ -1090,3 +1090,41 @@ mark.on {
     gap: 0;
   }
 }
+
+/* The verdict line leads a report with no High or Medium flag. Low flags fold
+   under it behind a sky label that names the count and severity in words. */
+.report-verdict {
+  max-width: none;
+  margin-bottom: var(--space-3);
+}
+
+.low-fold {
+  margin: 0 0 var(--space-5);
+}
+
+.low-fold > summary.folded {
+  margin: 0;
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+.low-fold > summary.folded::-webkit-details-marker {
+  display: none;
+}
+
+.low-fold > summary.folded::after {
+  content: " +" / "";
+}
+
+.low-fold[open] > summary.folded::after {
+  content: " \2212" / "";
+}
+
+.low-fold .report-flags-title {
+  margin-top: var(--space-3);
+}
+
+.low-fold .flag-list {
+  margin-top: var(--space-3);
+}

@@ -509,3 +509,10 @@ Status: an unvalidated hypothesis.
   - Code-generated "doesn't state" notes (fee missing on an auto-renewal).
   - The report section order is summary → deadlines → outside documents → flags.
 - **Verified here:** tsc clean; 111/111 tests; build OK; fixture .txt unchanged; sidecar sentences still verbatim.
+
+### 36. Ticket 05 (verdict line) done
+- **Subagent built:**
+  - `lib/analysis/verdict.ts`: the verdict is code-computed, present only when no verified flag is High or Medium, and names each verified incorporated term as unread.
+  - The UI leads with the verdict, with Low flags in a `<details>` fold.
+- **Verified here:** tsc clean; 123/123 tests; build OK; no fixture changes.
+- **Watch:** incorporated-term names render as the model's description; possibly stiff wording with real output.

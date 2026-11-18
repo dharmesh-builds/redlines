@@ -4,9 +4,9 @@
 
 **Blocked by:** 02, 04
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Verdict line is present if and only if there are no High or Medium flags
-- [ ] Verdict line names every incorporated-term reference as unread
-- [ ] Low flags are folded under the verdict and still reachable
-- [ ] Q4: tests cover no flags, Low only, any Medium, any High, and Low only plus incorporated terms
+- [x] Verdict line is present if and only if there are no High or Medium flags
+- [x] Verdict line names every incorporated-term reference as unread
+- [x] Low flags are folded under the verdict and still reachable
+- [x] Q4: tests cover no flags, Low only, any Medium, any High, and Low only plus incorporated terms

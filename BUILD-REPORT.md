@@ -15,6 +15,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 - **04 Summary, deadlines and incorporated terms: done.** 111 tests pass.
   - The report opens with a summary, then deadlines, then the outside documents the contract refers to. Each of those is marked "Redline hasn't read this document".
   - Every item is checked word for word against the contract, the same way flags are.
+- **05 Verdict line: done.** 123 tests pass.
+  - When nothing is High or Medium, the report opens with "Nothing in this document costs you money beyond what you agreed to."
+  - It names each outside document as unread, and the Low flags sit in a fold underneath.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -48,6 +51,8 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 25. **Deadlines always read "N days before" or "N days after" something.** The model gives "before" or "after" plus a short reference point, rather than free text that couldn't be relied on to read that way.
 26. **A deadline is kept only if its number is written in digits next to "day(s)" in the quoted sentence.** "Sixty (60) days" and "30-day" count. A number written only in words is dropped.
 27. **"The document doesn't say…" notes come from code, from a fixed list.** The model can't add one, because there would be nothing to quote. Today there is one such note: an auto-renewal with no stated regular fee.
+28. **Verdict wording for several outside documents.** With more than one, it reads "It also refers to X and Y. Redline hasn't read them." A "which" after a list could be read as covering only the last item.
+29. **Outside documents are named the way the model describes them.** Only the sentence behind each one is checked. With the test fixture this reads a little stiffly ("refers to Acceptable Use Policy at https://…"). Worth checking with real output.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)
