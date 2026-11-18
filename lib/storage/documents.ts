@@ -2,6 +2,7 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Report } from "../analysis";
+import { toStoredPayload } from "../library/payload";
 
 // Per-user storage of documents and reports. Every call goes through a client
 // acting as the signed-in user (anon key + session), so row-level security
@@ -41,7 +42,8 @@ export async function saveReport(
     .insert({
       user_id: userId,
       document_id: documentId,
-      payload: report,
+      // Versioned so the library can tell a report made by older code.
+      payload: toStoredPayload(report),
       model_id: report.modelId,
       red_lines: redLines,
     })

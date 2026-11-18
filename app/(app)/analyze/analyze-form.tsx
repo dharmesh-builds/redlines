@@ -6,13 +6,14 @@ import type { CounterOfferShown, Flag, Report, Severity, Summary } from "../../.
 import type { AnalyzeResponse } from "../../../lib/api/analyze-contract";
 import { CLAUSE_TITLES } from "../../../lib/clause-labels";
 import { checkDocumentText } from "../../../lib/document-input";
+import { MAX_DOCUMENT_NAME, defaultDocumentName, resolveDocumentName } from "../../../lib/library/naming";
 
 export type SavingMode =
   | { kind: "signed-in"; email: string }
   | { kind: "anonymous" }
   | { kind: "unavailable" };
 
-type Result = { report: Report; saved: boolean };
+type Result = { report: Report; saved: boolean; documentId?: string };
 
 const NETWORK_ERROR = "Redline couldn't reach the server. Check your connection and try again.";
 
@@ -22,7 +23,10 @@ function isTextFile(file: File) {
 
 export function AnalyzeForm({ saving }: { saving: SavingMode }) {
   const [text, setText] = useState("");
-  const [name, setName] = useState<string | null>(null);
+  // The picked file's name, and the name the reader typed (null until they
+  // edit the field, so it keeps following the file name or first line).
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [nameInput, setNameInput] = useState<string | null>(null);
   const [fileNote, setFileNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -45,7 +49,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
       return;
     }
     setText(content);
-    setName(file.name);
+    setFileName(file.name);
     setFileNote(`Read ${file.name} in your browser. Its text is below. The file stays on your computer.`);
   }
 
@@ -63,11 +67,15 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: checked.text, name: name ?? undefined }),
+        // A name is only used when the agreement is saved, so only signed-in readers send one.
+        body: JSON.stringify({
+          text: checked.text,
+          name: saving.kind === "signed-in" ? resolveDocumentName(nameInput, { fileName, text }) : undefined,
+        }),
       });
       const body = (await res.json()) as AnalyzeResponse;
       if ("error" in body) setError(body.error);
-      else setResult({ report: body.report, saved: body.saved });
+      else setResult(body.saved ? { report: body.report, saved: true, documentId: body.documentId } : { report: body.report, saved: false });
     } catch {
       setError(NETWORK_ERROR);
     } finally {
@@ -89,7 +97,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
           value={text}
           onChange={(e) => {
             setText(e.target.value);
-            if (name) setName(null);
+            if (!e.target.value) setFileName(null);
           }}
         />
         <div className="file-row">
@@ -99,6 +107,27 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
           </label>
           {fileNote ? <p className="field-note">{fileNote}</p> : null}
         </div>
+
+        {saving.kind === "signed-in" ? (
+          <div className="name-row">
+            <label htmlFor="agreement-name" className="field-label">
+              Name (optional)
+            </label>
+            <input
+              id="agreement-name"
+              type="text"
+              className="text-input"
+              maxLength={MAX_DOCUMENT_NAME}
+              value={nameInput ?? (text.trim() ? defaultDocumentName({ fileName, text }) : "")}
+              onChange={(e) => setNameInput(e.target.value)}
+              aria-describedby="agreement-name-note"
+            />
+            <p id="agreement-name-note" className="field-note">
+              This is how it&rsquo;s listed in your library. Leave it blank to use the file name or the first line of
+              the text.
+            </p>
+          </div>
+        ) : null}
 
         <p className="field-note">
           {saving.kind === "signed-in" ? (
@@ -230,7 +259,7 @@ function SummaryView({ summary }: { summary: Summary }) {
   );
 }
 
-export function ReportView({ report, saved }: Result) {
+export function ReportView({ report, saved, documentId }: Result) {
   const { flags, droppedFlagCount, verdict } = report;
   const dropped =
     droppedFlagCount > 0 ? (
@@ -239,7 +268,17 @@ export function ReportView({ report, saved }: Result) {
         {droppedFlagCount === 1 ? "its quoted sentence isn't" : "their quoted sentences aren't"} in your text.
       </p>
     ) : null;
-  const savedNote = saved ? <p className="field-note">Saved to your account.</p> : null;
+  const savedNote = saved ? (
+    <p className="field-note">
+      Saved to your library.
+      {documentId ? (
+        <>
+          {" "}
+          <Link href={`/app/documents/${documentId}`}>Open it</Link>
+        </>
+      ) : null}
+    </p>
+  ) : null;
   const list = (
     <ol className="flag-list">
       {flags.map((flag, i) => (

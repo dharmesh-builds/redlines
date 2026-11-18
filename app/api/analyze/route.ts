@@ -2,6 +2,7 @@ import { analyze } from "../../../lib/analysis";
 import { ANALYZE_ERRORS, type AnalyzeResponse } from "../../../lib/api/analyze-contract";
 import { checkDocumentText } from "../../../lib/document-input";
 import { createOpenRouterModel } from "../../../lib/model/openrouter";
+import { resolveDocumentName } from "../../../lib/library/naming";
 import { readDocumentText, saveDocument, saveReport } from "../../../lib/storage/documents";
 import { getSignedInUser } from "../../../lib/supabase/session";
 
@@ -9,8 +10,6 @@ import { getSignedInUser } from "../../../lib/supabase/session";
 // The browser sends only the extracted text, never the file. Signed in (and
 // Supabase configured): the text is stored first, read back, and analysed;
 // the report is saved with its model ID. Otherwise: analysed, nothing stored.
-
-const DEFAULT_NAME = "Pasted agreement";
 
 function json(body: AnalyzeResponse, status = 200) {
   return Response.json(body, { status });
@@ -27,8 +26,8 @@ export async function POST(request: Request) {
 
   const checked = checkDocumentText(body.text);
   if (!checked.ok) return json({ error: checked.message }, 400);
-  const name =
-    typeof body.name === "string" && body.name.trim() ? body.name.trim().slice(0, 200) : DEFAULT_NAME;
+  // The form sends the name it shows; if it's blank, fall back to the text's first line.
+  const name = resolveDocumentName(body.name, { text: checked.text });
 
   const model = createOpenRouterModel();
   const session = await getSignedInUser();

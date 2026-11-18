@@ -1195,3 +1195,131 @@ mark.on {
 .low-fold .flag-list {
   margin-top: var(--space-3);
 }
+
+/* ---------------------------------------------------------------------------
+   Library (/app) and a saved agreement (/app/documents/:id). Desk content:
+   names in the grotesque, 1px desk rules between rows, no cards. */
+
+.head-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.library-notice {
+  margin: var(--space-2) 0 0;
+}
+
+.library-state {
+  margin-top: var(--space-3);
+}
+
+.library-state .app-lede {
+  margin-bottom: 0;
+}
+
+.library-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--desk-rule);
+}
+
+.library-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--desk-rule);
+}
+
+.library-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  text-decoration-color: var(--tab-high);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.library-date {
+  color: var(--desk-ink-soft);
+  font-size: 0.9375rem;
+  white-space: nowrap;
+}
+
+.doc-back {
+  margin: 0 0 var(--space-2);
+}
+
+.doc-name {
+  overflow-wrap: anywhere;
+}
+
+.doc-meta {
+  margin-top: var(--space-2);
+}
+
+.model-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.doc-delete {
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--desk-rule);
+}
+
+.delete-question {
+  margin: 0;
+  font-weight: 600;
+  max-width: 52ch;
+}
+
+.delete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+}
+
+.delete-actions .text-button {
+  margin-top: 0;
+}
+
+.plain-button {
+  margin-top: var(--space-2);
+  padding: 10px 18px;
+  min-height: 44px;
+  background: transparent;
+  color: var(--desk-ink);
+  border: 1px solid var(--desk-ink-soft);
+  border-radius: 2px 6px 6px 2px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.plain-button:hover {
+  border-color: var(--desk-ink);
+}
+
+.plain-button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.name-row {
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 640px) {
+  .head-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+}

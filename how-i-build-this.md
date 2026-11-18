@@ -527,3 +527,10 @@ Status: an unvalidated hypothesis.
   - The UI shows original → rewrite → email, with copy buttons (clipboard, falling back to selecting the text).
 - **Verified here:** tsc clean; 145/145; build OK; package.json unchanged.
 - **Blocked dependency:** the subagent's attempt to install `happy-dom` hit a permission prompt. I didn't install it either, and logged it in `QUESTIONS.md` #1. Copy is tested via the copy function plus the markup targets, with no real DOM click.
+
+### 38. Ticket 10 (library) done (ahead of 07 so re-run has a document page)
+- **Subagent built:**
+  - The `/app` library list, the `/app/documents/[id]` saved-report page (shows the model ID, never re-runs), and in-page delete confirmation.
+  - The documents API routes, with a repository port (Supabase in production, in-memory in tests), versioned report payloads, and naming defaults.
+- **Verified here:** tsc clean; 168/168; build OK; no new deps; no migration change.
+- **Decision:** old payloads get an "older version, check again" note instead of partial rendering.

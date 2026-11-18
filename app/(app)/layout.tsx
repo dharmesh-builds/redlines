@@ -4,8 +4,9 @@ import { getSignedInUser } from "../../lib/supabase/session";
 import { ThemeToggle } from "../theme-toggle";
 
 // The app shell (.impeccable/surfaces/app-app-layout-tsx.md): the desk, the
-// wordmark and the account action. Checking an agreement works signed out;
-// only saving needs an account.
+// wordmark, links between the library and checking an agreement, and the
+// account action. Checking an agreement works signed out; only saving needs an
+// account.
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const configured = isSupabaseConfigured();
   const session = configured ? await getSignedInUser() : null;
@@ -18,11 +19,21 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </Link>
         <div className="head-actions">
           {session ? (
-            <form action="/auth/sign-out" method="post">
-              <button type="submit" className="head-link head-button">
-                Sign out
-              </button>
-            </form>
+            <>
+              <nav aria-label="Your account" className="head-nav">
+                <Link href="/app" className="head-link">
+                  Library
+                </Link>
+                <Link href="/analyze" className="head-link">
+                  Check an agreement
+                </Link>
+              </nav>
+              <form action="/auth/sign-out" method="post">
+                <button type="submit" className="head-link head-button">
+                  Sign out
+                </button>
+              </form>
+            </>
           ) : configured ? (
             <Link href="/sign-in" className="head-link">
               Sign in

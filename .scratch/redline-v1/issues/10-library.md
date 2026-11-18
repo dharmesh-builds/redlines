@@ -4,9 +4,9 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Document list shows name and date, newest first
-- [ ] Opening a document shows its latest saved report and the model ID used
-- [ ] Delete removes the document and all its reports
-- [ ] Naming a document on upload
+- [x] Document list shows name and date, newest first
+- [x] Opening a document shows its latest saved report and the model ID used
+- [x] Delete removes the document and all its reports
+- [x] Naming a document on upload

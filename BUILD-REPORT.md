@@ -21,6 +21,11 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 - **06 Counter-offers: done.** 145 tests pass.
   - Each flag shows the original sentences, the proposed rewrite, and a short email to the vendor. Both the rewrite and the email have a Copy button.
   - Gap: the copy click isn't tested in a simulated browser, because the testing library needed for that wasn't approved. See QUESTIONS.md #1.
+- **10 Library: done.** 168 tests pass.
+  - `/app` lists your saved documents, newest first.
+  - `/app/documents/[id]` shows the latest saved report and which model made it, without running the analysis again. Deleting asks you to confirm on the page itself.
+  - The API is `GET /api/documents`, plus `GET` and `DELETE /api/documents/[id]`.
+  - Tested against an in-memory stand-in for the database, never a real Supabase.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -59,6 +64,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 30. **A counter-offer that fails its checks drops the counter-offer, not the flag.** The flag shows "Redline couldn't draft a counter-offer for this clause." ADR 0001 drops a flag only when its citation fails, and a verified risk shouldn't vanish because the drafting went wrong.
 31. **"Changes only that clause" is checked mechanically.** A rewrite or request that contains another flag's verified sentence word for word is rejected. A request must contain a real ask: a question, "please", "could/would/can you", and the like.
 32. **The model is told never to guess whether the vendor will agree.** A test checks the prompt for this.
+33. **Reports saved by an earlier version get a plain note instead of a partial display:** "made by an older version… check the agreement again". A half-shown report could quietly leave out checks the reader expects. The version number is stored inside the saved report, so no extra migration is needed.
+34. **The library reads the database through a small interface,** so its logic can be tested against an in-memory version. Real sign-in isn't faked anywhere in the app itself.
+35. **Dates show in UTC, British style ("17 Nov 2026").** A pasted document is named after its first line unless you give it a name. An uploaded file keeps its file name.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)
