@@ -382,3 +382,15 @@ Status: an unvalidated hypothesis.
   - `proxy.ts` uses the Next 16 name for middleware. It refreshes the session cookie and uses `getUser()`, which revalidates the token, not `getSession()`. When the env vars are missing it passes requests through, so the landing page still works.
 - **Open:** the user is writing `isProtectedPath` (TODO(human)). After the integration finishes: `vercel env pull .env.local`, then check that no service-role key has a `NEXT_PUBLIC_` prefix.
 - **Build:** passes. The proxy shows up as `ƒ Proxy (Middleware)`.
+
+### 27. OpenRouter credentials checked
+- **What I asked for:** check the format of my `.env.local`, which holds the OpenRouter key, and gitignore it.
+- **Checked (values masked, never printed):**
+  - The file has 2 lines: `OPENROUTER_API_KEY` (73 chars, `sk-or-` prefix) and `OPENROUTER_MODEL=z-ai/glm-5.3-flash`.
+  - No quotes, spaces, `export`, CRLF line endings or `NEXT_PUBLIC_` prefix.
+  - The only defect was a missing final newline, which I fixed.
+- **Verified:**
+  - The model ID exists in OpenRouter's public model list.
+  - The key is valid: `/api/v1/key` returns 200. It's a free-tier key with a $5 limit and $0 used.
+- **Gitignore:** no change needed. The existing `.env.*` rule (`.gitignore:24`) already matches the file, and it has never been tracked or committed.
+- **Gotcha recorded:** `vercel env pull .env.local` *overwrites* the file. Pull the Supabase vars into a separate file and merge them, or the OpenRouter lines are lost. The OpenRouter vars also need adding to Vercel's Environment Variables for production. The user has to paste them there.
