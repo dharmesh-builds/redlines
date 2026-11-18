@@ -552,3 +552,12 @@ Status: an unvalidated hypothesis.
   - The public `POST /api/ask` (unsaved text, same limits as analyse) and the signed-in `POST /api/documents/[id]/questions` (stored text only).
   - A question box on both report views; answers kept for the visit only.
 - **Verified here:** tsc clean; 231/231; build OK; no new deps; fixtures untouched.
+
+### 41. Ticket 09 (PDF/DOCX extraction) done, after a rate-limit interruption
+- The subagent hit the 5-hour usage limit mid-ticket. The user re-pasted the build prompt after the 4:30pm reset. I checked the Status lines (01–08 and 10 done), then resumed the same agent with SendMessage instead of starting fresh, so its partial fixture work carried over.
+- **Subagent built:**
+  - `lib/extraction/` `extractText`: the pdf.js legacy build, mammoth and UTF-8 text.
+  - Refusals: scanned (<20 non-whitespace chars/page), encrypted (needs a user password), corrupt, and unsupported-type, decided by sniffed bytes rather than the extension.
+  - A read-only extracted-text preview before analysis.
+  - A deterministic fixture generator (Node built-ins only) for 9 files.
+- **Verified here:** tsc clean; 243/243; build OK; no new deps; no OCR; fixture .txt/.json untouched.

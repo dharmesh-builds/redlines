@@ -6,6 +6,7 @@ import type { CounterOfferShown, Flag, Report, Severity, Summary } from "../../.
 import type { AnalyzeResponse } from "../../../lib/api/analyze-contract";
 import { CLAUSE_TITLES } from "../../../lib/clause-labels";
 import { checkDocumentText } from "../../../lib/document-input";
+import type { ExtractedFormat } from "../../../lib/extraction";
 import { MAX_DOCUMENT_NAME, defaultDocumentName, resolveDocumentName } from "../../../lib/library/naming";
 import { QuestionBox, type QuestionTarget } from "./question-box";
 
@@ -19,10 +20,51 @@ type Result = { report: Report; saved: boolean; documentId?: string; showRedLine
 // document, or the exact text that was analysed when nothing was saved.
 type Checked = Result & { run: number; questionTarget: QuestionTarget };
 
+export const FILE_ACCEPT =
+  ".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain";
+
 const NETWORK_ERROR = "Redline couldn't reach the server. Check your connection and try again.";
 
-function isTextFile(file: File) {
-  return file.type === "text/plain" || /\.txt$/i.test(file.name);
+// Text read from a picked file. It is shown read-only: what Redline checks and
+// quotes is exactly what came out of the file, so a quote can't point at words
+// the reader typed in. To change it, the reader removes the file and pastes.
+export type FileSource = { fileName: string; format: ExtractedFormat };
+
+const FORMAT_NAME: Record<ExtractedFormat, string> = { pdf: "PDF", docx: "Word file", txt: "text file" };
+
+/** The extracted-text step: what Redline read from the file, before any check runs. */
+export function ExtractedPreview({
+  source,
+  text,
+  onClear,
+}: {
+  source: FileSource;
+  text: string;
+  onClear?: () => void;
+}) {
+  return (
+    <div className="extracted">
+      <label htmlFor="agreement-text" className="field-label">
+        Text from {source.fileName}
+      </label>
+      <textarea
+        id="agreement-text"
+        className="paper-input"
+        rows={14}
+        readOnly
+        spellCheck={false}
+        value={text}
+        aria-describedby="extracted-note"
+      />
+      <p id="extracted-note" className="field-note">
+        Redline will check this text and quote from it. You can&rsquo;t edit it here, so every quote matches your{" "}
+        {FORMAT_NAME[source.format]}. The file stays on your computer.
+      </p>
+      <button type="button" className="text-button" onClick={onClear}>
+        Use different text
+      </button>
+    </div>
+  );
 }
 
 export function AnalyzeForm({ saving }: { saving: SavingMode }) {
@@ -31,7 +73,10 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
   // edit the field, so it keeps following the file name or first line).
   const [fileName, setFileName] = useState<string | null>(null);
   const [nameInput, setNameInput] = useState<string | null>(null);
-  const [fileNote, setFileNote] = useState<string | null>(null);
+  const [source, setSource] = useState<FileSource | null>(null);
+  const [reading, setReading] = useState<string | null>(null);
+  // Only the latest pick may fill the form; an earlier, slower one is ignored.
+  const pick = useRef(0);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<Checked | null>(null);
@@ -41,21 +86,37 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
+    const id = ++pick.current;
     setError(null);
-    setFileNote(null);
-    if (!isTextFile(file)) {
-      setError("Only .txt files work here for now. Open the file, copy its text and paste it above.");
+    setReading(file.name);
+    // Read in the browser. The file itself is never uploaded; only its text is
+    // sent when the reader runs the check.
+    let extracted;
+    try {
+      const { extractText } = await import("../../../lib/extraction");
+      extracted = await extractText(file);
+    } catch {
+      extracted = { ok: false as const, message: "Redline couldn’t read this file. Reload the page and try again." };
+    }
+    if (id !== pick.current) return;
+    setReading(null);
+    if (!extracted.ok) {
+      setError(extracted.message);
       return;
     }
-    // Read in the browser. The file itself is never uploaded.
-    const content = await file.text();
-    if (content.includes("\u0000")) {
-      setError("That file doesn't read as plain text. Copy the agreement's text and paste it instead.");
-      return;
-    }
-    setText(content);
+    setText(extracted.text);
     setFileName(file.name);
-    setFileNote(`Read ${file.name} in your browser. Its text is below. The file stays on your computer.`);
+    setNameInput(null);
+    setSource({ fileName: file.name, format: extracted.format });
+  }
+
+  function clearFile() {
+    pick.current++;
+    setSource(null);
+    setText("");
+    setFileName(null);
+    setNameInput(null);
+    setError(null);
   }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -99,26 +160,40 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
   return (
     <>
       <form className="analyze-form" onSubmit={onSubmit}>
-        <label htmlFor="agreement-text" className="field-label">
-          Agreement text
-        </label>
-        <textarea
-          id="agreement-text"
-          className="paper-input"
-          rows={14}
-          spellCheck={false}
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-            if (!e.target.value) setFileName(null);
-          }}
-        />
+        {source ? (
+          <ExtractedPreview source={source} text={text} onClear={clearFile} />
+        ) : (
+          <>
+            <label htmlFor="agreement-text" className="field-label">
+              Agreement text
+            </label>
+            <textarea
+              id="agreement-text"
+              className="paper-input"
+              rows={14}
+              spellCheck={false}
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+                if (!e.target.value) setFileName(null);
+              }}
+            />
+          </>
+        )}
         <div className="file-row">
           <label className="file-pick">
-            <input type="file" accept=".txt,text/plain" onChange={onFile} className="visually-hidden" />
-            <span>Choose a .txt file</span>
+            <input
+              type="file"
+              accept={FILE_ACCEPT}
+              onChange={onFile}
+              className="visually-hidden"
+              disabled={reading !== null || pending}
+            />
+            <span>{source ? "Choose another file" : "Choose a PDF, Word or text file"}</span>
           </label>
-          {fileNote ? <p className="field-note">{fileNote}</p> : null}
+          <p className="field-note" role="status" aria-live="polite">
+            {reading ? `Reading ${reading}…` : ""}
+          </p>
         </div>
 
         {saving.kind === "signed-in" ? (
@@ -161,7 +236,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
           </p>
         ) : null}
 
-        <button type="submit" className="cta" disabled={pending}>
+        <button type="submit" className="cta" disabled={pending || reading !== null}>
           Check this agreement
         </button>
         <p className="field-note" role="status" aria-live="polite">

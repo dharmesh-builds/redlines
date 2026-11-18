@@ -36,6 +36,11 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
   - An answer is shown only if every sentence it quotes is checked word for word. Otherwise the box says "Nothing in this agreement answers that question."
   - Answers aren't saved.
   - Routes: `POST /api/ask` (public, unsaved text) and `POST /api/documents/[id]/questions` (signed in, reads the saved text).
+- **09 PDF and Word files: done.** 243 tests pass.
+  - PDF files with real text, Word (.docx) files and plain text are read in your browser.
+  - Before the check runs, you see the text exactly as it came out of the file.
+  - Scanned, password-protected, damaged and wrong-type files are turned away with the reason. There is no OCR.
+  - The test files are made by `tests/fixtures/files/generate.mjs`, using only what ships with Node.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -85,11 +90,19 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 41. **The question box works without an account too.** On an unsaved analysis, the browser sends back the exact text it just analysed, with the same length limits as the analysis. Your prompt only requires an account for the library and red lines. Signed in, questions are checked against the saved text, and any text the browser sends is ignored.
 42. **Questions are limited to 500 characters.** The prompt treats the question as something to look up, never as instructions. It rules out outside legal knowledge and questions about enforceability, legality or market norms.
 43. **Earlier answers stay on the page for that visit only,** newest first.
+44. **Text read from a file is shown read-only.** A quote must point at words that came out of the file, not words someone typed afterwards. To change it, remove the file and paste instead.
+45. **A PDF counts as a scan if it averages fewer than 20 characters of text per page.** Known gap: a PDF with only some scanned pages can pass, and the missing pages aren't reported.
+46. **"Password-protected" means a PDF you can't open without a password.** A PDF that only blocks copying or printing is read normally.
+47. **The file's contents decide its type, not its name.** A .pdf or .docx that doesn't match its format is reported as damaged.
+48. **The older ("legacy") build of the PDF reader is used everywhere.** The modern build needs a feature that Node 24 and older Safari lack.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)
 - **Sign-in by email link, the auth callback, and saving documents and reports (ticket 01).** All of this is written against the real Supabase client, but none of it ran against a real project. The migration wasn't applied.
 - **Known issue the ticket 01 agent found and left alone:** in `app/globals.css`, `:root` sets `--lift: var(--lift)`, which refers to itself, so dark-mode shadows don't render. Fixing it changes how the landing page looks, so it's yours to decide.
+
+## Interruptions
+- **The ticket 09 agent was cut off partway** by the 5-hour usage limit (reset 4:30pm IST). You re-ran the build prompt, I checked every ticket's Status line, and I sent the same agent back to finish from where it stopped. Nothing else was lost.
 
 ## First commands when you sit down
 (filled in at the end)

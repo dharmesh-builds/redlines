@@ -8,7 +8,7 @@ export const MIN_DOCUMENT_CHARS = 200;
 export const MAX_DOCUMENT_CHARS = 200_000;
 
 export const DOCUMENT_TEXT_MESSAGES = {
-  empty: "Paste the text of the agreement, or choose a .txt file.",
+  empty: "Paste the text of the agreement, or choose a file.",
   tooShort: (chars: number) =>
     `That's only ${chars.toLocaleString("en-US")} characters. Redline needs at least ${MIN_DOCUMENT_CHARS} to find a clause and quote it, so paste the whole agreement.`,
   tooLong: `That's more than ${MAX_DOCUMENT_CHARS.toLocaleString("en-US")} characters. Paste one agreement at a time.`,

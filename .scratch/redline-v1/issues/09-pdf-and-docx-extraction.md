@@ -8,9 +8,9 @@
 
 **Blocked by:** 01. Needs approval first: PDF and DOCX extraction libraries (log in `QUESTIONS.md`).
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Extraction returns text + source format, or unsupported + reason
-- [ ] The file never leaves the browser; only the extracted text is stored
-- [ ] The user sees the extracted text before running analysis
-- [ ] Extraction-seam tests with fixture files: text PDF, DOCX and TXT → text; image-only PDF → unsupported (scanned); encrypted PDF and wrong type → unsupported with reason
+- [x] Extraction returns text + source format, or unsupported + reason
+- [x] The file never leaves the browser; only the extracted text is stored
+- [x] The user sees the extracted text before running analysis
+- [x] Extraction-seam tests with fixture files: text PDF, DOCX and TXT → text; image-only PDF → unsupported (scanned); encrypted PDF and wrong type → unsupported with reason

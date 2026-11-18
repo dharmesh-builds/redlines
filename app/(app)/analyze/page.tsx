@@ -18,7 +18,7 @@ export default async function AnalyzePage() {
         Check an agreement
       </h1>
       <p className="app-lede">
-        Paste the agreement&rsquo;s text, or choose a .txt file. Redline reads the file in your browser
+        Paste the agreement&rsquo;s text, or choose a PDF, Word or text file. Redline reads the file in your browser
         and sends only its text.
       </p>
       <AnalyzeForm saving={saving} />
