@@ -12,6 +12,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
   - Severity, exposure and ranking are all worked out by code from quoted figures.
   - Whenever an amount is calculated, the sum is shown, e.g. "$750 × 12 = $9,000".
 - **03 Confidence labels: done.** 93 tests pass. Confidence comes from checks against the document's text, never from the model's own rating. A Low or Medium label shows its reason.
+- **04 Summary, deadlines and incorporated terms: done.** 111 tests pass.
+  - The report opens with a summary, then deadlines, then the outside documents the contract refers to. Each of those is marked "Redline hasn't read this document".
+  - Every item is checked word for word against the contract, the same way flags are.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -42,6 +45,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 22. **Whether a clause "spans several clauses" is worked out by code, not taken from the model.** Code checks where the quoted sentences sit in the stored text: quotes from two different numbered clauses count as spanning. A yes/no from the model would have been one more claim nobody can check.
 23. **A term the model calls "undefined" is checked against the document first.** If the document defines it ("X" means…, (the "X"), or an order-form line starting with it), the flag doesn't lose confidence.
 24. **Medium confidence also shows a reason.** DESIGN.md asks for a reason whenever confidence isn't High.
+25. **Deadlines always read "N days before" or "N days after" something.** The model gives "before" or "after" plus a short reference point, rather than free text that couldn't be relied on to read that way.
+26. **A deadline is kept only if its number is written in digits next to "day(s)" in the quoted sentence.** "Sixty (60) days" and "30-day" count. A number written only in words is dropped.
+27. **"The document doesn't say…" notes come from code, from a fixed list.** The model can't add one, because there would be nothing to quote. Today there is one such note: an auto-renewal with no stated regular fee.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)

@@ -502,3 +502,10 @@ Status: an unvalidated hypothesis.
   - The UI shows a Confidence fact line with its reason.
 - **Verified here:** tsc clean; 93/93 tests; build OK; no forbidden patterns; fixtures untouched.
 - **Why code over model fields:** every label must be reproducible from the stored text (Q7), and a model yes/no is unverifiable.
+
+### 35. Ticket 04 (summary, deadlines, incorporated terms) done
+- **Subagent built:**
+  - `lib/analysis/summary.ts`: verified summary points, deadlines (days + before/after + reference point; the day count must appear in digits beside "day(s)") and incorporated-term notes marked unread.
+  - Code-generated "doesn't state" notes (fee missing on an auto-renewal).
+  - The report section order is summary → deadlines → outside documents → flags.
+- **Verified here:** tsc clean; 111/111 tests; build OK; fixture .txt unchanged; sidecar sentences still verbatim.

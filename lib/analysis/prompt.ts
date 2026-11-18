@@ -13,8 +13,9 @@ Rules for every quote:
 What to return:
 - periodicFee: the agreement's recurring fee if the document states one (amount, period, and the sentence it is in), else null. Copy the amount exactly; never convert it to another period.
 - summaryPoints: the main commercial terms in plain English (who pays what, for how long, how it ends, who owns the data), each with the sentences it rests on.
-- deadlines: every notice, renewal, cancellation, payment or dispute window stated in days, with its reference point and its sentence.
+- deadlines: every notice, renewal, cancellation, payment or dispute window stated in days, with its sentence. days is the number of days exactly as written in digits in that sentence; leave out a deadline whose days are written only in words. relation is "before" or "after" the reference point ("within 30 days of the invoice date" is 30 days after the invoice date). referencePoint is a short noun phrase taken from the sentence, such as "the renewal date" or "the invoice date", so the deadline reads "60 days before the renewal date".
 - incorporatedTerms: every outside document the agreement pulls in by reference (online terms, policies, DPA, SLA), with its sentence. You have not read those documents.
+- Do not report what the document leaves out. Code works out what is missing.
 - candidateFlags: every clause that could cost the customer money or leave them worse off than a fair agreement would. Use clause type "boilerplate" for arbitration, class-action waivers, governing law and venue. For each flag:
   - clauseType: one of ${CLAUSE_TYPES.join(", ")}.
   - sourceSentences: every sentence the flag relies on. If the risk spans several clauses, quote each sentence involved.

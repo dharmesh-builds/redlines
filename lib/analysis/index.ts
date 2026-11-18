@@ -2,6 +2,11 @@
 export {
   analyze,
   type Confidence,
+  type DeadlineShown,
+  type IncorporatedTermShown,
+  type NotStatedNote,
+  type Summary,
+  type SummaryPointShown,
   type ConfidenceLevel,
   type ConfidenceReason,
   type Exposure,

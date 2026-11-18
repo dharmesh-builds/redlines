@@ -9,12 +9,14 @@
   "deadlines": [
     {
       "days": 30,
-      "referencePoint": "written notice before Pinecrest ends the agreement",
+      "relation": "before",
+      "referencePoint": "Pinecrest ends the agreement",
       "sentence": "Pinecrest may end this agreement by giving Customer at least 30 days' written notice, and will refund any fees paid for days after the agreement ends."
     },
     {
       "days": 60,
-      "referencePoint": "after the agreement ends",
+      "relation": "after",
+      "referencePoint": "the agreement ends",
       "sentence": "Customer may download all of its information as a spreadsheet at any time, including for 60 days after the agreement ends."
     }
   ],

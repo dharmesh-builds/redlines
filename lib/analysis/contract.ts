@@ -68,8 +68,15 @@ export type SummaryPoint = {
   sourceSentences: string[];
 };
 
+// Which side of the reference point the deadline falls on. Together with the
+// day count and the reference point it reads "60 days before the renewal date".
+export const DEADLINE_RELATIONS = ["before", "after"] as const;
+export type DeadlineRelation = (typeof DEADLINE_RELATIONS)[number];
+
 export type Deadline = {
   days: number;
+  relation: DeadlineRelation;
+  // A noun phrase, e.g. "the renewal date" or "the invoice date".
   referencePoint: string;
   sourceSentence: string;
 };
@@ -129,7 +136,12 @@ export const modelOutputSchema: JsonSchema = object({
   },
   deadlines: {
     type: "array",
-    items: object({ days: { type: "integer" }, referencePoint: str, sourceSentence: str }),
+    items: object({
+      days: { type: "integer" },
+      relation: { type: "string", enum: [...DEADLINE_RELATIONS] },
+      referencePoint: str,
+      sourceSentence: str,
+    }),
   },
   incorporatedTerms: {
     type: "array",
@@ -233,7 +245,9 @@ const checkModelOutput = shape({
     shape({ amount: isNumber, period: oneOf(FEE_PERIODS), sourceSentence: isString }),
   ),
   summaryPoints: arrayOf(shape({ text: isString, sourceSentences: arrayOf(isString) })),
-  deadlines: arrayOf(shape({ days: isInteger, referencePoint: isString, sourceSentence: isString })),
+  deadlines: arrayOf(
+    shape({ days: isInteger, relation: oneOf(DEADLINE_RELATIONS), referencePoint: isString, sourceSentence: isString }),
+  ),
   incorporatedTerms: arrayOf(shape({ description: isString, sourceSentence: isString })),
   candidateFlags: arrayOf(
     shape({

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { Flag, Report, Severity } from "../../../lib/analysis/analyze";
+import type { Flag, Report, Severity, Summary } from "../../../lib/analysis/analyze";
 import type { AnalyzeResponse } from "../../../lib/api/analyze-contract";
 import { CLAUSE_TITLES } from "../../../lib/clause-labels";
 import { checkDocumentText } from "../../../lib/document-input";
@@ -142,11 +142,101 @@ const SEVERITY_LABEL: Record<Severity, string> = {
   low: "Low severity",
 };
 
+// The summary, its deadlines and the outside documents it pulls in. Every item
+// quotes the sentence it rests on, checked word for word (ADR 0001).
+function SummaryView({ summary }: { summary: Summary }) {
+  const { points, deadlines, incorporatedTerms, notStated, droppedCount } = summary;
+  return (
+    <div className="summary">
+      <section className="summary-sheet" aria-labelledby="summary-title">
+        <h2 id="summary-title" className="summary-heading">
+          What this agreement says
+        </h2>
+        {points.length === 0 ? (
+          <p className="summary-empty">Redline couldn&rsquo;t match any summary point to your text, so there&rsquo;s no summary.</p>
+        ) : (
+          <ul className="summary-list">
+            {points.map((point, i) => (
+              <li key={i}>
+                <p className="summary-text">{point.text}</p>
+                {point.sourceSentences.map((sentence, j) => (
+                  <blockquote key={j} className="slip-quote summary-quote">
+                    {sentence}
+                  </blockquote>
+                ))}
+              </li>
+            ))}
+          </ul>
+        )}
+        {notStated.map((note) => (
+          <p key={note.kind} className="summary-not-stated">
+            {note.text}
+          </p>
+        ))}
+        {droppedCount > 0 ? (
+          <p className="summary-dropped">
+            {droppedCount === 1
+              ? "1 more summary item was left out because its quoted sentence isn't in your text."
+              : `${droppedCount} more summary items were left out because their quoted sentences aren't in your text.`}
+          </p>
+        ) : null}
+      </section>
+
+      <section className="summary-sheet" aria-labelledby="deadlines-title">
+        <h2 id="deadlines-title" className="summary-heading">
+          Deadlines
+        </h2>
+        {deadlines.length === 0 ? (
+          <p className="summary-empty">The document doesn&rsquo;t give any deadline in days.</p>
+        ) : (
+          <ul className="summary-list">
+            {deadlines.map((deadline, i) => (
+              <li key={i}>
+                <p className="summary-text num">{deadline.display}</p>
+                <blockquote className="slip-quote summary-quote">{deadline.sourceSentence}</blockquote>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      {incorporatedTerms.length > 0 ? (
+        <section className="summary-sheet" aria-labelledby="incorporated-title">
+          <h2 id="incorporated-title" className="summary-heading">
+            Other documents it pulls in
+          </h2>
+          <p className="summary-lead">
+            The agreement makes these documents part of its terms. Redline read only the text you gave it.
+          </p>
+          <ul className="summary-list">
+            {incorporatedTerms.map((term, i) => (
+              <li key={i}>
+                <p className="summary-text">{term.description}</p>
+                <p className="summary-unread">Redline hasn&rsquo;t read this document</p>
+                <blockquote className="slip-quote summary-quote">{term.sourceSentence}</blockquote>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <p className="note-verified summary-verified">
+        <svg className="check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">
+          <path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Quoted word for word from your text
+      </p>
+    </div>
+  );
+}
+
 export function ReportView({ report, saved }: Result) {
   const { flags, droppedFlagCount } = report;
   return (
-    <section className="report" aria-labelledby="report-title">
-      <h2 id="report-title" className="app-subtitle">
+    <section className="report" aria-label="Report">
+      <SummaryView summary={report.summary} />
+
+      <h2 id="report-title" className="app-subtitle report-flags-title">
         {flags.length === 0
           ? "Redline found no clause to flag in this text."
           : `${plural(flags.length, "flag", "flags")}, most costly first. Each quotes the sentence it comes from, checked word for word against your text.`}

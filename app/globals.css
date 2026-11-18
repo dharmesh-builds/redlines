@@ -924,6 +924,96 @@ mark.on {
   margin-top: var(--space-5);
 }
 
+/* The summary leads the report: paper slips on the desk, each item in ink with
+   the sentence it rests on quoted beneath it in the document serif. */
+.summary {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.summary-sheet {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 22px 26px;
+  box-shadow: 0 1px 0 var(--paper-edge), 0 16px 32px -14px var(--lift), 0 2px 6px var(--lift-soft);
+}
+
+.summary-heading {
+  margin: 0 0 12px;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.summary-lead,
+.summary-empty {
+  margin: 0 0 12px;
+  color: var(--ink-soft);
+}
+
+.summary-empty {
+  margin: 0;
+}
+
+.summary-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.summary-list li + li {
+  padding-top: 16px;
+  border-top: 1px solid var(--paper-edge);
+}
+
+.summary-text {
+  margin: 0 0 6px;
+}
+
+.summary-quote {
+  margin: 0 0 6px;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.summary-quote::before {
+  content: "\201C";
+}
+
+.summary-quote::after {
+  content: "\201D";
+}
+
+.summary-unread {
+  margin: 0 0 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.summary-not-stated {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--paper-edge);
+  font-weight: 600;
+}
+
+.summary-dropped {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.summary-verified {
+  margin: 0;
+  padding-top: 0;
+  border-top: 0;
+  color: var(--desk-ink-soft);
+}
+
 .report-dropped {
   margin: var(--space-1) 0 0;
   color: var(--desk-ink-soft);

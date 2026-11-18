@@ -174,22 +174,26 @@
   "deadlines": [
     {
       "days": 60,
-      "referencePoint": "before the renewal date",
+      "relation": "before",
+      "referencePoint": "the renewal date",
       "sentence": "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
     },
     {
       "days": 30,
-      "referencePoint": "after receiving written notice of a material breach",
+      "relation": "after",
+      "referencePoint": "receiving written notice of a material breach",
       "sentence": "Either party may terminate this Agreement if the other party materially breaches it and does not cure the breach within 30 days after receiving written notice describing it."
     },
     {
       "days": 30,
-      "referencePoint": "of the invoice date",
+      "relation": "after",
+      "referencePoint": "the invoice date",
       "sentence": "Customer will pay each invoice within 30 days of the invoice date."
     },
     {
       "days": 15,
-      "referencePoint": "of the invoice date",
+      "relation": "after",
+      "referencePoint": "the invoice date",
       "sentence": "Customer must notify Vendor in writing of any disputed invoice amount within 15 days of the invoice date, after which the invoice is treated as accepted."
     }
   ],

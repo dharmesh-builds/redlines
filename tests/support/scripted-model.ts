@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { ClauseType, FeePeriod, FigureUnit, ModelOutput } from "../../lib/analysis/contract";
+import type { ClauseType, DeadlineRelation, FeePeriod, FigureUnit, ModelOutput } from "../../lib/analysis/contract";
 import type { ModelPort, ModelRequest } from "../../lib/analysis/model-port";
 
 // Scripted model adapter for tests. It answers with a payload built from a
@@ -27,7 +27,7 @@ type Sidecar = {
     refersToOutsideTerms: boolean;
     counterOffer: { rewrittenClause: string; request: string };
   }[];
-  deadlines: { days: number; referencePoint: string; sentence: string }[];
+  deadlines: { days: number; relation: DeadlineRelation; referencePoint: string; sentence: string }[];
   incorporatedTerms: { description: string; sentence: string }[];
   summaryPoints: { text: string; sentences: string[] }[];
 };
@@ -58,6 +58,7 @@ export function payloadFromSidecar(name: FixtureName): ModelOutput {
     summaryPoints: sidecar.summaryPoints.map((p) => ({ text: p.text, sourceSentences: p.sentences })),
     deadlines: sidecar.deadlines.map((d) => ({
       days: d.days,
+      relation: d.relation,
       referencePoint: d.referencePoint,
       sourceSentence: d.sentence,
     })),

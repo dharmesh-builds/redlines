@@ -20,9 +20,18 @@ import {
 import { assessConfidence, indexDocument, type Confidence, type DocumentIndex } from "./confidence";
 import { ANALYSIS_SYSTEM_PROMPT, analysisPrompt } from "./prompt";
 import { createVerifier } from "./verbatim";
+import { buildSummary, verifyIncorporatedTerms, type Summary } from "./summary";
 
 export type { Exposure, Severity, ShownFigure, TwelveMonthFee };
 export type { Confidence, ConfidenceLevel, ConfidenceReason } from "./confidence";
+export type {
+  DeadlineShown,
+  IncorporatedTermShown,
+  NotStatedKind,
+  NotStatedNote,
+  Summary,
+  SummaryPointShown,
+} from "./summary";
 
 // A flag as the reader sees it. Every source sentence, and the sentence behind
 // every figure, has passed the verbatim check and is given as it reads in the
@@ -39,6 +48,9 @@ export type Flag = {
 
 export type Report = {
   modelId: string;
+  // The plain-English summary, deadlines, incorporated-term references and
+  // what the document doesn't state. Every quote in it is verified.
+  summary: Summary;
   // Ranked: High, then Medium (unquantified first), then Low.
   flags: Flag[];
   // How many flags the model proposed, and how many were dropped because a
@@ -74,17 +86,14 @@ export async function analyze(
 
   const verifier = createVerifier(documentText);
   const line = twelveMonthFee(result.value.periodicFee, verifier);
+  const incorporated = verifyIncorporatedTerms(result.value.incorporatedTerms, verifier);
   const context: FlagContext = {
     verifier,
     line,
     doc: indexDocument(documentText),
     // Where each verified incorporated-term reference sits. A flag quoting one
     // of these sentences refers to outside terms, whatever the model said.
-    outsideAt: new Set(
-      result.value.incorporatedTerms
-        .map((t) => verifier.find(t.sourceSentence)?.start)
-        .filter((start): start is number => start !== undefined),
-    ),
+    outsideAt: new Set(incorporated.map((t) => t.start)),
   };
   const verified: Flag[] = [];
 
@@ -97,6 +106,10 @@ export async function analyze(
   const candidateFlagCount = result.value.candidateFlags.length;
   return {
     modelId: response.modelId,
+    summary: buildSummary(result.value, verifier, incorporated, {
+      line,
+      hasAutoRenewalFlag: flags.some((f) => f.clauseType === "auto_renewal"),
+    }),
     flags,
     candidateFlagCount,
     droppedFlagCount: candidateFlagCount - flags.length,
