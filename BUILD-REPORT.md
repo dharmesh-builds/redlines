@@ -101,6 +101,20 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 - **Sign-in by email link, the auth callback, and saving documents and reports (ticket 01).** All of this is written against the real Supabase client, but none of it ran against a real project. The migration wasn't applied.
 - **Known issue the ticket 01 agent found and left alone:** in `app/globals.css`, `:root` sets `--lift: var(--lift)`, which refers to itself, so dark-mode shadows don't render. Fixing it changes how the landing page looks, so it's yours to decide.
 
+## Real-model smoke run (2026-11-18, 16:34 IST)
+**First attempt failed with OpenRouter 402.** The adapter set no `max_tokens`, so OpenRouter set aside the model's full 131,072-token output limit against the key's $5 credit limit and refused the call. **Every real analysis would have failed the same way.** I fixed it by capping output at 16,000 tokens (`MAX_OUTPUT_TOKENS` in `lib/model/openrouter.ts`, with a test assertion).
+
+**Second attempt passed.** Results:
+- **Model:** `z-ai/glm-5.3-flash` (via fireworks), about 23 seconds.
+- **Candidates 11, verified 11, dropped 0.** Every quote matched the contract word for word.
+- **Found all 7 planted clauses.**
+- **Severity right:** the indemnity, unilateral change and auto-renewal came back High; the early-termination fee Medium ("$2,250 … less than $750 × 12 = $9,000"); the arbitration, class-action waiver and governing law Low.
+- **Problems a reviewer should look at.** These are model-quality issues, which the ticket 12 eval measures. I didn't fix them, because changing prompt or product behaviour beyond the tickets needs your approval:
+  1. **The auto-renewal shows "No limit" even though the clause states $9,000.** Its severity (High) is still right, but the exposure line is wrong. The model probably marked `capStated: false` and left out the fee as a figure.
+  2. **The price increase came back High (no limit), not Medium.** The model didn't treat "will not exceed Vendor's standard list price" as a cap. That's arguable either way.
+  3. **Two false alarms at High:** the 15-day invoice-dispute window, and taxes plus suspension. The model said they cost money with no cap. Both match PRD call 6 ("more false alarms than misses"), but ranking them High is too strong.
+  4. **A duplicate:** the indemnity sentence was flagged twice, once as `indemnity` and once as `liability`. There's no step that removes duplicate flags. Removing flags that quote identical sentences would be a small code change, but it needs a decision.
+
 ## Interruptions
 - **The ticket 09 agent was cut off partway** by the 5-hour usage limit (reset 4:30pm IST). You re-ran the build prompt, I checked every ticket's Status line, and I sent the same agent back to finish from where it stopped. Nothing else was lost.
 

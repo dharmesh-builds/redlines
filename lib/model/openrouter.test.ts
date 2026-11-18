@@ -51,6 +51,7 @@ describe("OpenRouter adapter", () => {
     ]);
     expect(body.provider).toEqual({ order: ["fireworks"], allow_fallbacks: false, require_parameters: true });
     expect(body.reasoning).toEqual({ effort: "low" });
+    expect(body.max_tokens).toBe(16_000);
     expect(body.response_format).toEqual({
       type: "json_schema",
       json_schema: { name: "contract_analysis", strict: true, schema: request.schema },
@@ -142,6 +143,7 @@ describe("OpenRouter adapter", () => {
     expect(body.model).toBe(TEST_MODEL);
     expect(body.provider).toEqual({ order: ["fireworks"], allow_fallbacks: false, require_parameters: true });
     expect(body.reasoning).toEqual({ effort: "low" });
+    expect(body.max_tokens).toBe(16_000);
     expect(body.response_format).toEqual({
       type: "json_schema",
       json_schema: { name: "document_answer", strict: true, schema: askOutputSchema },

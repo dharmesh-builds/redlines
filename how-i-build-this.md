@@ -561,3 +561,12 @@ Status: an unvalidated hypothesis.
   - A read-only extracted-text preview before analysis.
   - A deterministic fixture generator (Node built-ins only) for 9 files.
 - **Verified here:** tsc clean; 243/243; build OK; no new deps; no OCR; fixture .txt/.json untouched.
+
+### 42. Real smoke run; fixed a 402 that would have broken every real call
+- **Run 1:** OpenRouter 402. With no `max_tokens`, it reserves the full 131,072 output tokens against the $5 key limit.
+- **Fix:** `max_tokens: 16_000` (`MAX_OUTPUT_TOKENS`), with assertions in both adapter tests.
+- **Run 2:** passed in 23s.
+  - 11 candidates, 11 verified, 0 dropped.
+  - All 7 planted clauses were found.
+  - Defects recorded in BUILD-REPORT for review: the auto-renewal exposure shown as unbounded despite $9,000; price increase High; 2 High false alarms (invoice dispute, taxes); indemnity duplicated as "liability".
+- **Not fixed:** this is prompt/behaviour scope, and the eval harness (ticket 12) measures it.

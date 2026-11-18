@@ -20,6 +20,8 @@ function readConfig() {
   return { apiKey, model };
 }
 
+export const MAX_OUTPUT_TOKENS = 16_000;
+
 export function buildOpenRouterBody(model: string, request: ModelRequest) {
   return {
     model,
@@ -32,6 +34,10 @@ export function buildOpenRouterBody(model: string, request: ModelRequest) {
     // ignore the schema.
     provider: { order: ["fireworks"], allow_fallbacks: false, require_parameters: true },
     reasoning: { effort: "low" },
+    // Without a cap, OpenRouter reserves the model's full output limit
+    // (131,072 tokens) against the key's credit limit and refuses the call
+    // with a 402 on a small key. A full report fits well inside this.
+    max_tokens: MAX_OUTPUT_TOKENS,
     response_format: {
       type: "json_schema",
       json_schema: { name: request.schemaName, strict: true, schema: request.schema },
