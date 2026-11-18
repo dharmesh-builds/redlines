@@ -710,3 +710,15 @@ Status: an unvalidated hypothesis.
 - **Asked:** ignore the older redline app/folder everywhere; use redlines only.
 - **Did:** saved as a standing rule in memory: Vercel `redlines` (redlines-seven.vercel.app, repo `dharmesh-builds/redlines`) is the only app; the old Vercel `redline` and its repo are out of bounds. The folder is already linked to `redlines` (`.vercel/`).
 - **Note:** for Supabase, the database stays `supabase-gray-ferry`. The Supabase project named `redlines` is the unused spare, so it doesn't fall under this rule.
+
+## Checking needs sign-in; text kept through sign-in (2026-11-18)
+- **Asked:** only let signed-in users run analysis. A signed-out user who pastes or uploads gets asked to sign in first, keeps their content, and the analysis runs after sign-in.
+- **Did:**
+  - Server: `analyzeResponse` and `askTextResponse` return 401 for `signed-out` before parsing or any model call (`ANALYZE_ERRORS.signedOut`, `ASK_ERRORS.signedOut`). `/api/ask` now resolves `libraryAccess()`. "Supabase not configured" still runs without an account (local only; nobody can sign in there).
+  - New `lib/pending-check.ts`: keep, take-once and forget the extracted text in `localStorage` (`redline-pending-check`), expiring after 1 h, the sign-in link's life. localStorage rather than sessionStorage because the email link opens a new tab. Never the file.
+  - `/analyze`: a signed-out Check validates the text, keeps it, and shows `SignInForm` (next=/analyze) under the form, with focus moved to its heading. Editing or replacing the text hides the prompt and deletes the kept copy. A signed-in arrival takes the kept text, restores it to the form, and runs the check (saved to the library under the user's red lines).
+  - Copy updated (form note, prompt, sign-in page lede) and run through the humanizer; two prompt lines tightened.
+  - ADR 0008 records the reversal of "analyze is public".
+- **Tests:** test-first. New `tests/routes/signed-in-only.test.tsx` (401s with no model call; signed-out form copy) and `lib/pending-check.test.ts` (once-only, expiry, malformed data, blocked storage, forget). The old "signed out runs with no red lines" test now runs on `not-configured`. 273/273 pass; typecheck clean.
+- **Browser check (Chrome, localhost):** signed-out Check made no network call, kept 296 chars, showed the prompt with focus on its heading, and left the text on screen. Editing removed the prompt. Direct POSTs returned 401 for both routes. Test text cleaned from localStorage.
+- **Not verified:** the return trip after clicking a real email link (needs an inbox). Not pushed, so the live site is unchanged.
