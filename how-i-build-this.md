@@ -650,3 +650,9 @@ Status: an unvalidated hypothesis.
 - **Outputs:** status is "Needs authentication". The old login belonged to the wrong account.
 - **Next (owner):** sign into supabase.com through Vercel (Storage → the Supabase store → Open in Supabase), then `/mcp` → supabase → Authenticate, and pick the Vercel-managed org "Dharmesh". After that I confirm the connection by listing gray-ferry's tables.
 - **Left alone:** the `redlines` project. Pausing or deleting it is the owner's call.
+
+## Supabase MCP sign-in rejected (2026-11-18)
+- **Asked:** check the connection after `/mcp` → Authenticate.
+- **Outputs:** `/mcp` said "Got new credentials, but supabase rejected them on reconnect." `claude mcp get supabase` still says "Needs authentication"; no Supabase tools loaded.
+- **Likely cause (not verified):** the browser approved an org that doesn't contain `lejzoxpsosqfqazwwgfr`, so the project-locked server refused the token. That would be the personal org, or the session that was signed in before going through Vercel.
+- **Decision:** config unchanged. Asked the owner to sign out of supabase.com, re-enter through Vercel → Open in Supabase, then authenticate again and pick the Vercel-managed org.
