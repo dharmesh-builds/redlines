@@ -394,3 +394,15 @@ Status: an unvalidated hypothesis.
   - The key is valid: `/api/v1/key` returns 200. It's a free-tier key with a $5 limit and $0 used.
 - **Gitignore:** no change needed. The existing `.env.*` rule (`.gitignore:24`) already matches the file, and it has never been tracked or committed.
 - **Gotcha recorded:** `vercel env pull .env.local` *overwrites* the file. Pull the Supabase vars into a separate file and merge them, or the OpenRouter lines are lost. The OpenRouter vars also need adding to Vercel's Environment Variables for production. The user has to paste them there.
+
+### 25. First Vercel build triggered by a push
+- **What I asked for:** take control of Chrome and fix the deployment. I approved pushing to trigger the build.
+- **Done:**
+  - No Chrome control was available in this session. A clean clone, `npm ci` and `next build` passed, so the code was not the problem; the cause in entry 24 (connected after every push) stood.
+  - Pushed `c04361d..2412f39`. Vercel built `2412f39`: **Vercel: success**, a Production deployment.
+- **The push was wider than I described when asking.** Another session had added commits in between: `bef0787` (account-rename log), `cfbe893` (Supabase clients + `proxy.ts` + 2 dependencies), `2412f39` (OpenRouter credential log).
+  - Secret scan of the pushed diff was clean: no key strings, no env files tracked, no `NEXT_PUBLIC_` secret.
+- **Not verified:** whether the page renders live.
+  - Both the deployment URL and `redlines-dharmesh9.vercel.app` redirect to Vercel login (Deployment Protection).
+  - `redlines.vercel.app` responds but isn't this page.
+  - `proxy.ts` throws if `NEXT_PUBLIC_SUPABASE_URL`/`ANON_KEY` are missing in Vercel's environment, so check that once you're signed in.
