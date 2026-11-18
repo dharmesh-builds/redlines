@@ -728,3 +728,9 @@ Status: an unvalidated hypothesis.
 - **Did:** read and committed the two leftovers: `AGENTS.md` (Next.js's auto-generated note for coding agents; it's re-created on every `next dev`, so committing keeps the tree clean) and the `.env*` line `vercel link` added to `.gitignore` (no `.env` files are tracked). Secret scan of `origin/main..HEAD`: none. Pushed `b390fc8..a2bd770`, 5 commits.
 - **Deploy:** `redlines-be4zs5ek4-dharmesh9.vercel.app`, Ready in 18 s. Live `/analyze` returns 200, and a signed-out `POST /api/analyze` on the live site returns 401 "Sign in to check an agreement."
 - **Not verified:** the full live round trip (paste, sign in by email, auto-check). Needs the owner's inbox.
+
+## Keep sign-in-only; Chrome already signed in (2026-11-19)
+- **Asked:** revert the sign-in requirement so automated Claude in Chrome tests aren't blocked, or else sign in and check.
+- **Options offered:** keep it with the owner signing in once; keep it with Claude signing in (email entered in Chrome, link read via Gmail); or revert. Owner chose "keep it, Claude signs in".
+- **Found:** no email was needed. On `redlines-seven.vercel.app`, the owner's Chrome was already signed in: the header shows Library / Red lines / Sign out, and `/analyze` says "Signed in as" the owner's address. Claude in Chrome shares those cookies, so automated tests on the live site run signed in. No email sent, inbox not read, nothing reverted.
+- **Caveats for testing:** every test check is saved to the owner's library and runs against their red lines (clean up afterwards). `localhost:3000` is a separate site with its own cookies, so it isn't signed in. Testing the signed-out flow means signing out first.
