@@ -625,3 +625,8 @@ Status: an unvalidated hypothesis.
 - **Did (after the owner said yes):** added `"typecheck": "tsc --noEmit"` to `package.json` scripts. No new dependency: `typescript` was already installed.
 - **Output:** `npm run typecheck` exits 0.
 - Also from this session: `npm install` was already up to date. `npm audit` shows 5 high-severity findings, all from one `picomatch` ReDoS bug reached only through test tooling (`vitest` → `vite`). Not fixed: the suggested `--force` fix would change the `vitest` version.
+
+### 49. Checks passed, then pushed at the owner's request
+- **Checks:** `npm test` 265/265 in 23 files. `npm run build` passed with all 17 routes. Neither the OpenRouter key's value nor any secret key name appears in `.next/static`.
+- **Asked:** "push all". Checked first: 5 commits, touching only `BUILD-REPORT.md`, `how-i-build-this.md` and `package.json`, with no env or secret files.
+- **Pushed:** `f9f6b48..25753f6` to `origin/main`, which triggers a Vercel production deploy. This entry was pushed after it as one more commit.
