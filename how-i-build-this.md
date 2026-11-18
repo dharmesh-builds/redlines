@@ -610,3 +610,12 @@ Status: an unvalidated hypothesis.
   - Auth → URL Configuration: Site URL is `http://localhost:3000`. The redirect list has `localhost:3000/**` and `https://redlines-dharmesh9.vercel.app/**`. That address is wrong: the real one is `redlines-seven.vercel.app`, so sign-in links from the live site would go to localhost or get rejected.
 - **Changed nothing.** Running SQL on production and changing auth settings need the owner's yes.
 - **Fixes waiting for approval:** (1) run both migrations in the SQL editor (never `seed.sql`); (2) set Site URL to `https://redlines-seven.vercel.app` and add `https://redlines-seven.vercel.app/**` to the redirect list.
+
+### 47. Fixed the live Supabase setup ("Fix all")
+- **Asked:** fix both problems from entry 46.
+- **Tables:** pasted both migrations, unchanged, into one query in the SQL editor and ran it. The result was "Success. No rows returned". `seed.sql` was not run.
+  - Check query: `documents`, `reports` and `red_lines` all have RLS on, with 4 policies each.
+  - From the terminal with the public key, all three tables now return `200 []` instead of 404. Signed-out callers see no rows, as RLS should allow.
+- **Auth URLs:** Site URL changed from `http://localhost:3000` to `https://redlines-seven.vercel.app` ("Successfully updated site URL"). Added `https://redlines-seven.vercel.app/**` to the redirect list, which now has 3 entries.
+- **Left in place, asked the owner:** the stale `https://redlines-dharmesh9.vercel.app/**` redirect. Removing it is a delete. It is also worth removing: if someone else ever claims that unused vercel.app name, Supabase would still accept sign-in redirects to it.
+- **Not verified:** a real sign-in by email link end to end. It needs an inbox, so the owner has to do it.
