@@ -22,6 +22,7 @@ import { ANALYSIS_SYSTEM_PROMPT, analysisPrompt } from "./prompt";
 import { createVerifier } from "./verbatim";
 import { buildSummary, verifyIncorporatedTerms, type Summary } from "./summary";
 import { computeVerdict, type Verdict } from "./verdict";
+import { checkCounterOffer, type CounterOfferShown } from "./counter-offer";
 
 export type { Exposure, Severity, ShownFigure, TwelveMonthFee };
 export type { Confidence, ConfidenceLevel, ConfidenceReason } from "./confidence";
@@ -34,6 +35,7 @@ export type {
   SummaryPointShown,
 } from "./summary";
 export type { Verdict } from "./verdict";
+export type { CounterOfferProblem, CounterOfferShown } from "./counter-offer";
 
 // A flag as the reader sees it. Every source sentence, and the sentence behind
 // every figure, has passed the verbatim check and is given as it reads in the
@@ -46,6 +48,10 @@ export type Flag = {
   figures: ShownFigure[];
   sourceSentences: string[];
   explanation: string;
+  // The drafted rewrite and request to the vendor, replacing exactly the
+  // verified source sentences above. When the draft fails the checks in
+  // counter-offer.ts the flag is still shown, with `drafted: false`.
+  counterOffer: CounterOfferShown;
 };
 
 export type Report = {
@@ -70,7 +76,9 @@ export type Report = {
  * sentence behind each figure, appears verbatim in `documentText` (ADR 0001),
  * and each figure's number is written in its sentence. Exposure and severity
  * are then computed from those figures (ADR 0003, ADR 0006), and confidence
- * from checks against the document (ADR 0004, ADR 0006).
+ * from checks against the document (ADR 0004, ADR 0006). Each kept flag's
+ * drafted counter-offer is checked by code and shown only if it passes; a
+ * failed draft never removes the flag (see counter-offer.ts).
  * Throws ModelOutputError if the model's answer is not in the agreed shape,
  * so no report is ever built from it.
  */
@@ -100,13 +108,20 @@ export async function analyze(
     // of these sentences refers to outside terms, whatever the model said.
     outsideAt: new Set(incorporated.map((t) => t.start)),
   };
-  const verified: Flag[] = [];
+  const verified: { flag: Omit<Flag, "counterOffer">; draft: CandidateFlag["counterOffer"] }[] = [];
 
   for (const candidate of result.value.candidateFlags) {
     const flag = verifyFlag(candidate, context);
-    if (flag) verified.push(flag);
+    if (flag) verified.push({ flag, draft: candidate.counterOffer });
   }
-  const flags = rank(verified);
+  // Counter-offers are checked once every displayed flag is known, so a draft
+  // that quotes another flag's clause can be caught.
+  const flags = rank(
+    verified.map(({ flag, draft }, i): Flag => {
+      const others = verified.flatMap((v, j) => (j === i ? [] : v.flag.sourceSentences));
+      return { ...flag, counterOffer: checkCounterOffer(draft, flag.sourceSentences, others) };
+    }),
+  );
 
   const candidateFlagCount = result.value.candidateFlags.length;
   const summary = buildSummary(result.value, verifier, incorporated, {
@@ -130,7 +145,10 @@ type FlagContext = {
   outsideAt: Set<number>;
 };
 
-function verifyFlag(candidate: CandidateFlag, { verifier, line, doc, outsideAt }: FlagContext): Flag | null {
+function verifyFlag(
+  candidate: CandidateFlag,
+  { verifier, line, doc, outsideAt }: FlagContext,
+): Omit<Flag, "counterOffer"> | null {
   if (candidate.sourceSentences.length === 0) return null;
 
   const sourceSentences: string[] = [];

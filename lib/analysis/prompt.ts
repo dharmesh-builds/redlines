@@ -26,7 +26,9 @@ What to return:
   - undefinedTerms: capitalised terms the clause relies on that the document never defines (a term is defined when the document says, for example, "Term" means ..., or (the "Term")). Copy each term exactly as the document writes it. Empty if there are none.
   - refersToOutsideTerms: true if the clause depends on a document outside this one (online terms, a policy, an MSA, a DPA, an SLA).
   - matchedRedLine: the customer's red line this clause matches, copied exactly from the list, else null.
-  - counterOffer: a rewritten clause that is fair to the customer, and a short polite request to the vendor asking for it.
+  - counterOffer: two parts, both about this clause only.
+    - rewrittenClause: replacement wording for the sentences in sourceSentences and nothing else, fair to the customer. It must differ from the original. Do not copy or rewrite any other clause into it.
+    - request: a short, polite request to the vendor, ready to paste into an email, that asks for this one change as a question (for example "Could we change Section 3.2 so that ...?"). Ask only for this change. Do not say or guess whether the vendor is likely to agree.
 - Do not rate severity or confidence. Code does that.`;
 
 export function analysisPrompt(documentText: string, redLines: readonly string[]): string {

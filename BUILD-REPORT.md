@@ -18,6 +18,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 - **05 Verdict line: done.** 123 tests pass.
   - When nothing is High or Medium, the report opens with "Nothing in this document costs you money beyond what you agreed to."
   - It names each outside document as unread, and the Low flags sit in a fold underneath.
+- **06 Counter-offers: done.** 145 tests pass.
+  - Each flag shows the original sentences, the proposed rewrite, and a short email to the vendor. Both the rewrite and the email have a Copy button.
+  - Gap: the copy click isn't tested in a simulated browser, because the testing library needed for that wasn't approved. See QUESTIONS.md #1.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -53,6 +56,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 27. **"The document doesn't say…" notes come from code, from a fixed list.** The model can't add one, because there would be nothing to quote. Today there is one such note: an auto-renewal with no stated regular fee.
 28. **Verdict wording for several outside documents.** With more than one, it reads "It also refers to X and Y. Redline hasn't read them." A "which" after a list could be read as covering only the last item.
 29. **Outside documents are named the way the model describes them.** Only the sentence behind each one is checked. With the test fixture this reads a little stiffly ("refers to Acceptable Use Policy at https://…"). Worth checking with real output.
+30. **A counter-offer that fails its checks drops the counter-offer, not the flag.** The flag shows "Redline couldn't draft a counter-offer for this clause." ADR 0001 drops a flag only when its citation fails, and a verified risk shouldn't vanish because the drafting went wrong.
+31. **"Changes only that clause" is checked mechanically.** A rewrite or request that contains another flag's verified sentence word for word is rejected. A request must contain a real ask: a question, "please", "could/would/can you", and the like.
+32. **The model is told never to guess whether the vendor will agree.** A test checks the prompt for this.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)

@@ -516,3 +516,14 @@ Status: an unvalidated hypothesis.
   - The UI leads with the verdict, with Low flags in a `<details>` fold.
 - **Verified here:** tsc clean; 123/123 tests; build OK; no fixture changes.
 - **Watch:** incorporated-term names render as the model's description; possibly stiff wording with real output.
+
+### 37. Ticket 06 (counter-offers) done
+- **Subagent built:**
+  - `lib/analysis/counter-offer.ts`: deterministic checks.
+    - A counter-offer must have a non-empty rewrite that differs from the original.
+    - The request must contain an ask.
+    - Neither the rewrite nor the request may contain another flag's verified sentence.
+  - A failure drops the counter-offer, not the flag.
+  - The UI shows original → rewrite → email, with copy buttons (clipboard, falling back to selecting the text).
+- **Verified here:** tsc clean; 145/145; build OK; package.json unchanged.
+- **Blocked dependency:** the subagent's attempt to install `happy-dom` hit a permission prompt. I didn't install it either, and logged it in `QUESTIONS.md` #1. Copy is tested via the copy function plus the markup targets, with no real DOM click.

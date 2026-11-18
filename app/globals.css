@@ -1084,6 +1084,73 @@ mark.on {
   font-family: var(--font-doc), Georgia, serif;
 }
 
+/* Counter-offer: original, proposed wording, request, each part copyable. */
+.counter-offer {
+  display: grid;
+  gap: 4px;
+}
+
+.counter-label {
+  margin: 6px 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.counter-label:first-child {
+  margin-top: 0;
+}
+
+.counter-original {
+  display: block;
+  font-family: var(--font-doc), Georgia, serif;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}
+
+.counter-text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.counter-rewrite {
+  font-family: var(--font-doc), Georgia, serif;
+}
+
+.counter-none {
+  margin: 0;
+}
+
+.copy-row {
+  margin: 4px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-button {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid rgba(26, 26, 26, 0.25);
+  border-radius: 2px 6px 6px 2px;
+  padding: 4px 12px;
+  min-height: 32px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  border-color: var(--ink);
+}
+
+.copy-status {
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+}
+
 @media (max-width: 640px) {
   .flag-note .note-facts div {
     grid-template-columns: 1fr;

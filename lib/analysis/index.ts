@@ -2,6 +2,8 @@
 export {
   analyze,
   type Confidence,
+  type CounterOfferProblem,
+  type CounterOfferShown,
   type DeadlineShown,
   type IncorporatedTermShown,
   type NotStatedNote,

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import type { Flag, Report, Severity, Summary } from "../../../lib/analysis/analyze";
+import { useEffect, useRef, useState } from "react";
+import type { CounterOfferShown, Flag, Report, Severity, Summary } from "../../../lib/analysis/analyze";
 import type { AnalyzeResponse } from "../../../lib/api/analyze-contract";
 import { CLAUSE_TITLES } from "../../../lib/clause-labels";
 import { checkDocumentText } from "../../../lib/document-input";
@@ -349,6 +349,12 @@ function FlagItem({ flag, id }: { flag: Flag; id: string }) {
             </div>
           ) : null}
           <div>
+            <dt>Ask for</dt>
+            <dd>
+              <CounterOfferView offer={flag.counterOffer} id={`${id}-offer`} />
+            </dd>
+          </div>
+          <div>
             <dt>Confidence</dt>
             <dd>
               <span className="confidence-level">{flag.confidence.label}</span>
@@ -369,5 +375,88 @@ function FlagItem({ flag, id }: { flag: Flag; id: string }) {
         </p>
       </div>
     </li>
+  );
+}
+
+// The counter-offer (ADR 0006): the verified sentences it replaces, the
+// rewritten clause, and a request to the vendor. Redline doesn't say whether
+// the vendor will agree; the user decides whether to send it.
+function CounterOfferView({ offer, id }: { offer: CounterOfferShown; id: string }) {
+  if (!offer.drafted) {
+    return <p className="reason counter-none">Redline couldn&rsquo;t draft a counter-offer for this clause.</p>;
+  }
+  return (
+    <div className="counter-offer">
+      <p className="counter-label">In place of</p>
+      {offer.replaces.map((sentence, i) => (
+        <q key={i} className="counter-original">
+          {sentence}
+        </q>
+      ))}
+      <p className="counter-label">Proposed wording</p>
+      <p id={`${id}-rewrite`} className="counter-text counter-rewrite">
+        {offer.rewrittenClause}
+      </p>
+      <CopyButton targetId={`${id}-rewrite`} label="Copy the proposed wording" />
+      <p className="counter-label">Email to the vendor</p>
+      <p id={`${id}-request`} className="counter-text counter-request">
+        {offer.request}
+      </p>
+      <CopyButton targetId={`${id}-request`} label="Copy the email to the vendor" />
+    </div>
+  );
+}
+
+export type CopyResult = "copied" | "selected";
+
+/**
+ * Copies the text of the element `targetId`, so what is copied is exactly what
+ * the reader sees. If the browser refuses clipboard access, the text is
+ * selected instead so the reader can copy it by hand.
+ */
+export async function copyShownText(targetId: string): Promise<CopyResult> {
+  const target = document.getElementById(targetId);
+  try {
+    if (!target?.textContent || !navigator.clipboard) throw new Error("Clipboard unavailable");
+    await navigator.clipboard.writeText(target.textContent);
+    return "copied";
+  } catch {
+    const selection = window.getSelection();
+    if (target && selection) selection.selectAllChildren(target);
+    return "selected";
+  }
+}
+
+// One-click copy for one part of a counter-offer. The button names its target
+// with aria-controls; the visible text changes to "Copied" and a status line
+// announces it.
+function CopyButton({ targetId, label }: { targetId: string; label: string }) {
+  const [state, setState] = useState<"idle" | CopyResult>("idle");
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
+
+  async function copy() {
+    if (timer.current) clearTimeout(timer.current);
+    const result = await copyShownText(targetId);
+    setState(result);
+    if (result === "copied") timer.current = setTimeout(() => setState("idle"), 2000);
+  }
+
+  return (
+    <p className="copy-row">
+      <button type="button" className="copy-button" aria-label={label} aria-controls={targetId} onClick={copy}>
+        {state === "copied" ? "Copied" : "Copy"}
+      </button>
+      <span className="copy-status" role="status" aria-live="polite">
+        {state === "copied" ? <span className="visually-hidden">Copied</span> : null}
+        {state === "selected" ? "Couldn\u2019t copy. The text is selected, so press Ctrl+C (or \u2318C on a Mac)." : null}
+      </span>
+    </p>
   );
 }

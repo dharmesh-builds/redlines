@@ -4,10 +4,10 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Model output carries a counter-offer (rewritten clause + request) per candidate flag
-- [ ] Each counter-offer quotes the clause it replaces and changes only that clause
-- [ ] The request asks only for that change
-- [ ] One-click copy for each part
-- [ ] Q6: tests assert every displayed flag has a counter-offer that quotes its clause and contains a request
+- [x] Model output carries a counter-offer (rewritten clause + request) per candidate flag
+- [x] Each counter-offer quotes the clause it replaces and changes only that clause
+- [x] The request asks only for that change
+- [x] One-click copy for each part
+- [x] Q6: tests assert every displayed flag has a counter-offer that quotes its clause and contains a request
