@@ -656,3 +656,12 @@ Status: an unvalidated hypothesis.
 - **Outputs:** `/mcp` said "Got new credentials, but supabase rejected them on reconnect." `claude mcp get supabase` still says "Needs authentication"; no Supabase tools loaded.
 - **Likely cause (not verified):** the browser approved an org that doesn't contain `lejzoxpsosqfqazwwgfr`, so the project-locked server refused the token. That would be the personal org, or the session that was signed in before going through Vercel.
 - **Decision:** config unchanged. Asked the owner to sign out of supabase.com, re-enter through Vercel → Open in Supabase, then authenticate again and pick the Vercel-managed org.
+
+## Supabase MCP connected to gray-ferry (2026-11-18)
+- **Asked:** check the connection after a second `/mcp` sign-in ("Signed in and connected to supabase").
+- **Outputs:**
+  - `get_project_url` → `https://lejzoxpsosqfqazwwgfr.supabase.co`, the same project as `.env.local`. Connection confirmed.
+  - `list_tables` → `documents`, `reports`, `red_lines`, RLS on, 0 rows each.
+  - Security advisor: one WARN, leaked password protection is off ([docs](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)). No missing-RLS findings.
+- **Gotcha:** once the server is locked to one project, its tools reject `project_id` (ZodError "Unrecognized key"), but Claude Code's cached schemas still require it until restart. Leaving `project_id` out works.
+- **Decision:** nothing changed. Turning on leaked password protection is a dashboard toggle (Auth → Passwords) and was offered to the owner. `redlines` is still unused.
