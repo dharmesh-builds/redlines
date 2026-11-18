@@ -643,3 +643,10 @@ Status: an unvalidated hypothesis.
   - App project (`.env.local`, `lejzoxpsosqfqazwwgfr`, `supabase-gray-ferry`, Vercel-managed): auth health 200; `documents`, `reports`, `red_lines` all 200. The app's connection works.
   - Supabase MCP sees a different account. It lists `redlines` (`xbzrockgubxfaxpyyhnx`, created 2026-11-18, same three tables, RLS on, 0 rows) and an inactive `dharmeshmanglani`. It cannot see the app's project.
 - **Decision:** changed nothing. Which project should be the real one is the owner's call: point the MCP at the Vercel-managed org, or move the app to `redlines`.
+
+## Point the Supabase MCP at gray-ferry (2026-11-18)
+- **Asked:** keep `supabase-gray-ferry`, connect the MCP to it.
+- **Did:** removed the local `supabase` MCP server and re-added it as `https://mcp.supabase.com/mcp?project_ref=lejzoxpsosqfqazwwgfr`. Locked to one project so it can't touch `redlines` or anything else. Write access kept, because schema fixes have gone through it before.
+- **Outputs:** status is "Needs authentication". The old login belonged to the wrong account.
+- **Next (owner):** sign into supabase.com through Vercel (Storage → the Supabase store → Open in Supabase), then `/mcp` → supabase → Authenticate, and pick the Vercel-managed org "Dharmesh". After that I confirm the connection by listing gray-ferry's tables.
+- **Left alone:** the `redlines` project. Pausing or deleting it is the owner's call.
