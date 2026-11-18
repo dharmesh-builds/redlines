@@ -431,3 +431,18 @@ Status: an unvalidated hypothesis.
 - **Not blocking:** ticket 13 (labelled contracts, needed only to measure quality later); local commits not pushed.
 - **Decision (via question tool):** email link, no passwords. → ADR 0007. Risk recorded: Supabase's default mailer is rate-limited, so custom SMTP is needed before real users, and that needs approval.
 - **Note:** this log has two entries numbered 25 (mine, "First Vercel build triggered by a push", and a parallel session's). Left as-is because the log is append-only.
+
+### 30. Pre-AFK config check (Chrome)
+- **What I asked for:** check whether any config is still pending before a long unattended build. Don't build yet.
+- **Checked in Chrome:**
+  - Vercel `redlines` env vars: all Supabase vars present (Production + Preview). OpenRouter key and model are present but **Production only**, so Preview deploys would lack them. Not blocking.
+  - Supabase project `supabase-gray-ferry` (org "Dharmesh", Vercel-managed): Email provider enabled, Site URL `http://localhost:3000`, **no redirect URLs**.
+  - Every Vercel var is marked Sensitive, so values can't be copied back out. That includes the database password.
+- **Decisions (via question tool):** all three recommended options.
+  1. Copied the two public values (project URL + publishable key) into `.env.local` as `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`. A test call to the auth settings endpoint returned 200. The file stays untracked. The secret and service-role keys were not copied.
+  2. Added redirect URLs `http://localhost:3000/**` and `https://redlines-dharmesh9.vercel.app/**`. Verified: "Total URLs: 2".
+  3. Approved the Supabase CLI as a dev dependency (`supabase` 3.2.0, via npx). This clears ticket 11's approval gate.
+- **Still waiting on the user (can't be done by me):**
+  - The database password can't be read from Vercel (Sensitive). To get it, reset it in Supabase → Project Settings → Database, then type it into `.env.local` as `SUPABASE_DB_PASSWORD`. The Vercel `POSTGRES_*` vars go stale after a reset; the app doesn't use them.
+  - `npx supabase login` is a browser sign-in that only the user can complete. After that I run `supabase link`.
+- **If not done before AFK:** the build writes migrations to `supabase/migrations/` and logs to `QUESTIONS.md` that they're unapplied. Anything that saves data stays untested until they're applied.
