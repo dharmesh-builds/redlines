@@ -421,3 +421,13 @@ Status: an unvalidated hypothesis.
   - I moved it out of `proxy.ts` so it can be tested. There are 3 tests and all pass.
 - **Build:** passes.
 - **Waiting on the user:** reconnect the Chrome extension. Then I'll copy the Supabase vars from the Vercel dashboard into `.env.local` and confirm the OpenRouter vars are in Vercel. The user says Supabase is linked and the vars are added.
+
+### 29. What's left before building; sign-in method decided
+- **What I asked for:** anything remaining before we start building.
+- **Must-haves found:**
+  1. Supabase URL + anon key are missing from local `.env.local` (it only has the OpenRouter lines). Copy them by hand, because `vercel env pull` would overwrite the OpenRouter lines.
+  2. The OpenRouter key and model aren't confirmed in Vercel's production env vars.
+  3. Sign-in method was undecided.
+- **Not blocking:** ticket 13 (labelled contracts, needed only to measure quality later); local commits not pushed.
+- **Decision (via question tool):** email link, no passwords. → ADR 0007. Risk recorded: Supabase's default mailer is rate-limited, so custom SMTP is needed before real users, and that needs approval.
+- **Note:** this log has two entries numbered 25 (mine, "First Vercel build triggered by a push", and a parallel session's). Left as-is because the log is append-only.
