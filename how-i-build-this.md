@@ -591,3 +591,4 @@ Status: an unvalidated hypothesis.
 - **Key finding:** a verified quote can carry a wrong deadline direction ("after" vs "before"). The verbatim check can't catch it; only the eval does.
 - **BUILD-REPORT.md rewritten in full:** 11 done, 11 blocked, 13 human; 32 decisions; unverified items; first commands.
 - **Push blocked:** the final `git push` was refused by Claude Code's permission check. All commits are local; the owner pushes by hand.
+- **Pushed by the owner by hand:** `048150b..f9f6b48` to `origin/main`, which triggers a Vercel production deploy.

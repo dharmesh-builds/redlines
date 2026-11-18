@@ -67,7 +67,7 @@ These are about the quality of the model's reading. Changing prompts or product 
 3. **Before relying on the Fireworks pin,** I checked that Fireworks serves `OPENROUTER_MODEL` and supports structured output and reasoning effort. It does.
 4. **No new dependencies.** Plain `fetch` calls OpenRouter, a hand-written checker validates what the model returns, and the smoke, eval and isolation scripts run through Vitest with their own configs. The ticket 06 agent asked to install `happy-dom` and was blocked by a permission prompt. I logged it in QUESTIONS.md and didn't install it myself.
 5. **Analysis doesn't need an account.** Anyone can paste or upload and get an analysis, but nothing is saved. Signed in, the document and its report are saved. The question box works both ways. When signed in, it reads only the saved text.
-6. **Push: NOT done.** CLAUDE.md says never push, but your prompt asked for one push at the end. I tried, after the build and tests passed and a secret scan came back clean (only the tests' placeholder key `sk-or-test-key-not-real`). Claude Code's permission check blocked it, so all 20 commits are local only. Run `git push origin main` yourself. Pushing to `main` starts a Vercel production deploy.
+6. **Push: NOT done.** CLAUDE.md says never push, but your prompt asked for one push at the end. I tried, after the build and tests passed and a secret scan came back clean (only the tests' placeholder key `sk-or-test-key-not-real`). Claude Code's permission check blocked it, You pushed by hand on 2026-11-18 (`048150b..f9f6b48`), which also started a Vercel production deploy.
 7. **No "Learn by Doing" handoffs.** You were away, so I wrote everything myself.
 8. **Ticket statuses:** `done`, `blocked` (with the reason on the ticket), or left as `ready-for-human` for ticket 13.
 9. **When a usage limit cut off the ticket 09 agent,** you re-ran the prompt. I checked every ticket's status and sent the same agent back to finish from where it stopped.
@@ -132,7 +132,6 @@ These are about the quality of the model's reading. Changing prompts or product 
 ## First commands when you sit down
 ```bash
 cd ~/AI/builds/redline
-git push origin main   # the push was blocked during the run; this also starts a Vercel deploy
 npm install            # picks up the Supabase CLI dev dependency
 npm test && npm run build
 npm run dev            # open http://localhost:3000/analyze, paste tests/fixtures/adhesion-contract.txt
