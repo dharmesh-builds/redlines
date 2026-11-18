@@ -366,3 +366,19 @@ Status: an unvalidated hypothesis.
 - **Left for the user:**
   - `gh auth status` still shows the old login name. The token is tied to the account ID, so it keeps working. Running `gh auth refresh` would update the name it displays.
   - The old Vercel project `redline` points at a different repo (`.../redline`). It wasn't touched.
+
+### 26. Connecting Supabase (part 1: scaffold and integration started)
+- **What I asked for:** connect Supabase if it isn't already.
+- **Found:** Supabase wasn't set up at all: no `.env.local`, no packages, no CLI. The user was signed out of supabase.com.
+- **Decisions (user, via question tool):**
+  - **Route:** the Vercel Marketplace integration. Keys sync into the Vercel project automatically and never pass through chat or form fields.
+  - **Account:** link the user's existing Supabase account, not a new account created through Vercel.
+  - **Dependencies:** approved `@supabase/supabase-js` (^2.119.0) and `@supabase/ssr` (^0.12.7).
+- **Integration form:** filled in for team `dharmesh9`. Access is limited to **Specific Projects → `redlines` only**, so the old `redline` project stays out. Connect Account, the Supabase sign-in and the OAuth approval are left for the user.
+- **Code:**
+  - `lib/supabase/env.ts` reads the URL and anon key and throws a clear error if either is missing. The service-role key is deliberately left out.
+  - `lib/supabase/client.ts` is the browser client.
+  - `lib/supabase/server.ts` is the server client. It's `server-only` and uses the anon key plus the session cookie, so RLS still applies on the server.
+  - `proxy.ts` uses the Next 16 name for middleware. It refreshes the session cookie and uses `getUser()`, which revalidates the token, not `getSession()`. When the env vars are missing it passes requests through, so the landing page still works.
+- **Open:** the user is writing `isProtectedPath` (TODO(human)). After the integration finishes: `vercel env pull .env.local`, then check that no service-role key has a `NEXT_PUBLIC_` prefix.
+- **Build:** passes. The proxy shows up as `ƒ Proxy (Middleware)`.
