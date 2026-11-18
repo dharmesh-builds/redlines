@@ -459,3 +459,20 @@ Status: an unvalidated hypothesis.
   - Fixtures `tests/fixtures/{adhesion,clean}-contract.{txt,json}`. The adhesion contract has 7 planted clauses (3 High, 2 Medium, 2 Low), a $750/month fee, 4 deadlines and 2 incorporated terms. The clean one has none.
 - **Verified here:** all 34 sidecar sentences occur verbatim exactly once in their .txt.
 - **Decision:** the price-increase fixture states a cap but no figure, so it's unquantified → Medium. That squares the prompt's "Medium" with ADR 0003's "uncapped = High".
+
+### 32. Ticket 01 (walking skeleton) done
+- **Subagent built:**
+  - The analysis module (`lib/analysis/`): the model port, the full model-output contract with a hand validator, and the verbatim check.
+  - The OpenRouter adapter (fireworks pin, low reasoning, json_schema).
+  - The migration with owner-only RLS.
+  - Email-link sign-in, the callback and sign-out.
+  - The public `/analyze` paste/.txt page and `POST /api/analyze`.
+  - The `npm run smoke` script (Vitest smoke config, excluded from `npm test`).
+- **Verified here:**
+  - tsc clean; 42/42 tests in 5 files; build passes.
+  - No TODO, "not implemented", service-role key or hardcoded model ID in the new code.
+  - Smoke exits 1 with a clear message when the key is unset.
+  - RLS is enabled on both tables, with 8 owner policies.
+- The agent reports that with the verbatim check disabled, 5 tests fail, so the tests bite.
+- **Decisions:** 200-char minimum paste; landing CTA → `/analyze`; the proxy redirects `/app` to sign-in when Supabase is absent.
+- **Not verified:** real Supabase sign-in and storage (none provisioned by design for this run).

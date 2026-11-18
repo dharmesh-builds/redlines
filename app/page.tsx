@@ -1,7 +1,7 @@
 import { ContractDemo } from "./contract-demo";
 import { ThemeToggle } from "./theme-toggle";
 
-const TRY_HREF = "/app";
+const TRY_HREF = "/analyze";
 const FORMATS = "PDF with selectable text, Word (.docx), plain text, or paste it in.";
 
 export default function Home() {

@@ -10,8 +10,13 @@ import { isProtectedPath } from "./lib/auth/protected-paths";
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  // Not configured yet (e.g. before `vercel env pull`): let the public landing page keep working.
-  if (!url || !anonKey) return NextResponse.next({ request });
+  // Not configured yet (e.g. before `vercel env pull`): public pages keep working,
+  // and account pages go to sign-in, which says sign-in isn't set up.
+  if (!url || !anonKey) {
+    return isProtectedPath(request.nextUrl.pathname)
+      ? redirectToSignIn(request)
+      : NextResponse.next({ request });
+  }
 
   let response = NextResponse.next({ request });
 
@@ -35,14 +40,17 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && isProtectedPath(request.nextUrl.pathname)) {
-    const signIn = request.nextUrl.clone();
-    signIn.pathname = "/sign-in";
-    signIn.searchParams.set("next", request.nextUrl.pathname);
-    return NextResponse.redirect(signIn);
-  }
+  if (!user && isProtectedPath(request.nextUrl.pathname)) return redirectToSignIn(request);
 
   return response;
+}
+
+function redirectToSignIn(request: NextRequest) {
+  const signIn = request.nextUrl.clone();
+  signIn.pathname = "/sign-in";
+  signIn.search = "";
+  signIn.searchParams.set("next", request.nextUrl.pathname);
+  return NextResponse.redirect(signIn);
 }
 
 export const config = {

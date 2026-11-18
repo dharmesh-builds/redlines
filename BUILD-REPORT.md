@@ -3,7 +3,11 @@
 Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it stops partway through, it still shows where things stood.
 
 ## Ticket status
-(updated as each ticket finishes)
+- **01 Walking skeleton: done.** 42 tests pass, and the typecheck and build are clean.
+  - Public `/analyze` lets anyone paste text or pick a .txt file, without signing in. When you're signed in, the document and report are saved.
+  - Other pages and routes: `/sign-in` (email link), `/auth/callback`, `/auth/sign-out`, and the `POST /api/analyze` route.
+  - The migration is `supabase/migrations/20261118000100_documents_reports.sql`.
+  - Sign-in and the database rules are built but couldn't be tried out: no Supabase was available.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -20,10 +24,15 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 10. **No "Learn by Doing" handoffs.** The session's learning mode normally hands small pieces of code to you. You're away, so I wrote everything.
 12. **The price-increase fixture is Medium, not High.** ADR 0003 calls an uncapped increase High, and the prompt asked for one Medium (unquantified) clause. So the fixture's renewal increase states a cap with no figure ("not exceed Vendor's standard list price"). That makes it unquantified, and therefore Medium.
 13. **Auto-renewal fixture sits on the line.** Its renewal fee is exactly 12 months of fees ($9,000 against $750/month), which tests the "at least 12 months" edge.
+14. **Shortest paste accepted: 200 characters (about 2–3 sentences); longest: 200,000.** Chosen by the ticket 01 agent.
+15. **The landing page's "Try it" link now goes to `/analyze`.** `/app` needs an account, and pasting must not.
+16. **Without Supabase, the proxy now sends `/app/*` to `/sign-in`.** Before, those pages loaded with no protection at all.
+17. **The smoke script runs through Vitest with its own config** (`vitest.smoke.config.mts`), so it needed no new dependency, and `npm test` doesn't pick it up.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)
-(filled in as the build goes)
+- **Sign-in by email link, the auth callback, and saving documents and reports (ticket 01).** All of this is written against the real Supabase client, but none of it ran against a real project. The migration wasn't applied.
+- **Known issue the ticket 01 agent found and left alone:** in `app/globals.css`, `:root` sets `--lift: var(--lift)`, which refers to itself, so dark-mode shadows don't render. Fixing it changes how the landing page looks, so it's yours to decide.
 
 ## First commands when you sit down
 (filled in at the end)
