@@ -688,3 +688,11 @@ Status: an unvalidated hypothesis.
 - **Asked:** start the app and give the sign-in page address.
 - **Did:** `npm run dev` in the background. Next.js 16.4.6 was ready in 205 ms using `.env.local`; `GET /sign-in` returned 200. Sign-in page: `http://localhost:3000/sign-in` (`app/(app)/sign-in/page.tsx`).
 - **Side effect:** Next.js wrote a new `AGENTS.md` at the repo root ("Generated AGENTS.md for AI agents"; turn off with `agentRules: false` in `next.config`). Left untracked; keep or drop is the owner's call.
+
+## Proved RLS isolates readers on `documents` (2026-11-18)
+- **Asked:** prove via `execute_sql` that RLS stops one reader seeing another's data. Change nothing; each check in a rolled-back transaction; don't count as postgres.
+- **Step 1 finding:** `auth.users` has one user, `99e9f04d-…bad0`, created 12:47 UTC, `last_sign_in_at` null, 0 documents. The sign-in link was never completed and nothing was saved. The library table is `documents` (`lib/library/supabase-repository.ts`).
+- **Adaptation:** with no real row to test against, each transaction first inserts a temporary document for that user as postgres, then switches role, counts, and rolls back.
+- **Results:** acting as the owner (`authenticated`, sub = owner): 1. Another reader (`authenticated`, sub = new random uuid): 0. Visitor (`anon`, no claims): 0, not refused (anon has table grants but no policy). Afterwards `documents` total = 0, no leftover test rows.
+- **Why:** all four `documents_*_own` policies are `to authenticated` with `user_id = auth.uid()`. anon matches no policy, so RLS's default deny returns nothing.
+- **Not covered:** `reports` and `red_lines` (same policy shape, not tested), and a real end-to-end save, which needs a completed sign-in.
