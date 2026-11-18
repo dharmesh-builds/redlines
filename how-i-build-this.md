@@ -683,3 +683,8 @@ Status: an unvalidated hypothesis.
 - **Asked:** run `npx vercel@latest login`; the owner ran it with `!` (device-code sign-in).
 - **Outputs:** CLI 66.1.0, logged in as the owner's account, team `dharmesh9`. `project ls` shows `redlines` → `https://redlines-seven.vercel.app` (live, updated today) and an older `redline` → `redline-lac-one.vercel.app` (last updated 2026-09-14). This folder isn't linked yet (no `.vercel/`). The CLI recommended turning on 2FA for the account.
 - **Decision:** nothing linked or changed. Waiting on what the owner wants the CLI for.
+
+## Started the app locally (2026-11-18)
+- **Asked:** start the app and give the sign-in page address.
+- **Did:** `npm run dev` in the background. Next.js 16.4.6 was ready in 205 ms using `.env.local`; `GET /sign-in` returned 200. Sign-in page: `http://localhost:3000/sign-in` (`app/(app)/sign-in/page.tsx`).
+- **Side effect:** Next.js wrote a new `AGENTS.md` at the repo root ("Generated AGENTS.md for AI agents"; turn off with `agentRules: false` in `next.config`). Left untracked; keep or drop is the owner's call.
