@@ -41,6 +41,10 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
   - Before the check runs, you see the text exactly as it came out of the file.
   - Scanned, password-protected, damaged and wrong-type files are turned away with the reason. There is no OCR.
   - The test files are made by `tests/fixtures/files/generate.mjs`, using only what ships with Node.
+- **11 Per-user isolation tests: BLOCKED.** The tests are written, but they need a real Supabase to run against, and there isn't one here. This machine has no Docker for a local Supabase, and you asked for no live project during this run.
+  - `npm run test:isolation` creates two users and checks that user B can't read, change, delete or forge user A's documents, reports or red lines. It also checks that the "users see only their own rows" rule is switched on for all three tables. If its connection settings are missing, it stops with a clear message instead of passing.
+  - What does run in `npm test`: a check of the migration files that fails if any table is missing that rule, or if a policy stops checking the signed-in user. I confirmed it fails when I delete one of those lines.
+  - None of ticket 11's three checkboxes is ticked. All three need the real run.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -95,9 +99,13 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 46. **"Password-protected" means a PDF you can't open without a password.** A PDF that only blocks copying or printing is read normally.
 47. **The file's contents decide its type, not its name.** A .pdf or .docx that doesn't match its format is reported as damaged.
 48. **The older ("legacy") build of the PDF reader is used everywhere.** The modern build needs a feature that Node 24 and older Safari lack.
+49. **Checking that the rule is switched on, without a new dependency.** A test-only database function in `supabase/seed.sql` reports whether each table has the rule on, so no Postgres client is needed. A local Supabase loads that file when it starts. `db push` never applies it, and neither do your hand-run migrations.
+50. **The isolation tests read their own settings:** `SUPABASE_TEST_URL`, `SUPABASE_TEST_ANON_KEY` and `SUPABASE_TEST_SERVICE_ROLE_KEY`. They refuse to run against the app's own live project.
+51. **I ran `npx supabase init`, which created `supabase/config.toml`.** It points sign-in at localhost:3000 and its `/auth/callback`, and turns off email confirmation, but only for the local test stack.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)
+- **Ticket 11's isolation suite has never run.** It needs `npx supabase start` (Docker) or a separate test project. See `supabase/README.md`.
 - **Sign-in by email link, the auth callback, and saving documents and reports (ticket 01).** All of this is written against the real Supabase client, but none of it ran against a real project. The migration wasn't applied.
 - **Known issue the ticket 01 agent found and left alone:** in `app/globals.css`, `:root` sets `--lift: var(--lift)`, which refers to itself, so dark-mode shadows don't render. Fixing it changes how the landing page looks, so it's yours to decide.
 

@@ -570,3 +570,12 @@ Status: an unvalidated hypothesis.
   - All 7 planted clauses were found.
   - Defects recorded in BUILD-REPORT for review: the auto-renewal exposure shown as unbounded despite $9,000; price increase High; 2 High false alarms (invoice dispute, taxes); indemnity duplicated as "liability".
 - **Not fixed:** this is prompt/behaviour scope, and the eval harness (ticket 12) measures it.
+
+### 43. Ticket 11 (per-user isolation) written but blocked
+- **Subagent built:**
+  - The `npm run test:isolation` real-instance suite (two users; B can't select/update/delete/insert-as-A on the 3 tables; RLS flags checked via a test-only SECURITY DEFINER function in `supabase/seed.sql`).
+  - A static RLS migration check inside `npm test`.
+  - `supabase/config.toml` (from `supabase init`) and `supabase/README.md`.
+- **Verified here:** tsc clean; 247/247; the static test passes (4); `test:isolation` exits 1 with no env set.
+- **Blocked:** no Docker and no test project, so the real suite has never executed. Marked blocked rather than done; criteria left unticked.
+- I committed only ticket 11's paths; the ticket 12 agent is still working.

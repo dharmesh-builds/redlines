@@ -4,7 +4,7 @@
 
 **Blocked by:** 07, 10. Needs approval first: Supabase CLI / local stack (log in `QUESTIONS.md`).
 
-**Status:** ready-for-agent
+**Status:** blocked: the suite is written (`npm run test:isolation`) but has never run, because there is no Supabase instance (no Docker, no test project). See BUILD-REPORT.md.
 
 - [ ] Tests run against a real Supabase instance with row-level security enabled, not mocks
 - [ ] B can't select, update or delete A's documents, reports or red lines
