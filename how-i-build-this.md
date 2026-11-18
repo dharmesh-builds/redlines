@@ -619,3 +619,9 @@ Status: an unvalidated hypothesis.
 - **Auth URLs:** Site URL changed from `http://localhost:3000` to `https://redlines-seven.vercel.app` ("Successfully updated site URL"). Added `https://redlines-seven.vercel.app/**` to the redirect list, which now has 3 entries.
 - **Left in place, asked the owner:** the stale `https://redlines-dharmesh9.vercel.app/**` redirect. Removing it is a delete. It is also worth removing: if someone else ever claims that unused vercel.app name, Supabase would still accept sign-in redirects to it.
 - **Not verified:** a real sign-in by email link end to end. It needs an inbox, so the owner has to do it.
+
+### 48. Added `npm run typecheck`
+- **Asked:** run `npm run typecheck`. It failed with "Missing script". The project had no such script; the type check had always been run as `npx tsc --noEmit`. That passed, with exit code 0.
+- **Did (after the owner said yes):** added `"typecheck": "tsc --noEmit"` to `package.json` scripts. No new dependency: `typescript` was already installed.
+- **Output:** `npm run typecheck` exits 0.
+- Also from this session: `npm install` was already up to date. `npm audit` shows 5 high-severity findings, all from one `picomatch` ReDoS bug reached only through test tooling (`vitest` → `vite`). Not fixed: the suggested `--force` fix would change the `vitest` version.
