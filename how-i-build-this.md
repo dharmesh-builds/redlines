@@ -705,3 +705,8 @@ Status: an unvalidated hypothesis.
 - **Push:** owner's request in chat. Secret scan of `origin/main..HEAD` found nothing (only the text `sb_publishable_…`). Pushed `ff3ce47..b390fc8` (README commit plus 10 log commits).
 - **Deploy:** `redlines-ifvgi8ll6-dharmesh9.vercel.app`, created 20:42 IST right after the push, Ready in 15 s, aliased to `https://redlines-seven.vercel.app`. Live `/` and `/sign-in` return 200.
 - **Not verified:** a real sign-in or analysis on the live site.
+
+## Standing rule: use redlines, ignore the old redline (2026-11-18)
+- **Asked:** ignore the older redline app/folder everywhere; use redlines only.
+- **Did:** saved as a standing rule in memory: Vercel `redlines` (redlines-seven.vercel.app, repo `dharmesh-builds/redlines`) is the only app; the old Vercel `redline` and its repo are out of bounds. The folder is already linked to `redlines` (`.vercel/`).
+- **Note:** for Supabase, the database stays `supabase-gray-ferry`. The Supabase project named `redlines` is the unused spare, so it doesn't fall under this rule.
