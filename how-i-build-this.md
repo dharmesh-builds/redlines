@@ -340,3 +340,16 @@ Status: an unvalidated hypothesis.
   - all shadows now use `--lift`/`--lift-soft`, so they change with the theme.
 - **DESIGN.md:** added a "Light mode" subsection under Colors.
 - **Detector:** 8 advisories, all from before this change: font sizes not on the DESIGN.md type scale (0.875, 1.125, 1.3125, 2.125rem and the close heading). Not fixed; that is a separate decision about the type scale.
+
+### 24. Vercel deployment diagnosis
+- **What I asked for:** fix the Vercel deployment.
+- **Checked:**
+  - Local `npm run build` passes on Next 16.4.6 (static `/` and `/_not-found`).
+  - `main` matches `origin/main` at c04361d.
+  - GitHub has no Vercel deployments or commit statuses for the repo.
+- **Dashboard (via Chrome):**
+  - Project `redlines` is linked to `dharmeshmanglaniiitr-ship-it/redlines`, connected about 20 minutes before this check.
+  - Framework preset is Next.js with default commands. It has zero deployments and shows "No Production Deployment".
+  - A separate old project, `redline`, points at a different repo (`.../redline`, Sep 14). It's unrelated.
+- **Cause:** Vercel deploys only on pushes made after the repo is connected. Every commit was pushed before the connection, so nothing ever triggered a build. The config and code are fine.
+- **Fix:** Deployments → ⋯ → Create Deployment → `main` → Deploy to Production. I set it up, but the permission guard blocked the final click, so the user has to click it. The other route is the next push to `main`, which also needs the user's approval.
