@@ -353,3 +353,16 @@ Status: an unvalidated hypothesis.
   - A separate old project, `redline`, points at a different repo (`.../redline`, Sep 14). It's unrelated.
 - **Cause:** Vercel deploys only on pushes made after the repo is connected. Every commit was pushed before the connection, so nothing ever triggered a build. The config and code are fine.
 - **Fix:** Deployments → ⋯ → Create Deployment → `main` → Deploy to Production. I set it up, but the permission guard blocked the final click, so the user has to click it. The other route is the next push to `main`, which also needs the user's approval.
+
+### 25. GitHub account renamed to dharmesh-builds
+- **What I asked for:** I renamed my GitHub account to https://github.com/dharmesh-builds; update it everywhere.
+- **It was a rename, not a new account:** the old `dharmeshmanglaniiitr-ship-it/redlines` path now redirects to `dharmesh-builds/redlines`, with the same repo and history.
+- **Updated:** the local `origin` now points to `https://github.com/dharmesh-builds/redlines.git`. Fetch works.
+- **Already correct:** Vercel's `redlines` project shows `dharmesh-builds/redlines`, because Vercel tracks the repo by ID.
+- **Deploy (follow-up to entry 24):** the user clicked Deploy to Production. `c04361d` is Ready and serving on production.
+- **Not changed, on purpose:**
+  - Entries 7 and 24 still name the old account. This log is append-only, and this entry records the change.
+  - The commit author email is tied to the email address, not the username, so it stays the same.
+- **Left for the user:**
+  - `gh auth status` still shows the old login name. The token is tied to the account ID, so it keeps working. Running `gh auth refresh` would update the name it displays.
+  - The old Vercel project `redline` points at a different repo (`.../redline`). It wasn't touched.
