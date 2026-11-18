@@ -1,15 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { isProtectedPath } from "./lib/auth/protected-paths";
 
 // Runs before every matched request. Two jobs:
 // 1. Refresh the Supabase session cookie so server code sees a live session.
 // 2. Send signed-out visitors away from pages that need an account.
 // This is an optimistic check only; data is protected by row-level security.
-
-function isProtectedPath(pathname: string): boolean {
-  // TODO(human): decide which paths need a signed-in user.
-  return false;
-}
 
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

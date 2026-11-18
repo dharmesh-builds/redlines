@@ -406,3 +406,18 @@ Status: an unvalidated hypothesis.
   - Both the deployment URL and `redlines-dharmesh9.vercel.app` redirect to Vercel login (Deployment Protection).
   - `redlines.vercel.app` responds but isn't this page.
   - `proxy.ts` throws if `NEXT_PUBLIC_SUPABASE_URL`/`ANON_KEY` are missing in Vercel's environment, so check that once you're signed in.
+
+### 28. Approved tools added; sign-in rule decided
+- **What I asked for:** yes to Vitest and the PDF/Word readers. I'm not an engineer: give me pending items in plain terms, must-haves only, and use Chrome rather than the CLI for dashboard work.
+- **Added:**
+  - `pdfjs-dist` ^6.5.438 (Mozilla's PDF reader, runs in the browser) and `mammoth` ^1.13.0 (DOCX → plain text). These clear ticket 09's approval gate.
+  - `vitest` ^5.1.1 as a dev dependency, with `npm test` / `npm run test:watch` scripts. This clears ticket 01's test-runner gate.
+- **Audit:**
+  - 5 "high" findings, all one advisory (GHSA-fc5q-39xc-vjpf, a ReDoS in `picomatch` ≤4.0.7) reached through vitest → vite/tinyglobby.
+  - It's dev-only and never shipped. It needs attacker-controlled glob patterns, and no patched picomatch exists yet.
+  - npm's suggested "fix" is a two-major downgrade to vitest 3.1.4. **Decision:** accept it for now and re-check when picomatch ships a fix.
+- **Sign-in rule:** the user handed back the `TODO(human)`, so I decided it. `lib/auth/protected-paths.ts` protects `/app` and everything under it, and leaves `/`, `/sign-in` and the auth callback public.
+  - It matches `/app` exactly or `/app/…`, so `/apple` isn't caught by a bare prefix match.
+  - I moved it out of `proxy.ts` so it can be tested. There are 3 tests and all pass.
+- **Build:** passes.
+- **Waiting on the user:** reconnect the Chrome extension. Then I'll copy the Supabase vars from the Vercel dashboard into `.env.local` and confirm the OpenRouter vars are in Vercel. The user says Supabase is linked and the vars are added.
