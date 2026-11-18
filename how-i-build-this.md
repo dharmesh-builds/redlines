@@ -678,3 +678,8 @@ Status: an unvalidated hypothesis.
 - **Migrations:** gray-ferry had no `supabase_migrations.schema_migrations` table. Created it with the CLI's layout (`version text pk`, `statements text[]`, `name text`) and inserted `20261118000100 documents_reports` and `20261118000200 red_lines` via `execute_sql`. I didn't use `apply_migration`, which would have added a third record stamped with today's time. `list_migrations` now shows both. Tables untouched.
 - **Leaked passwords:** in the Supabase dashboard (Chrome), Auth → Sign In / Providers → Email shows "Prevent use of leaked passwords", off, labelled "Only available on Pro plan and above". The Dharmesh org is on FREE. Nothing toggled or saved; panel closed without saving.
 - **Decision:** not upgraded. It's a purchase, and billing is out of scope (CLAUDE.md). The advisor warning stays. Cheap stand-in the owner could approve: raise the minimum password length from 6 to 8 (the dashboard's own advice), which is free.
+
+## Vercel CLI login (2026-11-18)
+- **Asked:** run `npx vercel@latest login`; the owner ran it with `!` (device-code sign-in).
+- **Outputs:** CLI 66.1.0, logged in as the owner's account, team `dharmesh9`. `project ls` shows `redlines` → `https://redlines-seven.vercel.app` (live, updated today) and an older `redline` → `redline-lac-one.vercel.app` (last updated 2026-09-14). This folder isn't linked yet (no `.vercel/`). The CLI recommended turning on 2FA for the account.
+- **Decision:** nothing linked or changed. Waiting on what the owner wants the CLI for.
