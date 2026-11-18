@@ -635,3 +635,11 @@ Status: an unvalidated hypothesis.
 - **Asked:** `claude mcp add --transport http supabase https://mcp.supabase.com/mcp`.
 - **Did:** ran it as given. It went into local scope (`~/.claude.json`, private to this project), so nothing in the repo changed. Status: "Needs authentication"; the owner signs in through `/mcp`.
 - **Note:** as added, it has full access to every project on the account, including production. A safer version adds `?project_ref=<ref>&read_only=true` to the URL. Not changed; offered to the owner.
+
+## Confirm the Supabase connection (2026-11-18)
+- **Asked:** confirm the Supabase connection.
+- **Did:** listed projects through the Supabase MCP; pinged the project in `.env.local` with the anon key; checked the three app tables over REST.
+- **Outputs:**
+  - App project (`.env.local`, `lejzoxpsosqfqazwwgfr`, `supabase-gray-ferry`, Vercel-managed): auth health 200; `documents`, `reports`, `red_lines` all 200. The app's connection works.
+  - Supabase MCP sees a different account. It lists `redlines` (`xbzrockgubxfaxpyyhnx`, created 2026-11-18, same three tables, RLS on, 0 rows) and an inactive `dharmeshmanglani`. It cannot see the app's project.
+- **Decision:** changed nothing. Which project should be the real one is the owner's call: point the MCP at the Vercel-managed org, or move the app to `redlines`.
