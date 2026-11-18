@@ -630,3 +630,8 @@ Status: an unvalidated hypothesis.
 - **Checks:** `npm test` 265/265 in 23 files. `npm run build` passed with all 17 routes. Neither the OpenRouter key's value nor any secret key name appears in `.next/static`.
 - **Asked:** "push all". Checked first: 5 commits, touching only `BUILD-REPORT.md`, `how-i-build-this.md` and `package.json`, with no env or secret files.
 - **Pushed:** `f9f6b48..25753f6` to `origin/main`, which triggers a Vercel production deploy. This entry was pushed after it as one more commit.
+
+### 50. Added the Supabase MCP server to Claude Code
+- **Asked:** `claude mcp add --transport http supabase https://mcp.supabase.com/mcp`.
+- **Did:** ran it as given. It went into local scope (`~/.claude.json`, private to this project), so nothing in the repo changed. Status: "Needs authentication"; the owner signs in through `/mcp`.
+- **Note:** as added, it has full access to every project on the account, including production. A safer version adds `?project_ref=<ref>&read_only=true` to the URL. Not changed; offered to the owner.
