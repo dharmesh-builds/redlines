@@ -70,3 +70,4 @@ test-results/
 
 # local tool state
 .claude/settings.local.json
+.env*
