@@ -601,3 +601,12 @@ Status: an unvalidated hypothesis.
   - Supabase project: email sign-in enabled, but `documents`, `reports`, `red_lines` all return 404. **The two migrations were never applied**, so saving anything when signed in fails.
 - **Still to do:** apply both migrations (SQL editor), then set Auth → URL Configuration (Site URL = the Vercel address, add `/auth/callback` redirect). Never apply `seed.sql` to production.
 - **Blocked on:** Claude in Chrome tools not loaded in this session (the known background-session issue); asked the owner to run `/chrome`.
+
+### 46. Checked the live Vercel and Supabase setup in Chrome
+- **Asked:** check the Vercel and Supabase setup (after `/chrome` reconnected the browser tools).
+- **Vercel (project `redlines`):** the production domain is `redlines-seven.vercel.app` (valid). The Supabase integration added its env vars (URL, anon/publishable keys, service-role/secret keys, Postgres URLs), all for Production and Preview. Only the URL and the public anon/publishable keys carry `NEXT_PUBLIC_`, so no secret reaches the browser. `OPENROUTER_*` are set for Production only, so Preview deploys can't analyse.
+- **Supabase (`supabase-gray-ferry`):**
+  - Table Editor shows "No tables or views", and the REST API still returns 404 for `documents`, `reports` and `red_lines`. The two migrations have still not been applied.
+  - Auth → URL Configuration: Site URL is `http://localhost:3000`. The redirect list has `localhost:3000/**` and `https://redlines-dharmesh9.vercel.app/**`. That address is wrong: the real one is `redlines-seven.vercel.app`, so sign-in links from the live site would go to localhost or get rejected.
+- **Changed nothing.** Running SQL on production and changing auth settings need the owner's yes.
+- **Fixes waiting for approval:** (1) run both migrations in the SQL editor (never `seed.sql`); (2) set Site URL to `https://redlines-seven.vercel.app` and add `https://redlines-seven.vercel.app/**` to the redirect list.
