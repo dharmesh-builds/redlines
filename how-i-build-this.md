@@ -722,3 +722,9 @@ Status: an unvalidated hypothesis.
 - **Tests:** test-first. New `tests/routes/signed-in-only.test.tsx` (401s with no model call; signed-out form copy) and `lib/pending-check.test.ts` (once-only, expiry, malformed data, blocked storage, forget). The old "signed out runs with no red lines" test now runs on `not-configured`. 273/273 pass; typecheck clean.
 - **Browser check (Chrome, localhost):** signed-out Check made no network call, kept 296 chars, showed the prompt with focus on its heading, and left the text on screen. Editing removed the prompt. Direct POSTs returned 401 for both routes. Test text cleaned from localStorage.
 - **Not verified:** the return trip after clicking a real email link (needs an inbox). Not pushed, so the live site is unchanged.
+
+## Pushed sign-in-only checking to production (2026-11-18)
+- **Asked:** push all changes.
+- **Did:** read and committed the two leftovers: `AGENTS.md` (Next.js's auto-generated note for coding agents; it's re-created on every `next dev`, so committing keeps the tree clean) and the `.env*` line `vercel link` added to `.gitignore` (no `.env` files are tracked). Secret scan of `origin/main..HEAD`: none. Pushed `b390fc8..a2bd770`, 5 commits.
+- **Deploy:** `redlines-be4zs5ek4-dharmesh9.vercel.app`, Ready in 18 s. Live `/analyze` returns 200, and a signed-out `POST /api/analyze` on the live site returns 401 "Sign in to check an agreement."
+- **Not verified:** the full live round trip (paste, sign in by email, auto-check). Needs the owner's inbox.
