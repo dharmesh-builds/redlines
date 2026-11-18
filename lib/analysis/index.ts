@@ -1,6 +1,9 @@
 // Public interface of the Analysis module.
 export {
   analyze,
+  type Confidence,
+  type ConfidenceLevel,
+  type ConfidenceReason,
   type Exposure,
   type Flag,
   type Report,

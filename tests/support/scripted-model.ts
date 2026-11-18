@@ -22,6 +22,7 @@ type Sidecar = {
     capStated: boolean;
     expectedExposure: "unbounded" | "stated" | "unquantified" | "none";
     expectedSeverity: "high" | "medium" | "low";
+    expectedConfidence: "high" | "medium" | "low";
     undefinedTerms: string[];
     refersToOutsideTerms: boolean;
     counterOffer: { rewrittenClause: string; request: string };

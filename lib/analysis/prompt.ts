@@ -18,12 +18,12 @@ What to return:
 - candidateFlags: every clause that could cost the customer money or leave them worse off than a fair agreement would. Use clause type "boilerplate" for arbitration, class-action waivers, governing law and venue. For each flag:
   - clauseType: one of ${CLAUSE_TYPES.join(", ")}.
   - sourceSentences: every sentence the flag relies on. If the risk spans several clauses, quote each sentence involved.
-  - explanation: one or two plain sentences saying what the clause does to the customer, figures first. No legal jargon, no alarm words.
+  - explanation: one or two plain sentences saying what the clause does to the customer, figures first. No legal jargon, no alarm words. State it flatly: no hedges about your own reading ("it seems", "appears to", "possibly", "arguably", "likely"). Code attaches a confidence label separately.
   - figures: each number the clause states (money amount, percentage, days, months, years), with the sentence it appears in. value is the number exactly as written in digits in that sentence. unit is money, percent, days, months, years or count. per is the period for a recurring money amount ("$778 per month" is per "month"), else null. Never compute, convert or invent a figure.
   - costsMoney: true if the clause can make the customer pay or lose money; false for clauses with no direct money effect (arbitration, governing law, venue and the like).
   - capStated: true only if the document states a limit on the customer's money obligation under this clause (a fixed amount counts as a limit).
-  - undefinedTerms: capitalised terms the clause relies on that the document never defines.
-  - refersToOutsideTerms: true if the clause depends on a document outside this one.
+  - undefinedTerms: capitalised terms the clause relies on that the document never defines (a term is defined when the document says, for example, "Term" means ..., or (the "Term")). Copy each term exactly as the document writes it. Empty if there are none.
+  - refersToOutsideTerms: true if the clause depends on a document outside this one (online terms, a policy, an MSA, a DPA, an SLA).
   - matchedRedLine: the customer's red line this clause matches, copied exactly from the list, else null.
   - counterOffer: a rewritten clause that is fair to the customer, and a short polite request to the vendor asking for it.
 - Do not rate severity or confidence. Code does that.`;

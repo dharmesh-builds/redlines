@@ -9,10 +9,10 @@ The flag shows the reason for a Low label. Confidence looks clearly different fr
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Model output carries the undefined terms a clause uses, whether it refers to outside terms, and whether it spans several clauses
-- [ ] Labels follow the rules exactly; the reason is shown for Low
-- [ ] UI always says "Low confidence" / "Low severity", never a bare "Low"
-- [ ] Flag explanations stay declarative; no stacked hedge words on top of a label
-- [ ] Q7: the same scripted model output always yields the same labels
+- [x] Model output carries the undefined terms a clause uses, whether it refers to outside terms, and whether it spans several clauses
+- [x] Labels follow the rules exactly; the reason is shown for Low
+- [x] UI always says "Low confidence" / "Low severity", never a bare "Low"
+- [x] Flag explanations stay declarative; no stacked hedge words on top of a label
+- [x] Q7: the same scripted model output always yields the same labels

@@ -17,18 +17,21 @@ import {
   type ShownFigure,
   type TwelveMonthFee,
 } from "./exposure";
+import { assessConfidence, indexDocument, type Confidence, type DocumentIndex } from "./confidence";
 import { ANALYSIS_SYSTEM_PROMPT, analysisPrompt } from "./prompt";
 import { createVerifier } from "./verbatim";
 
 export type { Exposure, Severity, ShownFigure, TwelveMonthFee };
+export type { Confidence, ConfidenceLevel, ConfidenceReason } from "./confidence";
 
 // A flag as the reader sees it. Every source sentence, and the sentence behind
 // every figure, has passed the verbatim check and is given as it reads in the
-// document. Severity and exposure are computed by code from those figures.
+// document. Severity, exposure and confidence are computed by code.
 export type Flag = {
   clauseType: ClauseType;
   severity: Severity;
   exposure: Exposure;
+  confidence: Confidence;
   figures: ShownFigure[];
   sourceSentences: string[];
   explanation: string;
@@ -49,7 +52,8 @@ export type Report = {
  * A candidate flag is kept only if every sentence it quotes, including the
  * sentence behind each figure, appears verbatim in `documentText` (ADR 0001),
  * and each figure's number is written in its sentence. Exposure and severity
- * are then computed from those figures (ADR 0003, ADR 0006).
+ * are then computed from those figures (ADR 0003, ADR 0006), and confidence
+ * from checks against the document (ADR 0004, ADR 0006).
  * Throws ModelOutputError if the model's answer is not in the agreed shape,
  * so no report is ever built from it.
  */
@@ -70,10 +74,22 @@ export async function analyze(
 
   const verifier = createVerifier(documentText);
   const line = twelveMonthFee(result.value.periodicFee, verifier);
+  const context: FlagContext = {
+    verifier,
+    line,
+    doc: indexDocument(documentText),
+    // Where each verified incorporated-term reference sits. A flag quoting one
+    // of these sentences refers to outside terms, whatever the model said.
+    outsideAt: new Set(
+      result.value.incorporatedTerms
+        .map((t) => verifier.find(t.sourceSentence)?.start)
+        .filter((start): start is number => start !== undefined),
+    ),
+  };
   const verified: Flag[] = [];
 
   for (const candidate of result.value.candidateFlags) {
-    const flag = verifyFlag(candidate, verifier, line);
+    const flag = verifyFlag(candidate, context);
     if (flag) verified.push(flag);
   }
   const flags = rank(verified);
@@ -87,18 +103,23 @@ export async function analyze(
   };
 }
 
-function verifyFlag(
-  candidate: CandidateFlag,
-  verifier: ReturnType<typeof createVerifier>,
-  line: TwelveMonthFee | null,
-): Flag | null {
+type FlagContext = {
+  verifier: ReturnType<typeof createVerifier>;
+  line: TwelveMonthFee | null;
+  doc: DocumentIndex;
+  outsideAt: Set<number>;
+};
+
+function verifyFlag(candidate: CandidateFlag, { verifier, line, doc, outsideAt }: FlagContext): Flag | null {
   if (candidate.sourceSentences.length === 0) return null;
 
   const sourceSentences: string[] = [];
+  const sourceOffsets: number[] = [];
   for (const quote of candidate.sourceSentences) {
     const match = verifier.find(quote);
     if (!match) return null;
     sourceSentences.push(match.text);
+    sourceOffsets.push(match.start);
   }
 
   const figures = [];
@@ -109,10 +130,20 @@ function verifyFlag(
   }
 
   const { exposure, severity } = assess(candidate, figures, line);
+  const confidence = assessConfidence(
+    {
+      claimedUndefinedTerms: candidate.undefinedTerms,
+      refersToOutsideTerms: candidate.refersToOutsideTerms || sourceOffsets.some((at) => outsideAt.has(at)),
+      sourceOffsets,
+      exposure,
+    },
+    doc,
+  );
   return {
     clauseType: candidate.clauseType,
     severity,
     exposure,
+    confidence,
     figures: figures.map(({ symbol: _symbol, ...figure }) => figure),
     sourceSentences,
     explanation: candidate.explanation,

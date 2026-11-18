@@ -11,6 +11,7 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 - **02 Severity and exposure: done.** 65 tests pass.
   - Severity, exposure and ranking are all worked out by code from quoted figures.
   - Whenever an amount is calculated, the sum is shown, e.g. "$750 × 12 = $9,000".
+- **03 Confidence labels: done.** 93 tests pass. Confidence comes from checks against the document's text, never from the model's own rating. A Low or Medium label shows its reason.
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -38,6 +39,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 19. **A quoted amount must actually appear in its sentence.** A figure whose number isn't written in digits in its verified sentence drops the whole flag, the same as a misquote.
 20. **The amount at stake is the largest one the flag's own figures support.** Within High, uncapped flags come first. Within each level, larger amounts come first.
 21. **Removed a thick coloured side border from the form error message** (`.form-error` in `app/globals.css`). The design checker flagged it as a known tell of AI-made screens, and DESIGN.md doesn't call for it.
+22. **Whether a clause "spans several clauses" is worked out by code, not taken from the model.** Code checks where the quoted sentences sit in the stored text: quotes from two different numbered clauses count as spanning. A yes/no from the model would have been one more claim nobody can check.
+23. **A term the model calls "undefined" is checked against the document first.** If the document defines it ("X" means…, (the "X"), or an order-form line starting with it), the flag doesn't lose confidence.
+24. **Medium confidence also shows a reason.** DESIGN.md asks for a reason whenever confidence isn't High.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)

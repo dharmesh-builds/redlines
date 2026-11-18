@@ -142,7 +142,7 @@ const SEVERITY_LABEL: Record<Severity, string> = {
   low: "Low severity",
 };
 
-function ReportView({ report, saved }: Result) {
+export function ReportView({ report, saved }: Result) {
   const { flags, droppedFlagCount } = report;
   return (
     <section className="report" aria-labelledby="report-title">
@@ -228,6 +228,18 @@ function FlagItem({ flag, id }: { flag: Flag; id: string }) {
               </dd>
             </div>
           ) : null}
+          <div>
+            <dt>Confidence</dt>
+            <dd>
+              <span className="confidence-level">{flag.confidence.label}</span>
+              {flag.confidence.reasonText ? (
+                <>
+                  {" "}
+                  <span className="reason">{flag.confidence.reasonText}</span>
+                </>
+              ) : null}
+            </dd>
+          </div>
         </dl>
         <p className="note-verified">
           <svg className="check" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">

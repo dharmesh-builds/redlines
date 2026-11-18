@@ -492,3 +492,13 @@ Status: an unvalidated hypothesis.
   - The fixture .txt is unchanged, and the sidecar sentences are still verbatim (25/25).
 - **Design hook:** the `.form-error` 3px left border (from ticket 01) is a side-tab tell. Removed it here; the build still passes.
 - **Open risk:** whether the real model fills `unit`/`per`/`costsMoney` reliably; the smoke run at the end will show it.
+
+### 34. Ticket 03 (confidence labels) done
+- **Subagent built:**
+  - `lib/analysis/confidence.ts`: rule-based confidence.
+  - "Spans clauses" is derived from the verified quote positions under numbered clauses, with no model boolean.
+  - "Undefined term" claims are checked against definition patterns in the text.
+  - Outside terms are also inferred when a flag quotes an incorporated-term sentence.
+  - The UI shows a Confidence fact line with its reason.
+- **Verified here:** tsc clean; 93/93 tests; build OK; no forbidden patterns; fixtures untouched.
+- **Why code over model fields:** every label must be reproducible from the stored text (Q7), and a model yes/no is unverifiable.

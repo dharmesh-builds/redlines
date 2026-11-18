@@ -971,6 +971,11 @@ mark.on {
   margin-top: 4px;
 }
 
+/* Confidence is a fact line, never a tab: the label in words, the reason in ink-soft. */
+.confidence-level {
+  font-weight: 600;
+}
+
 .figure-list {
   list-style: none;
   margin: 0;
