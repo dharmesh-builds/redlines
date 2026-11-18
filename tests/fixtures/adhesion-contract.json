@@ -1,5 +1,6 @@
 {
   "document": "adhesion-contract.txt",
+  "provisional": true,
   "periodicFee": {
     "amount": 750,
     "period": "month",
@@ -182,6 +183,7 @@
       "days": 30,
       "relation": "after",
       "referencePoint": "receiving written notice of a material breach",
+      "acceptedReferencePoints": ["receiving written notice of the breach", "receiving written notice describing the breach", "receipt of written notice of the breach", "receipt of notice of the breach", "receiving notice of the breach"],
       "sentence": "Either party may terminate this Agreement if the other party materially breaches it and does not cure the breach within 30 days after receiving written notice describing it."
     },
     {
@@ -205,6 +207,29 @@
     {
       "description": "Data Processing Addendum at https://www.tallyforge.example/legal/dpa",
       "sentence": "Vendor processes any personal data contained in Customer Data under Vendor's Data Processing Addendum, available at https://www.tallyforge.example/legal/dpa, which forms part of this Agreement."
+    }
+  ],
+  "looksRiskyButIsnt": [
+    {
+      "id": "mutual-termination-for-breach",
+      "sentences": [
+        "Either party may terminate this Agreement if the other party materially breaches it and does not cure the breach within 30 days after receiving written notice describing it."
+      ],
+      "why": "A termination right, but mutual, with 30 days to fix the breach first."
+    },
+    {
+      "id": "mutual-confidentiality-term",
+      "sentences": [
+        "Each party's confidentiality obligations continue for three years after this Agreement ends."
+      ],
+      "why": "An obligation that outlasts the agreement, but it binds both sides and costs nothing."
+    },
+    {
+      "id": "force-majeure",
+      "sentences": [
+        "Neither party is liable for a delay caused by events beyond its reasonable control, other than a delay in paying fees."
+      ],
+      "why": "Limits liability, but for both parties equally."
     }
   ],
   "summaryPoints": [

@@ -1,5 +1,6 @@
 {
   "document": "clean-contract.txt",
+  "provisional": true,
   "periodicFee": {
     "amount": 120,
     "period": "month",
@@ -11,6 +12,7 @@
       "days": 30,
       "relation": "before",
       "referencePoint": "Pinecrest ends the agreement",
+      "acceptedReferencePoints": ["the end of the agreement", "the agreement ends", "the termination date"],
       "sentence": "Pinecrest may end this agreement by giving Customer at least 30 days' written notice, and will refund any fees paid for days after the agreement ends."
     },
     {
@@ -21,6 +23,29 @@
     }
   ],
   "incorporatedTerms": [],
+  "looksRiskyButIsnt": [
+    {
+      "id": "provider-may-end",
+      "sentences": [
+        "Pinecrest may end this agreement by giving Customer at least 30 days' written notice, and will refund any fees paid for days after the agreement ends."
+      ],
+      "why": "The provider can end the service, but with 30 days' notice and a refund of unused fees."
+    },
+    {
+      "id": "data-deleted-after-60-days",
+      "sentences": [
+        "After those 60 days, Pinecrest will delete Customer's information from its systems, except for billing records it must keep by law."
+      ],
+      "why": "Data is deleted, but only after a 60-day download window."
+    },
+    {
+      "id": "customer-gets-consent",
+      "sentences": [
+        "Customer is responsible for getting its clients' consent to receive appointment reminders by text message and email."
+      ],
+      "why": "Puts a duty on the customer, but one it has anyway and with no money attached."
+    }
+  ],
   "summaryPoints": [
     {
       "text": "Northfield Physical Therapy pays $120 a month for Pinecrest's scheduling software, and the price stays fixed unless both sides sign a new agreement.",

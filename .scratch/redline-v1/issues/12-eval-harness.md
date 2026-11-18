@@ -10,10 +10,10 @@ Any unverified flag fails the run (T1). It starts with a small seed set of fixtu
 
 **Blocked by:** 02, 04
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] One command runs the eval; it never runs as part of the normal test suite
-- [ ] Reads labelled fixtures in the format agreed with ticket 13
-- [ ] Reports Q1, Q2, Q3 and Q5 per document and in total, plus the model ID
-- [ ] Fails on any flag that doesn't pass the verbatim check
-- [ ] Seed set of 2–3 fixtures, labelled and marked as provisional
+- [x] One command runs the eval; it never runs as part of the normal test suite
+- [x] Reads labelled fixtures in the format agreed with ticket 13
+- [x] Reports Q1, Q2, Q3 and Q5 per document and in total, plus the model ID
+- [x] Fails on any flag that doesn't pass the verbatim check
+- [x] Seed set of 2–3 fixtures, labelled and marked as provisional

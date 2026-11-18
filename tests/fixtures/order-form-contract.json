@@ -1,0 +1,51 @@
+{
+  "document": "order-form-contract.txt",
+  "provisional": true,
+  "clauses": [
+    {
+      "id": "auto-renewal-list-price",
+      "clauseType": "auto_renewal",
+      "sentences": [
+        "After the Initial Term, this Order Form renews automatically for successive 12-month terms at Quillstack's list price in effect at the time of renewal unless either party gives written notice of non-renewal at least 30 days before the end of the then-current term."
+      ],
+      "expectedSeverity": "medium"
+    }
+  ],
+  "deadlines": [
+    {
+      "days": 30,
+      "relation": "before",
+      "referencePoint": "the end of the then-current term",
+      "acceptedReferencePoints": ["the end of the current term", "the end of the term", "the renewal date"],
+      "sentence": "After the Initial Term, this Order Form renews automatically for successive 12-month terms at Quillstack's list price in effect at the time of renewal unless either party gives written notice of non-renewal at least 30 days before the end of the then-current term."
+    },
+    {
+      "days": 45,
+      "relation": "after",
+      "referencePoint": "the invoice date",
+      "sentence": "Customer will pay each invoice within 45 days of the invoice date."
+    }
+  ],
+  "incorporatedTerms": [
+    {
+      "description": "Quillstack Master Subscription Agreement at https://www.quillstack.example/legal/msa",
+      "sentence": "This Order Form is governed by the Quillstack Master Subscription Agreement at https://www.quillstack.example/legal/msa, which is incorporated into this Order Form by reference."
+    },
+    {
+      "description": "Quillstack Service Level Agreement at https://www.quillstack.example/legal/sla",
+      "sentence": "Customer's use of the Service is also subject to the Quillstack Service Level Agreement at https://www.quillstack.example/legal/sla."
+    }
+  ],
+  "looksRiskyButIsnt": [
+    {
+      "id": "fee-fixed-initial-term",
+      "sentences": ["The Subscription Fee will not increase during the Initial Term."],
+      "why": "A price clause, but it only protects the customer: the fee is fixed for the first year."
+    },
+    {
+      "id": "order-form-controls",
+      "sentences": ["If this Order Form conflicts with the Master Subscription Agreement, this Order Form controls."],
+      "why": "An order-of-precedence clause that favours the terms the customer can read."
+    }
+  ]
+}

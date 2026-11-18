@@ -9,6 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "smoke": "vitest run --config vitest.smoke.config.mts",
+    "eval": "vitest run --config vitest.eval.config.mts",
     "test:isolation": "vitest run --config vitest.isolation.config.mts"
   },
   "dependencies": {

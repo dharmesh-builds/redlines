@@ -1,0 +1,26 @@
+QUILLSTACK ORDER FORM
+
+Order Number: QS-50217
+Provider: Quillstack Software, Inc., 900 Larch Avenue, Denver, CO 80205
+Customer: Ridgeback Outfitters LLC, 31 Canyon Road, Durango, CO 81301
+Service: Quillstack Helpdesk, Standard edition, 8 agent seats
+Subscription Start Date: February 1, 2027
+Initial Term: 12 months from the Subscription Start Date.
+Subscription Fee: $400 per month, invoiced monthly in advance.
+
+Terms
+
+1. This Order Form is governed by the Quillstack Master Subscription Agreement at https://www.quillstack.example/legal/msa, which is incorporated into this Order Form by reference.
+
+2. Customer's use of the Service is also subject to the Quillstack Service Level Agreement at https://www.quillstack.example/legal/sla.
+
+3. The Subscription Fee will not increase during the Initial Term.
+
+4. After the Initial Term, this Order Form renews automatically for successive 12-month terms at Quillstack's list price in effect at the time of renewal unless either party gives written notice of non-renewal at least 30 days before the end of the then-current term.
+
+5. Customer will pay each invoice within 45 days of the invoice date.
+
+6. If this Order Form conflicts with the Master Subscription Agreement, this Order Form controls.
+
+Signed for Quillstack Software, Inc.: Teodora Vance, Account Executive
+Signed for Ridgeback Outfitters LLC: Calvin Mbeki, General Manager
