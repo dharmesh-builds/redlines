@@ -2,8 +2,9 @@ import { isSupabaseConfigured } from "../../../lib/supabase/env";
 import { getSignedInUser } from "../../../lib/supabase/session";
 import { AnalyzeForm, type SavingMode } from "./analyze-form";
 
-// /analyze: paste or pick a .txt agreement and see its verified flags.
-// Public on purpose: checking an agreement doesn't need an account.
+// /analyze: paste or pick an agreement and see its verified flags.
+// Anyone can open it and paste, but the check itself needs an account
+// (ADR 0008): a signed-out reader is asked to sign in, and their text waits.
 export default async function AnalyzePage() {
   const session = await getSignedInUser();
   const saving: SavingMode = session

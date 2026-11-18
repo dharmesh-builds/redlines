@@ -274,9 +274,11 @@ describe("analysing with the user's red lines", () => {
     expect((library.reports[0].payload as { redLines: string[] }).redLines).toEqual([FEE_LINE, COURT_LINE]);
   });
 
-  it("signed out: runs with no red lines, ignores any match the model reports, stores nothing", async () => {
+  // Signed out is refused outright (tests/routes/signed-in-only.test.tsx). Without
+  // Supabase (local only) there is no account, so there are no red lines either.
+  it("no Supabase: runs with no red lines, ignores any match the model reports, stores nothing", async () => {
     lines.seed(ME, [FEE_LINE]);
-    const res = await analyzeResponse(analyzeRequest({ text }), { kind: "signed-out" }, scriptedModel(modelAnswer()));
+    const res = await analyzeResponse(analyzeRequest({ text }), { kind: "not-configured" }, scriptedModel(modelAnswer()));
     const body = await res.json();
     expect(body.saved).toBe(false);
     expect(body.report.redLines).toEqual([]);

@@ -920,6 +920,17 @@ mark.on {
   color: var(--desk-ink-soft);
 }
 
+/* /analyze, signed out: the sign-in step shown under the form after Check. */
+.sign-in-prompt {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--desk-rule);
+}
+
+.sign-in-prompt h2:focus {
+  outline: none;
+}
+
 .report {
   margin-top: var(--space-5);
 }

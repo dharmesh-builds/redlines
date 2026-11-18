@@ -34,8 +34,8 @@ export default async function SignInPage({ searchParams }: { searchParams: Searc
         Sign in
       </h1>
       <p className="app-lede">
-        We&rsquo;ll email you a link to sign in, so there&rsquo;s no password. You can check an agreement
-        without signing in; signing in keeps your agreements and reports.
+        We&rsquo;ll email you a link to sign in, so there&rsquo;s no password. Once you&rsquo;re in, you can
+        check agreements, and each one stays in your library with its report.
       </p>
       {linkFailed ? (
         <p className="form-error" role="alert">

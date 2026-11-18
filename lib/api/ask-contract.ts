@@ -6,6 +6,7 @@ export type AskResponse = { answer: Answer } | { error: string };
 
 export const ASK_ERRORS = {
   badRequest: "Redline couldn't read that request. Reload the page and try again.",
+  signedOut: "Sign in to ask about an agreement.",
   notConfigured: "Questions aren't set up on this server yet, so this one wasn't answered.",
   modelFailed: "Redline didn't get an answer this time. Try again in a minute.",
   modelOutput: "The answer came back in a form Redline couldn't check, so it isn't shown. Try asking again.",

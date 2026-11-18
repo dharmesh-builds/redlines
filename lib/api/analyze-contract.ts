@@ -9,6 +9,7 @@ export type AnalyzeResponse =
 
 export const ANALYZE_ERRORS = {
   badRequest: "Redline couldn't read that request. Reload the page and try again.",
+  signedOut: "Sign in to check an agreement.",
   notConfigured: "Analysis isn't set up on this server yet, so nothing was checked.",
   modelFailed: "The analysis didn't finish. Nothing was saved. Try again in a minute.",
   modelOutput:

@@ -8,6 +8,8 @@ import { CLAUSE_TITLES } from "../../../lib/clause-labels";
 import { checkDocumentText } from "../../../lib/document-input";
 import type { ExtractedFormat } from "../../../lib/extraction";
 import { MAX_DOCUMENT_NAME, defaultDocumentName, resolveDocumentName } from "../../../lib/library/naming";
+import { forgetPendingCheck, keepPendingCheck, takePendingCheck } from "../../../lib/pending-check";
+import { SignInForm } from "../sign-in/sign-in-form";
 import { QuestionBox, type QuestionTarget } from "./question-box";
 
 export type SavingMode =
@@ -24,6 +26,17 @@ export const FILE_ACCEPT =
   ".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain";
 
 const NETWORK_ERROR = "Redline couldn't reach the server. Check your connection and try again.";
+
+// localStorage can throw on access (blocked site data, some private windows).
+function browserStore(): Storage | null {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+type CheckInput = { text: string; nameInput: string | null; fileName: string | null; source: FileSource | null };
 
 // Text read from a picked file. It is shown read-only: what Redline checks and
 // quotes is exactly what came out of the file, so a quote can't point at words
@@ -81,6 +94,37 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
   const [pending, setPending] = useState(false);
   const [result, setResult] = useState<Checked | null>(null);
   const [runs, setRuns] = useState(0);
+  // Set when a signed-out reader pressed Check: they sign in first. `kept`
+  // says whether this browser is holding their text for after sign-in.
+  const [signIn, setSignIn] = useState<{ kept: boolean } | null>(null);
+  const signInHeading = useRef<HTMLHeadingElement>(null);
+
+  // Back from the sign-in link: pick up the text kept before sign-in, once,
+  // and check it straight away, since that is what the reader asked for.
+  useEffect(() => {
+    if (saving.kind !== "signed-in") return;
+    const store = browserStore();
+    const pending = store ? takePendingCheck(store) : null;
+    if (!pending) return;
+    setText(pending.text);
+    setFileName(pending.fileName);
+    setSource(pending.source);
+    setNameInput(null);
+    void runCheck({ text: pending.text, nameInput: null, fileName: pending.fileName, source: pending.source });
+    // Runs once on arrival; runCheck reads only what it is passed.
+  }, []);
+
+  useEffect(() => {
+    if (signIn) signInHeading.current?.focus();
+  }, [signIn]);
+
+  // The text on screen changed, so any copy kept for after sign-in is out of date.
+  function dropSignIn() {
+    if (!signIn) return;
+    setSignIn(null);
+    const store = browserStore();
+    if (store) forgetPendingCheck(store);
+  }
 
   async function onFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -100,6 +144,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
     }
     if (id !== pick.current) return;
     setReading(null);
+    dropSignIn();
     if (!extracted.ok) {
       setError(extracted.message);
       return;
@@ -112,6 +157,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
 
   function clearFile() {
     pick.current++;
+    dropSignIn();
     setSource(null);
     setText("");
     setFileName(null);
@@ -119,14 +165,28 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
     setError(null);
   }
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const checked = checkDocumentText(text);
+    void runCheck({ text, nameInput, fileName, source });
+  }
+
+  async function runCheck(input: CheckInput) {
+    const checked = checkDocumentText(input.text);
     if (!checked.ok) {
       setError(checked.message);
       return;
     }
     setError(null);
+    // Signed out: no check. Keep the text in this browser and ask for sign-in.
+    if (saving.kind === "anonymous") {
+      const store = browserStore();
+      const kept = store
+        ? keepPendingCheck(store, { text: input.text, fileName: input.fileName, source: input.source })
+        : false;
+      setSignIn({ kept });
+      return;
+    }
+    setSignIn(null);
     setResult(null);
     setPending(true);
     try {
@@ -136,7 +196,10 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
         // A name is only used when the agreement is saved, so only signed-in readers send one.
         body: JSON.stringify({
           text: checked.text,
-          name: saving.kind === "signed-in" ? resolveDocumentName(nameInput, { fileName, text }) : undefined,
+          name:
+            saving.kind === "signed-in"
+              ? resolveDocumentName(input.nameInput, { fileName: input.fileName, text: input.text })
+              : undefined,
         }),
       });
       const body = (await res.json()) as AnalyzeResponse;
@@ -175,6 +238,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
               value={text}
               onChange={(e) => {
                 setText(e.target.value);
+                dropSignIn();
                 if (!e.target.value) setFileName(null);
               }}
             />
@@ -221,10 +285,7 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
           {saving.kind === "signed-in" ? (
             <>Signed in as {saving.email}. The text and its report are saved to your account.</>
           ) : saving.kind === "anonymous" ? (
-            <>
-              You&rsquo;re not signed in, so nothing is saved. <Link href="/sign-in?next=/analyze">Sign in</Link>{" "}
-              to keep your agreements and reports.
-            </>
+            <>Sign in to check an agreement. Each one you check goes into your library with its report.</>
           ) : (
             <>Nothing you paste here is saved.</>
           )}
@@ -243,6 +304,20 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
           {pending ? "Checking the agreement. This usually takes under a minute." : ""}
         </p>
       </form>
+
+      {signIn ? (
+        <section className="sign-in-prompt" aria-labelledby="sign-in-prompt-title">
+          <h2 id="sign-in-prompt-title" className="app-subtitle" tabIndex={-1} ref={signInHeading}>
+            Sign in to check this agreement
+          </h2>
+          <p className="field-note">
+            {signIn.kept
+              ? "Your text stays in this browser for an hour. Open the sign-in link in the same browser and the check starts by itself."
+              : "This browser won't let Redline keep your text, so paste it again after you sign in."}
+          </p>
+          <SignInForm next="/analyze" />
+        </section>
+      ) : null}
 
       {result ? (
         <>

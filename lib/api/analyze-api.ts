@@ -73,10 +73,13 @@ async function loadRedLinesFor(account: Extract<AnalyzeAccess, { kind: "ok" }>):
  * The browser sends only the extracted text, never the file.
  * Signed in: the user's red lines are loaded, the text is stored and read
  * back, analysed against those red lines, and the report is saved with its
- * model ID and red-line snapshot. Otherwise: analysed with no red lines, and
- * nothing is stored.
+ * model ID and red-line snapshot. Signed out: refused (401) before any model
+ * call. Supabase not configured (local work only, where nobody can sign in):
+ * analysed with no red lines, and nothing is stored.
  */
 export async function analyzeResponse(request: Request, account: AnalyzeAccess, model: ModelPort) {
+  if (account.kind === "signed-out") return json({ error: ANALYZE_ERRORS.signedOut }, 401);
+
   let body: { text?: unknown; name?: unknown };
   try {
     body = (await request.json()) as typeof body;

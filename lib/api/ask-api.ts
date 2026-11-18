@@ -38,11 +38,14 @@ async function answer(text: string, question: string, model: ModelPort): Promise
 
 /**
  * POST /api/ask  { text: string, question: string }
- * The anonymous /analyze flow, where nothing is stored: the page sends the
- * same text it just had analysed. Same text limits as POST /api/analyze.
- * Needs no account and never touches Supabase.
+ * The /analyze flow when nothing is stored: the page sends the same text it
+ * just had analysed. Same text limits as POST /api/analyze. Like analysis,
+ * it refuses a signed-out reader; it only runs without an account where
+ * Supabase isn't configured, so nobody could sign in.
  */
-export async function askTextResponse(request: Request, model: ModelPort) {
+export async function askTextResponse(request: Request, access: Pick<LibraryAccess, "kind">, model: ModelPort) {
+  if (access.kind === "signed-out") return json({ error: ASK_ERRORS.signedOut }, 401);
+
   const body = await readBody(request);
   if (!body) return json({ error: ASK_ERRORS.badRequest }, 400);
 
