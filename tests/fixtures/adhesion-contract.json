@@ -1,0 +1,222 @@
+{
+  "document": "adhesion-contract.txt",
+  "periodicFee": {
+    "amount": 750,
+    "period": "month",
+    "sentence": "Subscription Fee: $750 per month, invoiced annually in advance."
+  },
+  "clauses": [
+    {
+      "id": "auto-renewal",
+      "clauseType": "auto_renewal",
+      "sentences": [
+        "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
+      ],
+      "explanation": "The subscription renews for another 12 months unless you cancel in writing at least 60 days before the renewal date. Missing that date commits you to $9,000, which equals 12 months of the $750 monthly fee.",
+      "figures": [
+        {
+          "value": 9000,
+          "label": "Renewal Term fee",
+          "sentence": "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
+        },
+        {
+          "value": 60,
+          "label": "Days of notice needed to cancel",
+          "sentence": "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
+        }
+      ],
+      "capStated": true,
+      "undefinedTerms": [],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "stated",
+      "expectedSeverity": "high",
+      "expectedConfidence": "high",
+      "counterOffer": {
+        "rewrittenClause": "At the end of the Initial Term, this Agreement will continue on a month-to-month basis at the Subscription Fee unless Customer gives Vendor written notice of cancellation at least 7 days before the end of the then-current month, and Vendor will email Customer a reminder at least 30 days before the Initial Term ends.",
+        "request": "Could we change Section 3.2 so that after the first year the subscription continues month to month, cancellable with 7 days' written notice, and you email us a reminder 30 days before the first year ends? We'd rather not be locked into a further $9,000 year by a missed date."
+      }
+    },
+    {
+      "id": "customer-indemnity",
+      "clauseType": "indemnity",
+      "sentences": [
+        "Customer will defend, indemnify and hold harmless Vendor and its officers, employees and affiliates from and against any and all claims, losses, damages, fines, costs and expenses, including reasonable attorneys' fees, arising out of or relating to Customer Materials or Customer's use of the Service."
+      ],
+      "explanation": "You must cover all of Tallyforge's claims, losses and legal costs linked to \"Customer Materials\" or your use of the service, and the agreement sets no limit on that amount. The agreement never defines \"Customer Materials\".",
+      "figures": [],
+      "capStated": false,
+      "undefinedTerms": ["Customer Materials"],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "unbounded",
+      "expectedSeverity": "high",
+      "expectedConfidence": "low",
+      "counterOffer": {
+        "rewrittenClause": "Customer will defend, indemnify and hold harmless Vendor from and against third-party claims, and the resulting damages and reasonable attorneys' fees, to the extent arising from Customer Data that infringes a third party's rights, and Customer's total liability under this Section 7.1 will not exceed the Subscription Fees paid in the 12 months before the claim.",
+        "request": "Could we narrow Section 7.1 to third-party claims caused by our Customer Data, and cap our total liability under it at the fees we paid in the previous 12 months? As written, it has no limit and refers to \"Customer Materials\", which the agreement doesn't define."
+      }
+    },
+    {
+      "id": "unilateral-change",
+      "clauseType": "unilateral_change",
+      "sentences": [
+        "Vendor may amend these Terms and Conditions at any time in its sole discretion, and each amendment takes effect when Vendor posts it in the Service."
+      ],
+      "explanation": "Tallyforge can change these terms whenever it chooses, and a change applies as soon as it is posted in the service, without your agreement.",
+      "figures": [],
+      "capStated": false,
+      "undefinedTerms": [],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "unbounded",
+      "expectedSeverity": "high",
+      "expectedConfidence": "high",
+      "counterOffer": {
+        "rewrittenClause": "Vendor may propose amendments to these Terms and Conditions by giving Customer written notice at least 30 days in advance, and an amendment takes effect only when both parties sign it.",
+        "request": "Could we change Section 8.1 so any change to the terms needs 30 days' written notice and only takes effect once we both sign it?"
+      }
+    },
+    {
+      "id": "early-termination-fee",
+      "clauseType": "minimum_commitment",
+      "sentences": [
+        "If Customer terminates this Agreement before the end of the Initial Term for any reason other than Vendor's uncured material breach, Customer will pay Vendor an early termination fee of $2,250."
+      ],
+      "explanation": "Leaving before the first 12 months end costs $2,250, unless you are leaving because Tallyforge breached the agreement and did not fix it. That is 3 months of the $750 monthly fee.",
+      "figures": [
+        {
+          "value": 2250,
+          "label": "Early termination fee",
+          "sentence": "If Customer terminates this Agreement before the end of the Initial Term for any reason other than Vendor's uncured material breach, Customer will pay Vendor an early termination fee of $2,250."
+        }
+      ],
+      "capStated": true,
+      "undefinedTerms": [],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "stated",
+      "expectedSeverity": "medium",
+      "expectedConfidence": "high",
+      "counterOffer": {
+        "rewrittenClause": "Customer may terminate this Agreement for convenience on 30 days' written notice, and no early termination fee applies.",
+        "request": "Could we remove the $2,250 early termination fee in Section 3.5 and instead let us end the agreement with 30 days' written notice?"
+      }
+    },
+    {
+      "id": "renewal-price-increase",
+      "clauseType": "price_increase",
+      "sentences": [
+        "Vendor may increase the Subscription Fee for any Renewal Term, provided that the increased fee will not exceed Vendor's standard list price for the Service at the time of renewal."
+      ],
+      "explanation": "Tallyforge can raise the fee at each renewal, up to its standard list price. The agreement does not say what that list price is, so the size of the increase can't be worked out from this document.",
+      "figures": [],
+      "capStated": true,
+      "undefinedTerms": [],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "unquantified",
+      "expectedSeverity": "medium",
+      "expectedConfidence": "medium",
+      "counterOffer": {
+        "rewrittenClause": "Vendor may increase the Subscription Fee for a Renewal Term by no more than 5% over the fee for the preceding term, provided that Vendor gives Customer written notice of the new fee at least 90 days before the renewal date.",
+        "request": "Could we cap renewal price increases in Section 3.3 at 5% over the previous term, with the new price sent to us in writing at least 90 days before renewal?"
+      }
+    },
+    {
+      "id": "arbitration-class-waiver",
+      "clauseType": "boilerplate",
+      "sentences": [
+        "Any dispute arising out of or relating to this Agreement will be resolved exclusively by final and binding arbitration before a single arbitrator, and not in court.",
+        "Customer waives any right to bring or take part in a class action, class arbitration or other representative proceeding against Vendor."
+      ],
+      "explanation": "Any dispute goes to private binding arbitration instead of court. You also give up the right to join a class action against Tallyforge.",
+      "figures": [],
+      "capStated": false,
+      "undefinedTerms": [],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "none",
+      "expectedSeverity": "low",
+      "expectedConfidence": "low",
+      "counterOffer": {
+        "rewrittenClause": "Any dispute arising out of or relating to this Agreement may be brought in the courts named in Section 9.3, and either party may instead choose binding arbitration only if the other party agrees in writing.",
+        "request": "Could we change Sections 9.1 and 9.2 so disputes go to court by default, with arbitration only if we both agree in writing, and drop the class action waiver?"
+      }
+    },
+    {
+      "id": "governing-law-venue",
+      "clauseType": "boilerplate",
+      "sentences": [
+        "This Agreement is governed by the laws of the State of Oregon, and the exclusive venue for any proceeding that is not subject to arbitration is the state and federal courts located in Multnomah County, Oregon."
+      ],
+      "explanation": "Oregon law applies, and any court case must be brought in Multnomah County, Oregon.",
+      "figures": [],
+      "capStated": false,
+      "undefinedTerms": [],
+      "refersToOutsideTerms": false,
+      "expectedExposure": "none",
+      "expectedSeverity": "low",
+      "expectedConfidence": "high",
+      "counterOffer": {
+        "rewrittenClause": "This Agreement is governed by the laws of the State of Washington, and any proceeding may be brought in the state or federal courts located in Whatcom County, Washington.",
+        "request": "Could we change Section 9.3 so Washington law applies and disputes can be heard in Whatcom County, where our business is based?"
+      }
+    }
+  ],
+  "deadlines": [
+    {
+      "days": 60,
+      "referencePoint": "before the renewal date",
+      "sentence": "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
+    },
+    {
+      "days": 30,
+      "referencePoint": "after receiving written notice of a material breach",
+      "sentence": "Either party may terminate this Agreement if the other party materially breaches it and does not cure the breach within 30 days after receiving written notice describing it."
+    },
+    {
+      "days": 30,
+      "referencePoint": "of the invoice date",
+      "sentence": "Customer will pay each invoice within 30 days of the invoice date."
+    },
+    {
+      "days": 15,
+      "referencePoint": "of the invoice date",
+      "sentence": "Customer must notify Vendor in writing of any disputed invoice amount within 15 days of the invoice date, after which the invoice is treated as accepted."
+    }
+  ],
+  "incorporatedTerms": [
+    {
+      "description": "Acceptable Use Policy at https://www.tallyforge.example/legal/aup",
+      "sentence": "Customer shall comply with Vendor's Acceptable Use Policy, available at https://www.tallyforge.example/legal/aup, which is incorporated into this Agreement by reference."
+    },
+    {
+      "description": "Data Processing Addendum at https://www.tallyforge.example/legal/dpa",
+      "sentence": "Vendor processes any personal data contained in Customer Data under Vendor's Data Processing Addendum, available at https://www.tallyforge.example/legal/dpa, which forms part of this Agreement."
+    }
+  ],
+  "summaryPoints": [
+    {
+      "text": "Harbor Lane Bakery subscribes to Tallyforge Inventory Cloud for a first term of 12 months at $750 a month, billed yearly in advance.",
+      "sentences": [
+        "Initial Term: 12 months from the Effective Date.",
+        "Subscription Fee: $750 per month, invoiced annually in advance."
+      ]
+    },
+    {
+      "text": "The subscription renews for another 12 months at $9,000 unless you cancel in writing at least 60 days before the renewal date.",
+      "sentences": [
+        "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
+      ]
+    },
+    {
+      "text": "You own your data and can export it as CSV at any time while the agreement runs.",
+      "sentences": [
+        "As between the parties, Customer owns all Customer Data.",
+        "Customer may export Customer Data in CSV format at any time while this Agreement is in effect."
+      ]
+    },
+    {
+      "text": "The agreement also binds you to an Acceptable Use Policy and a Data Processing Addendum that live on Tallyforge's website, not in this document.",
+      "sentences": [
+        "Customer shall comply with Vendor's Acceptable Use Policy, available at https://www.tallyforge.example/legal/aup, which is incorporated into this Agreement by reference.",
+        "Vendor processes any personal data contained in Customer Data under Vendor's Data Processing Addendum, available at https://www.tallyforge.example/legal/dpa, which forms part of this Agreement."
+      ]
+    }
+  ]
+}

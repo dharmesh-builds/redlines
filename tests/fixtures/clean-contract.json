@@ -1,0 +1,45 @@
+{
+  "document": "clean-contract.txt",
+  "periodicFee": {
+    "amount": 120,
+    "period": "month",
+    "sentence": "Fee: $120 per month, billed monthly in advance."
+  },
+  "clauses": [],
+  "deadlines": [
+    {
+      "days": 30,
+      "referencePoint": "written notice before Pinecrest ends the agreement",
+      "sentence": "Pinecrest may end this agreement by giving Customer at least 30 days' written notice, and will refund any fees paid for days after the agreement ends."
+    },
+    {
+      "days": 60,
+      "referencePoint": "after the agreement ends",
+      "sentence": "Customer may download all of its information as a spreadsheet at any time, including for 60 days after the agreement ends."
+    }
+  ],
+  "incorporatedTerms": [],
+  "summaryPoints": [
+    {
+      "text": "Northfield Physical Therapy pays $120 a month for Pinecrest's scheduling software, and the price stays fixed unless both sides sign a new agreement.",
+      "sentences": [
+        "Fee: $120 per month, billed monthly in advance.",
+        "The monthly fee stays at $120 for as long as this agreement is in effect, and any change to the fee requires a new agreement signed by both parties."
+      ]
+    },
+    {
+      "text": "The plan runs month to month, and you can cancel at any time with no cancellation fee.",
+      "sentences": [
+        "This agreement runs month to month, starting on the Start Date.",
+        "Pinecrest does not charge any cancellation fee, and Customer owes nothing further after the paid month ends."
+      ]
+    },
+    {
+      "text": "You own your data and can download it at any time, including for 60 days after the agreement ends.",
+      "sentences": [
+        "Customer owns all appointment records, client contact details and other information that Customer enters into the service.",
+        "Customer may download all of its information as a spreadsheet at any time, including for 60 days after the agreement ends."
+      ]
+    }
+  ]
+}

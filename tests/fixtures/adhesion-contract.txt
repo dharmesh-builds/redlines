@@ -1,0 +1,129 @@
+TALLYFORGE SUBSCRIPTION AGREEMENT
+
+ORDER FORM
+
+Order Number: TF-2026-0418
+Vendor: Tallyforge, Inc., 410 Mercer Street, Suite 200, Portland, OR 97209
+Customer: Harbor Lane Bakery LLC, 88 Quay Road, Bellingham, WA 98225
+Service: Tallyforge Inventory Cloud, Growth plan, up to 15 Users
+Effective Date: December 1, 2026
+Initial Term: 12 months from the Effective Date.
+Subscription Fee: $750 per month, invoiced annually in advance.
+Implementation Fee: $500, invoiced once on the Effective Date.
+
+By signing this Order Form, Customer agrees to the Terms and Conditions below.
+
+TERMS AND CONDITIONS
+
+1. Definitions
+
+1.1 "Agreement" means the Order Form together with these Terms and Conditions.
+
+1.2 "Service" means the hosted inventory and purchasing software named in the Order Form, including updates Vendor makes generally available to its customers.
+
+1.3 "Users" means the employees and contractors of Customer whom Customer authorizes to log in to the Service.
+
+1.4 "Customer Data" means the records, files and other information that Customer or its Users enter into the Service.
+
+1.5 "Initial Term" means the period stated in the Order Form, and "Renewal Term" means each renewal period described in Section 3.2.
+
+1.6 "Subscription Fee" means the recurring fee stated in the Order Form.
+
+2. Access and Use
+
+2.1 Subject to this Agreement, Vendor grants Customer a non-exclusive, non-transferable right for its Users to access and use the Service during the Initial Term and any Renewal Term for Customer's internal business purposes.
+
+2.2 Customer shall comply with Vendor's Acceptable Use Policy, available at https://www.tallyforge.example/legal/aup, which is incorporated into this Agreement by reference.
+
+2.3 Customer is responsible for keeping User login credentials confidential and for all activity that occurs under its Users' accounts.
+
+2.4 Vendor will provide email support on business days between 8 a.m. and 6 p.m. Pacific Time and will use commercially reasonable efforts to respond within one business day.
+
+2.5 Customer may not resell the Service, reverse engineer it, or use it to build a competing product.
+
+2.6 Vendor will make the Service available 24 hours a day, 7 days a week, except during scheduled maintenance, which Vendor will announce in advance by email and will schedule outside 6 a.m. to 8 p.m. Pacific Time where it can.
+
+2.7 Vendor will back up Customer Data daily and keep backups in a separate data center from the primary copy.
+
+2.8 As part of onboarding, Vendor will provide up to four hours of remote onboarding and training for Customer's Users at no extra charge.
+
+3. Term, Renewal and Termination
+
+3.1 This Agreement begins on the Effective Date and continues for the Initial Term.
+
+3.2 At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance.
+
+3.3 Vendor may increase the Subscription Fee for any Renewal Term, provided that the increased fee will not exceed Vendor's standard list price for the Service at the time of renewal.
+
+3.4 Either party may terminate this Agreement if the other party materially breaches it and does not cure the breach within 30 days after receiving written notice describing it.
+
+3.5 If Customer terminates this Agreement before the end of the Initial Term for any reason other than Vendor's uncured material breach, Customer will pay Vendor an early termination fee of $2,250.
+
+3.6 When this Agreement ends, Customer's right to use the Service stops, and any fees already invoiced remain payable.
+
+4. Fees and Payment
+
+4.1 Customer will pay each invoice within 30 days of the invoice date.
+
+4.2 Customer must notify Vendor in writing of any disputed invoice amount within 15 days of the invoice date, after which the invoice is treated as accepted.
+
+4.3 Fees do not include sales, use or similar taxes, which Customer will pay in addition to the fees, except for taxes on Vendor's income.
+
+4.4 Vendor may suspend access to the Service if an undisputed invoice remains unpaid after its due date, and will restore access promptly once the invoice is paid.
+
+5. Customer Data and Privacy
+
+5.1 As between the parties, Customer owns all Customer Data.
+
+5.2 Vendor will use Customer Data only to provide and support the Service and will not sell it.
+
+5.3 Vendor processes any personal data contained in Customer Data under Vendor's Data Processing Addendum, available at https://www.tallyforge.example/legal/dpa, which forms part of this Agreement.
+
+5.4 Vendor will maintain administrative, physical and technical safeguards designed to protect Customer Data against unauthorized access.
+
+5.5 Customer may export Customer Data in CSV format at any time while this Agreement is in effect.
+
+6. Confidentiality
+
+6.1 Each party will keep the other party's non-public business information confidential and will use it only to perform this Agreement.
+
+6.2 This obligation does not apply to information that is already public, that the receiving party already lawfully knew, or that it must disclose by law.
+
+6.3 Each party's confidentiality obligations continue for three years after this Agreement ends.
+
+7. Indemnity
+
+7.1 Customer will defend, indemnify and hold harmless Vendor and its officers, employees and affiliates from and against any and all claims, losses, damages, fines, costs and expenses, including reasonable attorneys' fees, arising out of or relating to Customer Materials or Customer's use of the Service.
+
+7.2 Customer will notify Vendor promptly of any claim it learns of that relates to the Service and will cooperate with Vendor in responding to it.
+
+8. Changes to These Terms
+
+8.1 Vendor may amend these Terms and Conditions at any time in its sole discretion, and each amendment takes effect when Vendor posts it in the Service.
+
+8.2 Vendor may update the features of the Service from time to time, provided that it does not materially reduce the core inventory functions during a paid term.
+
+9. Disputes
+
+9.1 Any dispute arising out of or relating to this Agreement will be resolved exclusively by final and binding arbitration before a single arbitrator, and not in court.
+
+9.2 Customer waives any right to bring or take part in a class action, class arbitration or other representative proceeding against Vendor.
+
+9.3 This Agreement is governed by the laws of the State of Oregon, and the exclusive venue for any proceeding that is not subject to arbitration is the state and federal courts located in Multnomah County, Oregon.
+
+10. General
+
+10.1 This Agreement is the entire agreement between the parties about the Service and replaces any earlier proposals or discussions.
+
+10.2 Notices under this Agreement must be sent by email to the addresses each party designates in writing, and are effective on the next business day after sending.
+
+10.3 Customer may not assign this Agreement without Vendor's prior written consent, but Vendor may assign it to a successor in a merger or sale of its business.
+
+10.4 Neither party is liable for a delay caused by events beyond its reasonable control, other than a delay in paying fees.
+
+10.5 If any provision of this Agreement is found unenforceable, the rest of the Agreement remains in effect.
+
+10.6 A failure to enforce any provision is not a waiver of the right to enforce it later.
+
+Signed for Tallyforge, Inc.: Dana Whitcombe, VP Sales
+Signed for Harbor Lane Bakery LLC: Marisol Ortega, Owner

@@ -446,3 +446,16 @@ Status: an unvalidated hypothesis.
   - The database password can't be read from Vercel (Sensitive). To get it, reset it in Supabase → Project Settings → Database, then type it into `.env.local` as `SUPABASE_DB_PASSWORD`. The Vercel `POSTGRES_*` vars go stale after a reset; the app doesn't use them.
   - `npx supabase login` is a browser sign-in that only the user can complete. After that I run `supabase link`.
 - **If not done before AFK:** the build writes migrations to `supabase/migrations/` and logs to `QUESTIONS.md` that they're unapplied. Anything that saves data stays untested until they're applied.
+
+### 31. Unattended build started; fixtures written
+- **What I asked for:** a long AFK build (pasted prompt). Orchestrate subagents ticket by ticket, fixtures first, write BUILD-REPORT.md, push at the end.
+- **Ramp-up findings:**
+  - The `implement` skill isn't installed, so I'm following the prompt directly. There's no CONTEXT.md (GLOSSARY.md is used instead). DESIGN.md and the Next app already exist.
+  - Fireworks serves the configured model with `response_format`, `structured_outputs` and `reasoning_effort`, so the provider pin is safe.
+  - Docker is absent, so ticket 11's real-instance tests can't run here.
+- **Done:**
+  - `.scratch/redline-v1/build-brief.md`: the shared rules for every subagent.
+  - The BUILD-REPORT.md skeleton.
+  - Fixtures `tests/fixtures/{adhesion,clean}-contract.{txt,json}`. The adhesion contract has 7 planted clauses (3 High, 2 Medium, 2 Low), a $750/month fee, 4 deadlines and 2 incorporated terms. The clean one has none.
+- **Verified here:** all 34 sidecar sentences occur verbatim exactly once in their .txt.
+- **Decision:** the price-increase fixture states a cap but no figure, so it's unquantified → Medium. That squares the prompt's "Medium" with ADR 0003's "uncapped = High".

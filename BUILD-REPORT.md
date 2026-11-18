@@ -18,6 +18,8 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 8. **Push.** CLAUDE.md says never push. Your prompt (step 9) explicitly asks for one push at the end, so I treated that as your approval. I'll push only once the build and tests pass.
 9. **Ticket 13 (labelled fixture set) is marked `ready-for-human`,** because it needs a person to label real contracts. I didn't build it. Ticket 12's seed fixtures stand in for it, marked provisional.
 10. **No "Learn by Doing" handoffs.** The session's learning mode normally hands small pieces of code to you. You're away, so I wrote everything.
+12. **The price-increase fixture is Medium, not High.** ADR 0003 calls an uncapped increase High, and the prompt asked for one Medium (unquantified) clause. So the fixture's renewal increase states a cap with no figure ("not exceed Vendor's standard list price"). That makes it unquantified, and therefore Medium.
+13. **Auto-renewal fixture sits on the line.** Its renewal fee is exactly 12 months of fees ($9,000 against $750/month), which tests the "at least 12 months" edge.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)
