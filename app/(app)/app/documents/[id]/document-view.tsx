@@ -2,6 +2,7 @@ import Link from "next/link";
 import { formatSavedDate, type DocumentDetail } from "../../../../../lib/library/library";
 import { redLineKey } from "../../../../../lib/analysis/red-lines";
 import { ReportView } from "../../../analyze/analyze-form";
+import { QuestionBox } from "../../../analyze/question-box";
 import { DeleteDocument } from "./delete-document";
 import { RecheckDocument } from "./recheck-document";
 
@@ -97,6 +98,9 @@ export function DocumentView({
       ) : (
         <ReportView report={report.content.report} saved={false} showRedLines />
       )}
+
+      {/* Questions read the saved text, so they work even without a current report. */}
+      <QuestionBox target={{ kind: "document", documentId: document.id }} />
 
       <DeleteDocument documentId={document.id} name={document.name} />
     </section>

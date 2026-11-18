@@ -181,13 +181,13 @@ export type ValidationResult =
   | { ok: true; value: ModelOutput }
   | { ok: false; errors: string[] };
 
-type Check = (value: unknown, path: string, errors: string[]) => void;
+export type Check = (value: unknown, path: string, errors: string[]) => void;
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-const isString: Check = (v, path, errors) => {
+export const isString: Check = (v, path, errors) => {
   if (typeof v !== "string") errors.push(`${path} must be a string`);
 };
 
@@ -203,7 +203,7 @@ const isInteger: Check = (v, path, errors) => {
   if (typeof v !== "number" || !Number.isInteger(v)) errors.push(`${path} must be a whole number`);
 };
 
-function oneOf(options: readonly string[]): Check {
+export function oneOf(options: readonly string[]): Check {
   return (v, path, errors) => {
     if (typeof v !== "string" || !options.includes(v)) {
       errors.push(`${path} must be one of: ${options.join(", ")}`);
@@ -217,7 +217,7 @@ function nullable(check: Check): Check {
   };
 }
 
-function arrayOf(check: Check): Check {
+export function arrayOf(check: Check): Check {
   return (v, path, errors) => {
     if (!Array.isArray(v)) {
       errors.push(`${path} must be a list`);
@@ -227,7 +227,7 @@ function arrayOf(check: Check): Check {
   };
 }
 
-function shape(fields: Record<string, Check>): Check {
+export function shape(fields: Record<string, Check>): Check {
   return (v, path, errors) => {
     if (!isObject(v)) {
       errors.push(`${path} must be an object`);

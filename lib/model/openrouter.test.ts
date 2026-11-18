@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { analyze, ModelCallError, ModelNotConfiguredError, ModelOutputError } from "../analysis";
-import { fixtureText, payloadFromSidecar } from "../../tests/support/scripted-model";
+import { analyze, ask, askOutputSchema, ModelCallError, ModelNotConfiguredError, ModelOutputError } from "../analysis";
+import { fixtureSidecar, fixtureText, payloadFromSidecar } from "../../tests/support/scripted-model";
 import { OPENROUTER_URL, createOpenRouterModel } from "./openrouter";
 
 const TEST_KEY = "sk-or-test-key-not-real";
@@ -123,5 +123,29 @@ describe("OpenRouter adapter", () => {
       for (const [k, v] of Object.entries(schema)) walk(v, `${path}.${k}`);
     })(body.response_format.json_schema.schema, "schema");
     expect(problems).toEqual([]);
+  });
+
+  it("sends ask with the pinned provider, low reasoning and the strict answer schema", async () => {
+    const sentence = fixtureSidecar("adhesion-contract").periodicFee!.sentence;
+    const fetchMock = vi.fn(async () =>
+      openRouterReply(
+        JSON.stringify({ outcome: "answered", answer: "$750 a month, billed yearly.", sourceSentences: [sentence] }),
+      ),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const answer = await ask(fixtureText("adhesion-contract"), "How much is the fee?", createOpenRouterModel());
+    expect(answer).toEqual({ kind: "answered", text: "$750 a month, billed yearly.", sources: [sentence] });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const body = JSON.parse((fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
+    expect(body.model).toBe(TEST_MODEL);
+    expect(body.provider).toEqual({ order: ["fireworks"], allow_fallbacks: false, require_parameters: true });
+    expect(body.reasoning).toEqual({ effort: "low" });
+    expect(body.response_format).toEqual({
+      type: "json_schema",
+      json_schema: { name: "document_answer", strict: true, schema: askOutputSchema },
+    });
+    expect(body.messages[1].content).toContain("How much is the fee?");
   });
 });

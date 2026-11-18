@@ -545,3 +545,10 @@ Status: an unvalidated hypothesis.
 - **Verified here:** tsc clean; 203/203; build OK; no new deps; fixtures untouched; 5 RLS lines in the new migration.
 - **T5:** checked by the subagent by breaking the severity rule (4/5 payloads failed), then restored.
 - **Design hook:** `.model-id` used a monospace stack not in DESIGN.md. Switched it to `--font-ui` with tabular numbers.
+
+### 40. Ticket 08 (question box) done
+- **Subagent built:**
+  - `ask()` with a strict `document_answer` schema; any failed, blank or missing source → not-in-document.
+  - The public `POST /api/ask` (unsaved text, same limits as analyse) and the signed-in `POST /api/documents/[id]/questions` (stored text only).
+  - A question box on both report views; answers kept for the visit only.
+- **Verified here:** tsc clean; 231/231; build OK; no new deps; fixtures untouched.

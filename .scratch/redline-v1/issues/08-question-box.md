@@ -4,9 +4,9 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `ask` returns answered (text + verified sources) or not-in-document
-- [ ] An answer whose sources fail verification becomes not-in-document
-- [ ] Runs server-side through the same model port; the browser never calls the model
-- [ ] T4: scripted "not in document" and scripted answers with fabricated sources both yield not-in-document
+- [x] `ask` returns answered (text + verified sources) or not-in-document
+- [x] An answer whose sources fail verification becomes not-in-document
+- [x] Runs server-side through the same model port; the browser never calls the model
+- [x] T4: scripted "not in document" and scripted answers with fabricated sources both yield not-in-document

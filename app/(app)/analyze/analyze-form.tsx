@@ -7,6 +7,7 @@ import type { AnalyzeResponse } from "../../../lib/api/analyze-contract";
 import { CLAUSE_TITLES } from "../../../lib/clause-labels";
 import { checkDocumentText } from "../../../lib/document-input";
 import { MAX_DOCUMENT_NAME, defaultDocumentName, resolveDocumentName } from "../../../lib/library/naming";
+import { QuestionBox, type QuestionTarget } from "./question-box";
 
 export type SavingMode =
   | { kind: "signed-in"; email: string }
@@ -14,6 +15,9 @@ export type SavingMode =
   | { kind: "unavailable" };
 
 type Result = { report: Report; saved: boolean; documentId?: string; showRedLines?: boolean };
+// The analysed result plus what its questions are asked of: the saved
+// document, or the exact text that was analysed when nothing was saved.
+type Checked = Result & { run: number; questionTarget: QuestionTarget };
 
 const NETWORK_ERROR = "Redline couldn't reach the server. Check your connection and try again.";
 
@@ -30,7 +34,8 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
   const [fileNote, setFileNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [result, setResult] = useState<Result | null>(null);
+  const [result, setResult] = useState<Checked | null>(null);
+  const [runs, setRuns] = useState(0);
 
   async function onFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -75,7 +80,15 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
       });
       const body = (await res.json()) as AnalyzeResponse;
       if ("error" in body) setError(body.error);
-      else setResult(body.saved ? { report: body.report, saved: true, documentId: body.documentId } : { report: body.report, saved: false });
+      else {
+        const run = runs + 1;
+        setRuns(run);
+        setResult(
+          body.saved
+            ? { report: body.report, saved: true, documentId: body.documentId, run, questionTarget: { kind: "document", documentId: body.documentId } }
+            : { report: body.report, saved: false, run, questionTarget: { kind: "text", text: checked.text } },
+        );
+      }
     } catch {
       setError(NETWORK_ERROR);
     } finally {
@@ -156,7 +169,13 @@ export function AnalyzeForm({ saving }: { saving: SavingMode }) {
         </p>
       </form>
 
-      {result ? <ReportView {...result} showRedLines={result.saved} /> : null}
+      {result ? (
+        <>
+          <ReportView report={result.report} saved={result.saved} documentId={result.documentId} showRedLines={result.saved} />
+          {/* A new check starts a fresh question box; earlier answers belonged to the old text. */}
+          <QuestionBox key={result.run} target={result.questionTarget} />
+        </>
+      ) : null}
     </>
   );
 }

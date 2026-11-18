@@ -32,6 +32,10 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
   - Each report keeps a copy of the red lines it was checked against. "Check again" makes a new report and keeps the old one.
   - The migration is `20261118000200_red_lines.sql`.
   - T5 is tested: adding a red line never removes a flag or lowers a severity.
+- **08 Question box: done.** 231 tests pass.
+  - An answer is shown only if every sentence it quotes is checked word for word. Otherwise the box says "Nothing in this agreement answers that question."
+  - Answers aren't saved.
+  - Routes: `POST /api/ask` (public, unsaved text) and `POST /api/documents/[id]/questions` (signed in, reads the saved text).
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -78,6 +82,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 38. **Reports are now version 2.** Reports saved before red lines existed show the "older version" note, with a button to check the agreement again.
 39. **Only a document's latest report is shown.** Earlier ones stay in the database, but no screen lists them. A history view would be new scope, so it needs your approval.
 40. **Fonts.** The model ID was shown in a monospace system font, which DESIGN.md doesn't allow. The design checker caught it, and I switched it to the interface font.
+41. **The question box works without an account too.** On an unsaved analysis, the browser sends back the exact text it just analysed, with the same length limits as the analysis. Your prompt only requires an account for the library and red lines. Signed in, questions are checked against the saved text, and any text the browser sends is ignored.
+42. **Questions are limited to 500 characters.** The prompt treats the question as something to look up, never as instructions. It rules out outside legal knowledge and questions about enforceability, legality or market norms.
+43. **Earlier answers stay on the page for that visit only,** newest first.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)

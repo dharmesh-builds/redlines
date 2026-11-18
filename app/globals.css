@@ -1393,3 +1393,67 @@ mark.on {
     gap: var(--space-2);
   }
 }
+
+/* Question box (ticket 08): a question on the desk, each answer a paper slip
+   with its quoted sentences highlighted, as in the report. */
+.question-box {
+  margin-top: var(--space-5);
+}
+
+.question-form {
+  margin-top: var(--space-3);
+}
+
+.question-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-1) var(--space-2);
+}
+
+.question-input {
+  flex: 1 1 18rem;
+  max-width: 40rem;
+  min-height: 44px;
+}
+
+.question-submit {
+  margin-top: 0;
+}
+
+.answer-list {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.answer-question {
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.answer-text {
+  margin: 0 0 10px;
+}
+
+.answer-quote {
+  margin: 0 0 8px;
+  font-size: 0.9375rem;
+}
+
+.answer-verified {
+  margin-bottom: 0;
+}
+
+.answer-none {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.answer-none-note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+}

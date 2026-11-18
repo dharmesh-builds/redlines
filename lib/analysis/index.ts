@@ -29,3 +29,11 @@ export {
   type ClauseType,
   type ModelOutput,
 } from "./contract";
+export {
+  ask,
+  askOutputSchema,
+  validateAskOutput,
+  ASK_SCHEMA_NAME,
+  type Answer,
+  type AskModelOutput,
+} from "./ask";
