@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { ClauseType, ModelOutput } from "../../lib/analysis/contract";
+import type { ClauseType, FeePeriod, FigureUnit, ModelOutput } from "../../lib/analysis/contract";
 import type { ModelPort, ModelRequest } from "../../lib/analysis/model-port";
 
 // Scripted model adapter for tests. It answers with a payload built from a
@@ -11,14 +11,17 @@ import type { ModelPort, ModelRequest } from "../../lib/analysis/model-port";
 const FIXTURES = fileURLToPath(new URL("../fixtures/", import.meta.url));
 
 type Sidecar = {
-  periodicFee: { amount: number; period: "month" | "quarter" | "year"; sentence: string } | null;
+  periodicFee: { amount: number; period: FeePeriod; sentence: string } | null;
   clauses: {
     id: string;
     clauseType: ClauseType;
     sentences: string[];
     explanation: string;
-    figures: { value: number; label: string; sentence: string }[];
+    figures: { value: number; unit: FigureUnit; per: FeePeriod | null; label: string; sentence: string }[];
+    costsMoney: boolean;
     capStated: boolean;
+    expectedExposure: "unbounded" | "stated" | "unquantified" | "none";
+    expectedSeverity: "high" | "medium" | "low";
     undefinedTerms: string[];
     refersToOutsideTerms: boolean;
     counterOffer: { rewrittenClause: string; request: string };
@@ -50,6 +53,7 @@ export function payloadFromSidecar(name: FixtureName): ModelOutput {
     : null;
 
   return {
+    periodicFee: fee,
     summaryPoints: sidecar.summaryPoints.map((p) => ({ text: p.text, sourceSentences: p.sentences })),
     deadlines: sidecar.deadlines.map((d) => ({
       days: d.days,
@@ -64,9 +68,15 @@ export function payloadFromSidecar(name: FixtureName): ModelOutput {
       clauseType: c.clauseType,
       sourceSentences: [...c.sentences],
       explanation: c.explanation,
-      figures: c.figures.map((f) => ({ value: f.value, label: f.label, sourceSentence: f.sentence })),
+      figures: c.figures.map((f) => ({
+        value: f.value,
+        unit: f.unit,
+        per: f.per,
+        label: f.label,
+        sourceSentence: f.sentence,
+      })),
+      costsMoney: c.costsMoney,
       capStated: c.capStated,
-      periodicFee: fee,
       undefinedTerms: [...c.undefinedTerms],
       refersToOutsideTerms: c.refersToOutsideTerms,
       matchedRedLine: null,

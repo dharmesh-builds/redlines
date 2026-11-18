@@ -23,8 +23,16 @@ export type ClauseType = (typeof CLAUSE_TYPES)[number];
 export const FEE_PERIODS = ["month", "quarter", "year"] as const;
 export type FeePeriod = (typeof FEE_PERIODS)[number];
 
+// What a figure counts. Money can be a one-off amount (per: null) or a
+// recurring one (per: "month" and so on). Code does all arithmetic; the model
+// only copies numbers out of the document.
+export const FIGURE_UNITS = ["money", "percent", "days", "months", "years", "count"] as const;
+export type FigureUnit = (typeof FIGURE_UNITS)[number];
+
 export type QuotedFigure = {
   value: number;
+  unit: FigureUnit;
+  per: FeePeriod | null;
   label: string;
   sourceSentence: string;
 };
@@ -45,8 +53,10 @@ export type CandidateFlag = {
   sourceSentences: string[];
   explanation: string;
   figures: QuotedFigure[];
+  // Whether the clause can make the customer pay or lose money. A clause that
+  // can't is Low severity: no direct money exposure.
+  costsMoney: boolean;
   capStated: boolean;
-  periodicFee: PeriodicFee | null;
   undefinedTerms: string[];
   refersToOutsideTerms: boolean;
   matchedRedLine: string | null;
@@ -70,6 +80,9 @@ export type IncorporatedTerm = {
 };
 
 export type ModelOutput = {
+  // The agreement's recurring fee, if the document states one. Code uses it to
+  // work out 12 months of fees, the line between High and Medium severity.
+  periodicFee: PeriodicFee | null;
   summaryPoints: SummaryPoint[];
   deadlines: Deadline[];
   incorporatedTerms: IncorporatedTerm[];
@@ -97,7 +110,19 @@ function object(properties: Record<string, JsonSchema>): JsonSchema {
 
 export const MODEL_OUTPUT_SCHEMA_NAME = "contract_analysis";
 
+const periodicFeeSchema: JsonSchema = {
+  anyOf: [
+    object({
+      amount: { type: "number" },
+      period: { type: "string", enum: [...FEE_PERIODS] },
+      sourceSentence: str,
+    }),
+    { type: "null" },
+  ],
+};
+
 export const modelOutputSchema: JsonSchema = object({
+  periodicFee: periodicFeeSchema,
   summaryPoints: {
     type: "array",
     items: object({ text: str, sourceSentences: strArray }),
@@ -118,19 +143,16 @@ export const modelOutputSchema: JsonSchema = object({
       explanation: str,
       figures: {
         type: "array",
-        items: object({ value: { type: "number" }, label: str, sourceSentence: str }),
+        items: object({
+          value: { type: "number" },
+          unit: { type: "string", enum: [...FIGURE_UNITS] },
+          per: { anyOf: [{ type: "string", enum: [...FEE_PERIODS] }, { type: "null" }] },
+          label: str,
+          sourceSentence: str,
+        }),
       },
+      costsMoney: { type: "boolean" },
       capStated: { type: "boolean" },
-      periodicFee: {
-        anyOf: [
-          object({
-            amount: { type: "number" },
-            period: { type: "string", enum: [...FEE_PERIODS] },
-            sourceSentence: str,
-          }),
-          { type: "null" },
-        ],
-      },
       undefinedTerms: strArray,
       refersToOutsideTerms: { type: "boolean" },
       matchedRedLine: { type: ["string", "null"] },
@@ -207,6 +229,9 @@ function shape(fields: Record<string, Check>): Check {
 }
 
 const checkModelOutput = shape({
+  periodicFee: nullable(
+    shape({ amount: isNumber, period: oneOf(FEE_PERIODS), sourceSentence: isString }),
+  ),
   summaryPoints: arrayOf(shape({ text: isString, sourceSentences: arrayOf(isString) })),
   deadlines: arrayOf(shape({ days: isInteger, referencePoint: isString, sourceSentence: isString })),
   incorporatedTerms: arrayOf(shape({ description: isString, sourceSentence: isString })),
@@ -215,11 +240,17 @@ const checkModelOutput = shape({
       clauseType: oneOf(CLAUSE_TYPES),
       sourceSentences: arrayOf(isString),
       explanation: isString,
-      figures: arrayOf(shape({ value: isNumber, label: isString, sourceSentence: isString })),
-      capStated: isBoolean,
-      periodicFee: nullable(
-        shape({ amount: isNumber, period: oneOf(FEE_PERIODS), sourceSentence: isString }),
+      figures: arrayOf(
+        shape({
+          value: isNumber,
+          unit: oneOf(FIGURE_UNITS),
+          per: nullable(oneOf(FEE_PERIODS)),
+          label: isString,
+          sourceSentence: isString,
+        }),
       ),
+      costsMoney: isBoolean,
+      capStated: isBoolean,
       undefinedTerms: arrayOf(isString),
       refersToOutsideTerms: isBoolean,
       matchedRedLine: nullable(isString),

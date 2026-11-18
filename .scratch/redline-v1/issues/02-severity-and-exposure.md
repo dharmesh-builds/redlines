@@ -9,13 +9,13 @@ Severity is computed by code from the model's structured output, never chosen by
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Model output carries figures (value + source sentence), whether a cap is stated, the periodic fee if stated, and a boilerplate clause type
-- [ ] A flag with any figure whose quote fails verification is dropped
-- [ ] Exposure is classed unbounded / stated (with arithmetic on quoted figures, e.g. "$778 × 12") / unquantified ("the document doesn't state the fee")
-- [ ] When the 12-month fee can't be computed from the document, a bounded stated exposure is Medium
-- [ ] Arbitration, class-action waiver, governing law and venue are always shown at Low
-- [ ] UI ranks flags High → Medium (unquantified first) → Low and shows each flag's figures
-- [ ] T3: every exposure number traces to a quoted figure or shown arithmetic
-- [ ] Edge-case tests: unbounded; exactly 12 months of fees; just below; fee not stated; boilerplate
+- [x] Model output carries figures (value + source sentence), whether a cap is stated, the periodic fee if stated, and a boilerplate clause type
+- [x] A flag with any figure whose quote fails verification is dropped
+- [x] Exposure is classed unbounded / stated (with arithmetic on quoted figures, e.g. "$778 × 12") / unquantified ("the document doesn't state the fee")
+- [x] When the 12-month fee can't be computed from the document, a bounded stated exposure is Medium
+- [x] Arbitration, class-action waiver, governing law and venue are always shown at Low
+- [x] UI ranks flags High → Medium (unquantified first) → Low and shows each flag's figures
+- [x] T3: every exposure number traces to a quoted figure or shown arithmetic
+- [x] Edge-case tests: unbounded; exactly 12 months of fees; just below; fee not stated; boilerplate

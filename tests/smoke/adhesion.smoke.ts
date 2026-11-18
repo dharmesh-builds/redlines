@@ -10,7 +10,8 @@ it("analyses the adhesion fixture with the real model", async () => {
 
   const lines = [`Model: ${report.modelId}`, ""];
   report.flags.forEach((flag, i) => {
-    lines.push(`${i + 1}. [${flag.clauseType}] ${flag.explanation}`);
+    lines.push(`${i + 1}. [${flag.severity} severity, ${flag.exposure.kind}] [${flag.clauseType}] ${flag.explanation}`);
+    lines.push(`   Exposure: ${flag.exposure.statement}`);
     for (const sentence of flag.sourceSentences) lines.push(`   > ${sentence}`);
     lines.push("");
   });

@@ -8,6 +8,9 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
   - Other pages and routes: `/sign-in` (email link), `/auth/callback`, `/auth/sign-out`, and the `POST /api/analyze` route.
   - The migration is `supabase/migrations/20261118000100_documents_reports.sql`.
   - Sign-in and the database rules are built but couldn't be tried out: no Supabase was available.
+- **02 Severity and exposure: done.** 65 tests pass.
+  - Severity, exposure and ranking are all worked out by code from quoted figures.
+  - Whenever an amount is calculated, the sum is shown, e.g. "$750 × 12 = $9,000".
 
 ## Decisions made in your absence
 1. **The `mattpocock-skills:implement` skill isn't installed in this environment.** I followed the steps in your prompt directly.
@@ -28,6 +31,13 @@ Started 2026-11-18. I'm keeping this file up to date as the build runs, so if it
 15. **The landing page's "Try it" link now goes to `/analyze`.** `/app` needs an account, and pasting must not.
 16. **Without Supabase, the proxy now sends `/app/*` to `/sign-in`.** Before, those pages loaded with no protection at all.
 17. **The smoke script runs through Vitest with its own config** (`vitest.smoke.config.mts`), so it needed no new dependency, and `npm test` doesn't pick it up.
+18. **New fields in what the model returns (ticket 02).**
+    - The periodic fee is stated once for the whole contract, not once per flag.
+    - Each figure carries a `unit` and a `per` (e.g. dollars per month).
+    - Each flag says whether the clause costs money at all. Without that, a no-money clause with no cap would rank High.
+19. **A quoted amount must actually appear in its sentence.** A figure whose number isn't written in digits in its verified sentence drops the whole flag, the same as a misquote.
+20. **The amount at stake is the largest one the flag's own figures support.** Within High, uncapped flags come first. Within each level, larger amounts come first.
+21. **Removed a thick coloured side border from the form error message** (`.form-error` in `app/globals.css`). The design checker flagged it as a known tell of AI-made screens, and DESIGN.md doesn't call for it.
 11. **Status lines.** A finished ticket is marked `Status: done`. A ticket that is stuck or can't be checked is marked `Status: blocked`, with the reason given here.
 
 ## Couldn't be verified (Supabase or the key missing)

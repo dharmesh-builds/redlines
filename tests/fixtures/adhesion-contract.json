@@ -16,15 +16,20 @@
       "figures": [
         {
           "value": 9000,
+          "unit": "money",
+          "per": null,
           "label": "Renewal Term fee",
           "sentence": "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
         },
         {
           "value": 60,
+          "unit": "days",
+          "per": null,
           "label": "Days of notice needed to cancel",
           "sentence": "At the end of the Initial Term and of each Renewal Term, this Agreement will automatically renew for a further Renewal Term of 12 months unless Customer gives Vendor written notice of cancellation at least 60 days before the renewal date, and the fee for each Renewal Term is $9,000, payable in advance."
         }
       ],
+      "costsMoney": true,
       "capStated": true,
       "undefinedTerms": [],
       "refersToOutsideTerms": false,
@@ -44,6 +49,7 @@
       ],
       "explanation": "You must cover all of Tallyforge's claims, losses and legal costs linked to \"Customer Materials\" or your use of the service, and the agreement sets no limit on that amount. The agreement never defines \"Customer Materials\".",
       "figures": [],
+      "costsMoney": true,
       "capStated": false,
       "undefinedTerms": ["Customer Materials"],
       "refersToOutsideTerms": false,
@@ -63,6 +69,7 @@
       ],
       "explanation": "Tallyforge can change these terms whenever it chooses, and a change applies as soon as it is posted in the service, without your agreement.",
       "figures": [],
+      "costsMoney": true,
       "capStated": false,
       "undefinedTerms": [],
       "refersToOutsideTerms": false,
@@ -84,10 +91,13 @@
       "figures": [
         {
           "value": 2250,
+          "unit": "money",
+          "per": null,
           "label": "Early termination fee",
           "sentence": "If Customer terminates this Agreement before the end of the Initial Term for any reason other than Vendor's uncured material breach, Customer will pay Vendor an early termination fee of $2,250."
         }
       ],
+      "costsMoney": true,
       "capStated": true,
       "undefinedTerms": [],
       "refersToOutsideTerms": false,
@@ -107,6 +117,7 @@
       ],
       "explanation": "Tallyforge can raise the fee at each renewal, up to its standard list price. The agreement does not say what that list price is, so the size of the increase can't be worked out from this document.",
       "figures": [],
+      "costsMoney": true,
       "capStated": true,
       "undefinedTerms": [],
       "refersToOutsideTerms": false,
@@ -127,6 +138,7 @@
       ],
       "explanation": "Any dispute goes to private binding arbitration instead of court. You also give up the right to join a class action against Tallyforge.",
       "figures": [],
+      "costsMoney": false,
       "capStated": false,
       "undefinedTerms": [],
       "refersToOutsideTerms": false,
@@ -146,6 +158,7 @@
       ],
       "explanation": "Oregon law applies, and any court case must be brought in Multnomah County, Oregon.",
       "figures": [],
+      "costsMoney": false,
       "capStated": false,
       "undefinedTerms": [],
       "refersToOutsideTerms": false,

@@ -476,3 +476,19 @@ Status: an unvalidated hypothesis.
 - The agent reports that with the verbatim check disabled, 5 tests fail, so the tests bite.
 - **Decisions:** 200-char minimum paste; landing CTA → `/analyze`; the proxy redirects `/app` to sign-in when Supabase is absent.
 - **Not verified:** real Supabase sign-in and storage (none provisioned by design for this run).
+
+### 33. Ticket 02 (severity and exposure) done
+- **Subagent built:**
+  - `lib/analysis/exposure.ts`: code-computed exposure (unbounded/stated/unquantified) and severity, with the arithmetic shown.
+  - Ranking: High (uncapped first) → Medium unquantified → Medium stated → Low.
+  - The UI shows severity tabs and figures with their quotes.
+- **Contract changes:**
+  - The periodic fee moved to the top level.
+  - Figures gained `unit`/`per`.
+  - Flags gained `costsMoney`.
+  - A figure's number must appear in its verified sentence, or the flag drops.
+- **Verified here:**
+  - tsc clean; 65/65 tests; build OK.
+  - The fixture .txt is unchanged, and the sidecar sentences are still verbatim (25/25).
+- **Design hook:** the `.form-error` 3px left border (from ticket 01) is a side-tab tell. Removed it here; the build still passes.
+- **Open risk:** whether the real model fills `unit`/`per`/`costsMoney` reliably; the smoke run at the end will show it.

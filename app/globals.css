@@ -831,8 +831,6 @@ mark.on {
 
 .form-error {
   margin: var(--space-2) 0 0;
-  padding-left: 12px;
-  border-left: 3px solid var(--tab-high);
   font-weight: 600;
   max-width: 52ch;
 }
@@ -939,16 +937,61 @@ mark.on {
   gap: var(--space-3);
 }
 
-.flag-slip .flag-explanation {
-  margin: 6px 0 14px;
-  font-size: 0.9375rem;
-  line-height: 1.45;
+/* A flag in the report: its severity tab (length = severity) sits above its
+   note, as on a phone-width sheet. The tab still pulls the note open and shut. */
+.flag-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.flag-slip .slip-quote {
-  margin: 0 0 10px;
+.flag-item .flag-tab,
+.flag-item .flag-note {
+  position: static;
 }
 
-.flag-slip .slip-quote mark {
+.flag-item .flag-tab {
+  margin: 0;
+}
+
+.flag-item .flag-note {
+  width: 100%;
+  box-shadow: 0 16px 32px -14px var(--lift), 0 2px 6px var(--lift-soft);
+}
+
+.flag-note .slip-quote {
+  margin: 0 0 12px;
+}
+
+.flag-note .slip-quote mark {
   transition: none;
+}
+
+.flag-note .note-facts {
+  margin-top: 4px;
+}
+
+.figure-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.figure-source {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.875rem;
+}
+
+.figure-source q {
+  font-family: var(--font-doc), Georgia, serif;
+}
+
+@media (max-width: 640px) {
+  .flag-note .note-facts div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 }

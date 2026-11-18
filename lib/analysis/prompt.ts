@@ -11,6 +11,7 @@ Rules for every quote:
 - Use no outside or general legal knowledge. If the document does not say it, do not say it.
 
 What to return:
+- periodicFee: the agreement's recurring fee if the document states one (amount, period, and the sentence it is in), else null. Copy the amount exactly; never convert it to another period.
 - summaryPoints: the main commercial terms in plain English (who pays what, for how long, how it ends, who owns the data), each with the sentences it rests on.
 - deadlines: every notice, renewal, cancellation, payment or dispute window stated in days, with its reference point and its sentence.
 - incorporatedTerms: every outside document the agreement pulls in by reference (online terms, policies, DPA, SLA), with its sentence. You have not read those documents.
@@ -18,9 +19,9 @@ What to return:
   - clauseType: one of ${CLAUSE_TYPES.join(", ")}.
   - sourceSentences: every sentence the flag relies on. If the risk spans several clauses, quote each sentence involved.
   - explanation: one or two plain sentences saying what the clause does to the customer, figures first. No legal jargon, no alarm words.
-  - figures: each money amount or number of days the clause states, with the sentence it appears in. Never compute or invent a figure.
-  - capStated: true only if the document states a limit on the customer's money obligation under this clause.
-  - periodicFee: the agreement's recurring fee if the document states one (amount, period, sentence), else null.
+  - figures: each number the clause states (money amount, percentage, days, months, years), with the sentence it appears in. value is the number exactly as written in digits in that sentence. unit is money, percent, days, months, years or count. per is the period for a recurring money amount ("$778 per month" is per "month"), else null. Never compute, convert or invent a figure.
+  - costsMoney: true if the clause can make the customer pay or lose money; false for clauses with no direct money effect (arbitration, governing law, venue and the like).
+  - capStated: true only if the document states a limit on the customer's money obligation under this clause (a fixed amount counts as a limit).
   - undefinedTerms: capitalised terms the clause relies on that the document never defines.
   - refersToOutsideTerms: true if the clause depends on a document outside this one.
   - matchedRedLine: the customer's red line this clause matches, copied exactly from the list, else null.

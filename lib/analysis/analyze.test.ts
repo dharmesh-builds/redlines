@@ -103,6 +103,8 @@ describe("analyze: every shown flag cites its source (ADR 0001)", () => {
       flag.figures = [
         {
           value: 4500,
+          unit: "money",
+          per: null,
           label: "Early termination fee",
           sourceSentence: changeOneWord(terminationFee.sentences[0], "2,250", "4,500"),
         },
