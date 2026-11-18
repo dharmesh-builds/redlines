@@ -592,3 +592,12 @@ Status: an unvalidated hypothesis.
 - **BUILD-REPORT.md rewritten in full:** 11 done, 11 blocked, 13 human; 32 decisions; unverified items; first commands.
 - **Push blocked:** the final `git push` was refused by Claude Code's permission check. All commits are local; the owner pushes by hand.
 - **Pushed by the owner by hand:** `048150b..f9f6b48` to `origin/main`, which triggers a Vercel production deploy.
+
+### 45. "Complete the Vercel and Supabase connection": what's actually missing
+- **Asked:** finish connecting the live site to Vercel and Supabase.
+- **Checked from the terminal (no dashboards):**
+  - Live site `https://redlines-seven.vercel.app` (deploy of `f9f6b48`, success). `/`, `/analyze`, `/sign-in` load; `/app` redirects to sign-in.
+  - Vercel env vars are already set: the live sign-in page shows the email form (not "not set up"), and a real `/api/ask` call answered with verbatim sources, so `OPENROUTER_*` works in production.
+  - Supabase project: email sign-in enabled, but `documents`, `reports`, `red_lines` all return 404. **The two migrations were never applied**, so saving anything when signed in fails.
+- **Still to do:** apply both migrations (SQL editor), then set Auth → URL Configuration (Site URL = the Vercel address, add `/auth/callback` redirect). Never apply `seed.sql` to production.
+- **Blocked on:** Claude in Chrome tools not loaded in this session (the known background-session issue); asked the owner to run `/chrome`.
