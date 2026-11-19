@@ -212,11 +212,18 @@ export function assess(
     return { exposure: { kind: "none", statement: EXPOSURE_COPY.none }, severity: "low" };
   }
 
-  if (!candidate.capStated) {
+  const amounts = statedAmounts(figures, line);
+
+  // A commitment clause's stated amount is the commitment itself (ADR 0003:
+  // auto-renewal exposure is "the renewal commitment the document states"),
+  // so it bounds the exposure whatever the model said about a cap. Other
+  // clauses keep the model's answer: an indemnity that mentions one fine is
+  // still uncapped.
+  const bounded = candidate.capStated || (COMMITMENT_CLAUSES.has(candidate.clauseType) && amounts.length > 0);
+  if (!bounded) {
     return { exposure: { kind: "unbounded", statement: EXPOSURE_COPY.unbounded }, severity: "high" };
   }
 
-  const amounts = statedAmounts(figures, line);
   if (amounts.length === 0) {
     return { exposure: { kind: "unquantified", statement: EXPOSURE_COPY.unquantified }, severity: "medium" };
   }
@@ -239,6 +246,10 @@ export function assess(
     severity: high ? "high" : "medium",
   };
 }
+
+// Clauses whose cost is the amount they commit the customer to (PRD §5:
+// renewal fee, minimum commitment, early-termination fee).
+const COMMITMENT_CLAUSES: ReadonlySet<ClauseType> = new Set(["auto_renewal", "minimum_commitment", "termination"]);
 
 function isBoilerplate(type: ClauseType) {
   return type === "boilerplate";

@@ -104,12 +104,38 @@ describe("analyze: severity and exposure on the planted clauses", () => {
 describe("analyze: severity edge cases", () => {
   it("unbounded: a money clause with no cap is High, even with figures", async () => {
     const payload = tamperedPayload("adhesion-contract", (p) => {
-      p.candidateFlags.find((f) => f.clauseType === "minimum_commitment")!.capStated = false;
+      p.candidateFlags.find((f) => f.clauseType === "price_increase")!.capStated = false;
     });
-    const flag = flagOf(await run(payload), "minimum_commitment");
+    const flag = flagOf(await run(payload), "price_increase");
     expect(flag.exposure.kind).toBe("unbounded");
     expect(flag.severity).toBe("high");
     expect(flag.exposure.statement).toMatch(/No limit/);
+  });
+
+  it("a commitment clause's stated amount is its exposure, even when the model says no cap", async () => {
+    // The live model said "no cap" for a $36,000 renewal and a $2,000 × 12
+    // commitment, and both showed "No limit". The stated amount is the
+    // commitment (ADR 0003), so it is shown whatever capStated says.
+    const honest = await run();
+    const payload = tamperedPayload("adhesion-contract", (p) => {
+      for (const f of p.candidateFlags) {
+        if (f.clauseType === "auto_renewal" || f.clauseType === "minimum_commitment") f.capStated = false;
+      }
+    });
+    const report = await run(payload);
+    for (const type of ["auto_renewal", "minimum_commitment"] as const) {
+      const flag = flagOf(report, type);
+      expect(flag.exposure.kind).toBe("stated");
+      expect(flag.exposure.statement).not.toMatch(/No limit/);
+      expect(flag.exposure).toEqual(flagOf(honest, type).exposure);
+      expect(flag.severity).toBe(flagOf(honest, type).severity);
+    }
+  });
+
+  it("an uncapped indemnity with no amount stays unbounded", async () => {
+    const flag = flagOf(await run(), "indemnity");
+    expect(flag.exposure.kind).toBe("unbounded");
+    expect(flag.severity).toBe("high");
   });
 
   it("exactly 12 months of fees is High, and the arithmetic is shown", async () => {
