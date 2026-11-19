@@ -59,12 +59,16 @@ export type Summary = {
 /**
  * The day count as it is written in `sentence`: digits followed by "day" or
  * "days", optionally "calendar", "business" or "working" days, and allowing
- * "sixty (60) days" and "30-day". Number words alone are not accepted: a
- * deadline written only in words is dropped, the same way a figure is.
- * Returns the unit as written ("days", "business days"), or null.
+ * "sixty (60) days" and "30-day". The word for "day" may also be Spanish or
+ * Portuguese (días, dias), French (jours), Italian (giorni), German (Tage) or
+ * Dutch (dagen), so a deadline in an agreement in one of those languages isn't
+ * dropped. Number words alone are not accepted: a deadline written only in
+ * words is dropped, the same way a figure is.
+ * Returns the unit for display ("days", "business days"), or null.
  */
 function dayCountIn(sentence: string, days: number): string | null {
-  const DAY_COUNT = /(\d{1,3}(?:,\d{3})+|\d+)\)?[\s-]*(?:(calendar|business|working)[\s-]+)?days?\b/gi;
+  const DAY_COUNT =
+    /(\d{1,3}(?:,\d{3})+|\d+)\)?[\s-]*(?:(calendar|business|working)[\s-]+)?(?:days?|d[ií]as?|jours?|giorn[oi]|tag(?:e|en)?|dag(?:en)?)\b/gi;
   for (const match of sentence.matchAll(DAY_COUNT)) {
     if (Number(match[1].replace(/,/g, "")) !== days) continue;
     const kind = match[2]?.toLowerCase();

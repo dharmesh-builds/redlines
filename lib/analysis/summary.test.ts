@@ -141,6 +141,33 @@ describe("analyze: T2 for the summary, every unverified item is dropped", () => 
   });
 });
 
+describe("analyze: deadlines in an agreement that isn't in English", () => {
+  const spanish =
+    "CONTRATO DE SUSCRIPCIÓN DE SOFTWARE\n\nCuota: 500 euros al mes, facturados mensualmente por adelantado.\n\n" +
+    "2. Al finalizar el Plazo inicial, este Contrato se renovará automáticamente por periodos sucesivos de 12 meses, " +
+    "salvo que el Cliente notifique por escrito su voluntad de no renovar con al menos 90 días de antelación a la fecha de renovación.";
+  const renewal =
+    "2. Al finalizar el Plazo inicial, este Contrato se renovará automáticamente por periodos sucesivos de 12 meses, " +
+    "salvo que el Cliente notifique por escrito su voluntad de no renovar con al menos 90 días de antelación a la fecha de renovación.";
+  const payload = (days: number) => ({
+    periodicFee: null,
+    summaryPoints: [],
+    deadlines: [{ days, relation: "before", referencePoint: "the renewal date", sourceSentence: renewal }],
+    incorporatedTerms: [],
+    candidateFlags: [],
+  });
+
+  it("keeps a day count written as \"90 días\"", async () => {
+    const { summary } = await run(spanish, payload(90));
+    expect(summary.deadlines.map((d) => d.display)).toEqual(["90 days before the renewal date"]);
+  });
+
+  it("still drops a number that counts months (\"12 meses\"), not days", async () => {
+    const { summary } = await run(spanish, payload(12));
+    expect(summary.deadlines).toEqual([]);
+  });
+});
+
 describe("analyze: incorporated terms are a summary note, not a flag (ADR 0005)", () => {
   it("they never change a flag's severity or exposure, and never add a flag", async () => {
     const withTerms = await run(adhesion, payloadFromSidecar("adhesion-contract"));
