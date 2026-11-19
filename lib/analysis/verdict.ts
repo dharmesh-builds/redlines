@@ -33,8 +33,12 @@ function joinNames(names: string[]): string {
 export function computeVerdict(
   flags: readonly { severity: Severity }[],
   incorporatedTerms: readonly IncorporatedTermShown[],
+  summaryPointCount: number,
 ): Verdict {
   if (flags.some((f) => f.severity === "high" || f.severity === "medium")) return { present: false };
+  // No verified flag and no verified summary point: nothing shows this text is
+  // an agreement, so there are no terms to reassure the reader about.
+  if (flags.length === 0 && summaryPointCount === 0) return { present: false };
   const unreadTerms = incorporatedTerms.map((t) => t.description.trim());
   let text: string = VERDICT_COPY.clean;
   if (unreadTerms.length === 1) text += ` ${VERDICT_COPY.unreadOne(unreadTerms[0])}`;

@@ -37,6 +37,23 @@ describe("analyze: the verdict line (Q4)", () => {
     expect(report.verdict).toEqual({ present: true, unreadTerms: [], text: CLEAN_LINE });
   });
 
+  it("text that isn't an agreement (no flags, no summary point): absent", async () => {
+    const recipe =
+      "Weeknight Tomato Soup\n\nHeat two tablespoons of olive oil in a large pot over medium heat. " +
+      "Add one chopped onion and cook for eight minutes until soft.";
+    const nothingFound: ModelOutput = {
+      periodicFee: null,
+      summaryPoints: [],
+      deadlines: [],
+      incorporatedTerms: [],
+      candidateFlags: [],
+    };
+    const report = await run(recipe, nothingFound);
+    expect(report.flags).toHaveLength(0);
+    expect(report.summary.points).toHaveLength(0);
+    expect(report.verdict).toEqual({ present: false });
+  });
+
   it("Low flags only: present", async () => {
     const report = await run(adhesion, keepBands(["low"], { keepTerms: false }));
     expect(report.flags.length).toBeGreaterThan(0);

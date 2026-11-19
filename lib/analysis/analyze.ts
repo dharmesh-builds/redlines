@@ -149,7 +149,7 @@ export async function analyze(
     modelId: response.modelId,
     redLines: lines,
     summary,
-    verdict: computeVerdict(flags, summary.incorporatedTerms),
+    verdict: computeVerdict(flags, summary.incorporatedTerms, summary.points.length),
     flags,
     candidateFlagCount,
     droppedFlagCount: candidateFlagCount - flags.length,
