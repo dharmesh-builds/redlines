@@ -211,3 +211,76 @@ These happened once and did not happen again in the runs that followed. None was
   - The Copy button changes to "Copied" when clicked. The clipboard's contents were not read, to avoid a browser permission prompt.
   - The known dark-mode issue is still present: in dark mode `--lift` resolves to nothing and no element on the report has a shadow. The PRD makes no promise about this.
 - **Not tested:** sign-in and its callback (signing out was ruled out), the rule that each user sees only their own rows (needs a second account), and file upload (paste only, as instructed).
+
+---
+
+## Security review
+
+Reviewed 19 Nov 2026 by reading the code on `main` (commit `b84ef1d`), with no changes made. The method was Anthropic's `claude-code-security-review` instructions (`.claude/commands/security-review.md`), applied to every file rather than to a diff:
+
+- One pass looked for problems. Each candidate was then checked again independently against its false-positive rules.
+- Only problems rated at least 8 out of 10 for real exploitability are listed.
+- Order of review: `supabase/migrations`, sign-in and sign-out, every server route that reads or writes the database, every environment-variable read, then the rest of `app/` and `lib/`.
+- Skipped: `node_modules`, tests, fixtures, the lock file and documentation.
+
+### 9. A crafted sign-in link sends the reader to another site right after they sign in
+
+**Where**
+- `lib/auth/safe-next.ts:6`: `safeNextPath` checks the decoded `next` value for a leading `/`, a leading `//` and a backslash. It doesn't reject a tab, newline or carriage return.
+- `app/(app)/sign-in/page.tsx:45` and `app/(app)/sign-in/sign-in-form.tsx:18-22`: the value goes into the email link as `/auth/callback?next=…`.
+- `app/auth/callback/route.ts:11` and `:20`: after the sign-in code is exchanged, the route runs `NextResponse.redirect(new URL(next, url.origin))`.
+
+**Steps**
+1. Someone sends a Redline user the link `https://redlines-seven.vercel.app/sign-in?next=/%09/evil.example/login`. `%09` is a tab.
+2. The user enters their email on the real sign-in page. They get the genuine Supabase sign-in email and click it.
+3. `/auth/callback` signs them in. It then redirects them to `https://evil.example/login`. The URL parser drops the tab, so `/<tab>/evil.example` becomes `//evil.example`, a different site.
+
+Checked locally:
+- `new URL("/\t/evil.example", "https://redlines-seven.vercel.app")` gives `https://evil.example/`. A newline (`%0A`) does the same.
+- `NextResponse.redirect` sends any well-formed URL without checking that it is on the same site.
+
+Not checked on the live site, because that needs a sign-in email.
+
+**What the product promises**
+- The guard's own comment, `lib/auth/safe-next.ts:1-2`: "Only same-site paths are allowed, so a crafted link can't bounce a fresh session to another site."
+- CLAUDE.md: "a user can read only their own rows". This finding doesn't break that, since no data or session is exposed. It does put the user on an attacker's page that looks trustworthy.
+
+**What happened instead**
+The guard accepts a path that the browser-standard URL parser resolves to another host. The session cookie isn't leaked, because it is scoped to Redline's host.
+
+The user arrives at the attacker's page straight from a real Redline email and a successful sign-in. A page there posing as Redline is believable. It could ask them to "upload your agreement again", which would hand over the confidential contracts this product exists to protect, or to "sign in again" with another password.
+
+**Severity:** medium. It is a phishing aid, not account takeover.
+
+### Checked and held up
+
+- **Row-level security** (`supabase/migrations/20261118000100_documents_reports.sql`, `…000200_red_lines.sql`):
+  - It is on for `documents`, `reports` and `red_lines`.
+  - Each table has separate select, insert, update and delete policies for `authenticated`, scoped to `user_id = (select auth.uid())`, with `WITH CHECK` on insert and update.
+  - A report can only be attached to a document the user owns.
+  - Nothing is granted to `anon`, and there are no views.
+  - The trigger function is not `SECURITY DEFINER`. The one `SECURITY DEFINER` helper in `seed.sql` is test-only and granted only to `service_role`.
+- **Sessions:**
+  - `proxy.ts` and `lib/supabase/session.ts` use `getUser()`, which verifies the session with Supabase. Errors count as signed out.
+  - Every `/app` page and API route checks the user again on the server.
+  - Sign-out (`app/auth/sign-out/route.ts`) is POST-only.
+- **Server routes:**
+  - All 8 API handlers resolve the user on the server before touching data.
+  - They check ids are UUIDs and filter by both `user_id` and id, through a client acting as the user, so row-level security applies too.
+  - The new `?report=` option only picks among the user's own document's reports.
+  - Input sizes are capped.
+- **Secrets:**
+  - `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` are read only in `lib/model/openrouter.ts`, which is marked `server-only` and neither returns nor logs the key.
+  - The app uses no service-role key.
+  - Only the Supabase URL and anon key are `NEXT_PUBLIC_`.
+  - No client component imports a server module.
+  - No real key or `.env` file appears in git history.
+- **XSS:**
+  - The only `dangerouslySetInnerHTML` is a fixed theme script in `app/layout.tsx:30`.
+  - Document and model text is rendered as plain React text.
+  - PDF and Word parsing extract plain text only.
+- **Not checked:**
+  - The production Supabase dashboard settings: redirect allow-list, signups, email confirmation. They aren't in the repo.
+  - The two lower candidates, which fell below the bar:
+    - CSRF on the JSON APIs: session cookies are `SameSite=Lax`, so a cross-site POST arrives signed out.
+    - Writing directly to Supabase with one's own token to exceed app limits: it affects only one's own rows.
