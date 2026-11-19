@@ -77,7 +77,7 @@ export function DocumentView({
         </p>
       ) : null}
       {outOfDate ? <p className="field-note red-line-stale">Your red lines have changed since this check.</p> : null}
-      <RecheckDocument documentId={document.id} />
+      <RecheckDocument documentId={document.id} reportId={report?.meta.id ?? null} />
 
       {!report ? (
         <div className="library-state">
