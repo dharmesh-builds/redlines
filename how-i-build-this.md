@@ -748,3 +748,10 @@ Status: an unvalidated hypothesis.
 - **Finding 5 (earlier reports unreachable):** `loadDocument` now returns all reports and takes an optional report ID (`?report=<id>`, ignored unless it belongs to that document). The page lists "All reports on this agreement" when there are 2+, and marks an open older report "This is an earlier report." with a link back.
 - **Copy:** new UI strings for 4 and 5 run through the humanizer skill; no changes needed beyond "Try again."
 - **Checks:** typecheck, 288 tests, build all pass. All on branch `fix-deadlines-non-english` with finding 2; not pushed.
+
+## Fix cosmetic findings 6, 7 and 8 (2026-11-19)
+- **Asked:** fix findings 6–8, security review, merge to main. Findings 2–5 were already merged and live (`redlines-azr0lcats`).
+- **6 (UTC dates):** `formatSavedDate` formatted in UTC on purpose (server can't know the zone). It now takes a time zone; new client component `app/local-date.tsx` renders UTC first, then the reader's local date. Used in the library, report header and "All reports" list. Test: `lib/library/dates.test.ts` (00:30 IST on 19 Nov shows 19 Nov).
+- **7 (stale red-line error):** the add/edit boxes cleared the error only on submit; typing now clears it. No automated test: the suite has no DOM library, and adding one is a dependency needing approval.
+- **8 (squeezed vendor email):** `.note-facts div` matched the nested counter-offer div and made it a 2-column grid; narrowed to `.note-facts > div` (3 rules). No automated layout test; to be checked by eye on a live report.
+- **Checks:** typecheck, 292 tests, build pass. Branch `fix-cosmetic-findings`.
