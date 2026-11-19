@@ -755,3 +755,10 @@ Status: an unvalidated hypothesis.
 - **7 (stale red-line error):** the add/edit boxes cleared the error only on submit; typing now clears it. No automated test: the suite has no DOM library, and adding one is a dependency needing approval.
 - **8 (squeezed vendor email):** `.note-facts div` matched the nested counter-offer div and made it a 2-column grid; narrowed to `.note-facts > div` (3 rules). No automated layout test; to be checked by eye on a live report.
 - **Checks:** typecheck, 292 tests, build pass. Branch `fix-cosmetic-findings`.
+
+## Security review of the whole codebase, and fixing finding 9 (2026-11-19)
+- **Asked:** review every file for security (Anthropic's claude-code-security-review method, applied to whole files), record results in FINDINGS.md; then fix what it found, review the fix, merge.
+- **Review:** one pass found candidates, an independent pass re-checked each against the false-positive rules, threshold 8/10. One real finding (9, medium): `safeNextPath` let `next=/%09/evil.example` through; the callback's `new URL(next, origin)` drops the tab and redirects to another host after a genuine sign-in. RLS, server-side auth on all 8 API routes, secrets handling and XSS held up. Recorded in FINDINGS.md on main.
+- **Fix:** `lib/auth/safe-next.ts` now refuses control characters, spaces and backslashes, and resolves the path against a probe origin, refusing any change of origin. New `lib/auth/safe-next.test.ts` (failed first on the tab case). Typecheck, 297 tests, build pass.
+- **Review of the fix:** no vulnerabilities; tried encoded slashes, `/.//`, unicode lookalikes, CR/LF header injection, long input; all stay on the site.
+- Branch `fix-sign-in-redirect`, merged fast-forward to main; not pushed.
