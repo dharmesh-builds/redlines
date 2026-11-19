@@ -37,26 +37,38 @@ export async function loadLibrary(repo: LibraryRepository, userId: string): Prom
 export type SavedReport = { meta: ReportMeta; content: ReadPayload };
 
 export type DocumentDetail =
-  | { kind: "ok"; document: DocumentRow; report: SavedReport | null }
+  | {
+      kind: "ok";
+      document: DocumentRow;
+      report: SavedReport | null;
+      // Every report on this document, newest first, so earlier ones can be opened.
+      reports: ReportMeta[];
+    }
   | { kind: "not-found" }
   | { kind: "unavailable" };
 
-/** One document and its most recent saved report. Never re-runs the analysis. */
+/**
+ * One document and one of its saved reports: `reportId` if it is one of this
+ * document's reports, otherwise the most recent. A report ID from another
+ * document or user is never read. Never re-runs the analysis.
+ */
 export async function loadDocument(
   repo: LibraryRepository,
   userId: string,
   documentId: string,
+  reportId?: string,
 ): Promise<DocumentDetail> {
   if (!isDocumentId(documentId)) return { kind: "not-found" };
   try {
     const document = await repo.findDocument(userId, documentId);
     if (!document) return { kind: "not-found" };
-    const [latest] = newestFirst(await repo.listReports(userId, documentId));
-    if (!latest) return { kind: "ok", document, report: null };
-    const row = await repo.readReport(userId, latest.id);
-    if (!row) return { kind: "ok", document, report: null };
+    const reports = newestFirst(await repo.listReports(userId, documentId));
+    const chosen = reports.find((r) => r.id === reportId) ?? reports[0];
+    if (!chosen) return { kind: "ok", document, report: null, reports };
+    const row = await repo.readReport(userId, chosen.id);
+    if (!row) return { kind: "ok", document, report: null, reports };
     const { payload: _payload, ...meta } = row;
-    return { kind: "ok", document, report: { meta, content: readStoredPayload(row.payload) } };
+    return { kind: "ok", document, report: { meta, content: readStoredPayload(row.payload) }, reports };
   } catch (err) {
     console.error("[library] read failed:", (err as Error).message);
     return { kind: "unavailable" };

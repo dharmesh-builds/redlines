@@ -56,7 +56,10 @@ export function DocumentView({
     );
   }
 
-  const { document, report } = detail;
+  const { document, report, reports } = detail;
+  const latestId = reports[0]?.id ?? null;
+  // An older report is open (from the "All reports" list).
+  const isEarlier = report !== null && latestId !== null && report.meta.id !== latestId;
   const current = report?.content.kind === "current" ? report.content.report : null;
   const outOfDate = current !== null && currentRedLines !== null && !sameRedLines(current.redLines, currentRedLines);
   return (
@@ -71,13 +74,44 @@ export function DocumentView({
           the model <code className="model-id">{report.meta.modelId}</code>.
         </p>
       ) : null}
+      {isEarlier ? (
+        <p className="field-note library-notice" role="status">
+          This is an earlier report. <Link href={`/app/documents/${document.id}`}>See the latest report.</Link>
+        </p>
+      ) : null}
       {rechecked ? (
         <p className="field-note library-notice" role="status">
           Checked again with your current red lines. Earlier reports are still saved.
         </p>
       ) : null}
       {outOfDate ? <p className="field-note red-line-stale">Your red lines have changed since this check.</p> : null}
-      <RecheckDocument documentId={document.id} reportId={report?.meta.id ?? null} />
+      {/* The re-check note tracks the latest report, whichever one is open. */}
+      <RecheckDocument documentId={document.id} reportId={latestId} />
+      {reports.length > 1 ? (
+        <section className="doc-reports" aria-labelledby="doc-reports-title">
+          <h2 id="doc-reports-title" className="field-note doc-reports-title">
+            All reports on this agreement
+          </h2>
+          <ol className="doc-reports-list" reversed>
+            {reports.map((r, i) => {
+              const label = `Check ${reports.length - i}, ${formatSavedDate(r.createdAt)}`;
+              const suffix = `${i === 0 ? " (latest)" : ""}${r.id === report?.meta.id ? " (showing)" : ""}`;
+              return (
+                <li key={r.id}>
+                  {r.id === report?.meta.id ? (
+                    <span aria-current="page">{label}</span>
+                  ) : (
+                    <Link href={i === 0 ? `/app/documents/${document.id}` : `/app/documents/${document.id}?report=${r.id}`}>
+                      {label}
+                    </Link>
+                  )}
+                  {suffix}
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ) : null}
 
       {!report ? (
         <div className="library-state">

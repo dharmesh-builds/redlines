@@ -14,9 +14,11 @@ export default async function DocumentPage({ params, searchParams }: { params: P
   const { id } = await params;
   const access = await accountAccess();
   if (access.kind !== "ok") redirect(`/sign-in?next=/app/documents/${encodeURIComponent(id)}`);
-  const detail = await loadDocument(access.library, access.userId, id);
-  const current = detail.kind === "ok" ? await loadRedLines(access.redLines, access.userId) : null;
   const query = searchParams ? await searchParams : {};
+  // ?report=<id> opens an earlier report; anything else shows the latest.
+  const reportId = typeof query.report === "string" ? query.report : undefined;
+  const detail = await loadDocument(access.library, access.userId, id, reportId);
+  const current = detail.kind === "ok" ? await loadRedLines(access.redLines, access.userId) : null;
   return (
     <DocumentView
       detail={detail}

@@ -365,6 +365,47 @@ describe("a saved report and its red lines", () => {
     expect(fresh).not.toContain("Your red lines have changed");
   });
 
+  it("after a re-check, the earlier report is listed and can be opened (finding 5)", async () => {
+    lines.seed(ME, [FEE_LINE]);
+    const id = await saveOne();
+    const firstId = library.reports[0].id;
+    lines.seed(ME, [FEE_LINE, COURT_LINE]);
+    await recheckDocumentResponse(account(), id, scriptedModel(modelAnswer()));
+    const secondId = library.reports[1].id;
+
+    // The latest shows by default, with both reports listed and the earlier one linked.
+    const latestHtml = renderToStaticMarkup(
+      <DocumentView detail={await loadDocument(library, ME, id)} currentRedLines={[FEE_LINE, COURT_LINE]} />,
+    );
+    expect(textOf(latestHtml)).toContain(`Checked against your red lines: ${FEE_LINE} ${COURT_LINE}`);
+    expect(latestHtml).toContain(`href="/app/documents/${id}?report=${firstId}"`);
+    expect(textOf(latestHtml)).toContain("All reports on this agreement");
+    expect(textOf(latestHtml)).not.toContain("This is an earlier report.");
+
+    // Opening the earlier one shows the report as it was, says it's earlier, and links back.
+    const earlier = await loadDocument(library, ME, id, firstId);
+    expect(earlier.kind === "ok" && earlier.report?.meta.id).toBe(firstId);
+    const earlierHtml = renderToStaticMarkup(
+      <DocumentView detail={earlier} currentRedLines={[FEE_LINE, COURT_LINE]} />,
+    );
+    const earlierText = textOf(earlierHtml);
+    expect(earlierText).toContain(`Checked against your red lines: ${FEE_LINE}`);
+    expect(earlierText).not.toContain(`${FEE_LINE} ${COURT_LINE}`);
+    expect(earlierText).toContain("This is an earlier report.");
+    expect(earlierHtml).toContain(`href="/app/documents/${id}"`);
+
+    // A report ID that isn't one of this document's shows the latest instead.
+    const unknown = await loadDocument(library, ME, id, "99999999-9999-4999-8999-999999999999");
+    expect(unknown.kind === "ok" && unknown.report?.meta.id).toBe(secondId);
+  });
+
+  it("a document with one report lists no earlier reports", async () => {
+    const id = await saveOne();
+    const text = textOf(renderToStaticMarkup(<DocumentView detail={await loadDocument(library, ME, id)} currentRedLines={[]} />));
+    expect(text).not.toContain("All reports on this agreement");
+    expect(text).not.toContain("This is an earlier report.");
+  });
+
   it("re-running analyses the stored text, not anything the browser sends", async () => {
     const id = await saveOne();
     const model = scriptedModel(modelAnswer());

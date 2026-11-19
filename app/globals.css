@@ -1397,6 +1397,21 @@ mark.on {
   margin-top: 0;
 }
 
+.doc-reports {
+  margin: 0 0 var(--space-3);
+}
+
+.doc-reports-title {
+  margin: 0 0 var(--space-1);
+  font-weight: 700;
+}
+
+.doc-reports-list {
+  margin: 0;
+  padding-left: var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 640px) {
   .head-actions {
     flex-wrap: wrap;
