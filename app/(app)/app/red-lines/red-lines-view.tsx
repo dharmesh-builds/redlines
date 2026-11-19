@@ -119,7 +119,11 @@ function RedLineEditor({ initial }: { initial: RedLineRow[] }) {
           className="text-input red-line-input"
           maxLength={MAX_RED_LINE_CHARS}
           value={draft}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={(e) => {
+            setDraft(e.target.value);
+            // An error about the old text no longer applies once it changes.
+            setError(null);
+          }}
           aria-describedby="new-red-line-note"
           disabled={full}
         />
@@ -226,7 +230,10 @@ function RedLineItem({
             className="text-input red-line-input"
             maxLength={MAX_RED_LINE_CHARS}
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => {
+              setText(e.target.value);
+              setError(null);
+            }}
           />
           <div className="delete-actions">
             <button type="submit" className="plain-button" disabled={pending}>
