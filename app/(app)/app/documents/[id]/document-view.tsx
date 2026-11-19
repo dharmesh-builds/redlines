@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatSavedDate, type DocumentDetail } from "../../../../../lib/library/library";
+import type { DocumentDetail } from "../../../../../lib/library/library";
+import { LocalDate } from "../../../../local-date";
 import { redLineKey } from "../../../../../lib/analysis/red-lines";
 import { ReportView } from "../../../analyze/analyze-form";
 import { QuestionBox } from "../../../analyze/question-box";
@@ -70,7 +71,7 @@ export function DocumentView({
       </h1>
       {report ? (
         <p className="field-note doc-meta">
-          Checked on <time dateTime={report.meta.createdAt}>{formatSavedDate(report.meta.createdAt)}</time> with
+          Checked on <LocalDate iso={report.meta.createdAt} /> with
           the model <code className="model-id">{report.meta.modelId}</code>.
         </p>
       ) : null}
@@ -94,7 +95,11 @@ export function DocumentView({
           </h2>
           <ol className="doc-reports-list" reversed>
             {reports.map((r, i) => {
-              const label = `Check ${reports.length - i}, ${formatSavedDate(r.createdAt)}`;
+              const label = (
+                <>
+                  Check {reports.length - i}, <LocalDate iso={r.createdAt} />
+                </>
+              );
               const suffix = `${i === 0 ? " (latest)" : ""}${r.id === report?.meta.id ? " (showing)" : ""}`;
               return (
                 <li key={r.id}>

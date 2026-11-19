@@ -100,15 +100,21 @@ export async function deleteDocument(
   }
 }
 
-const DATE = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-  timeZone: "UTC",
-});
+function dateFormat(timeZone: string): Intl.DateTimeFormat {
+  const options = { day: "numeric", month: "short", year: "numeric" } as const;
+  try {
+    return new Intl.DateTimeFormat("en-GB", { ...options, timeZone });
+  } catch {
+    return new Intl.DateTimeFormat("en-GB", { ...options, timeZone: "UTC" });
+  }
+}
 
-/** "18 Nov 2026". Dates are shown in UTC so server and browser agree. */
-export function formatSavedDate(iso: string): string {
+/**
+ * "18 Nov 2026" in `timeZone`. The server renders UTC, since it can't know the
+ * reader's time zone; <LocalDate> then shows the reader's own date in the
+ * browser (finding 6).
+ */
+export function formatSavedDate(iso: string, timeZone = "UTC"): string {
   const t = Date.parse(iso);
-  return Number.isNaN(t) ? "" : DATE.format(t);
+  return Number.isNaN(t) ? "" : dateFormat(timeZone).format(t);
 }

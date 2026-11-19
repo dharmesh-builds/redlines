@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatSavedDate, type LibraryList } from "../../../lib/library/library";
+import type { LibraryList } from "../../../lib/library/library";
+import { LocalDate } from "../../local-date";
 
 // The library (app shell brief, "Library"): the reader's saved agreements on
 // the desk, newest first, each opening its saved report.
@@ -41,7 +42,7 @@ export function LibraryView({ list, deleted = false }: { list: LibraryList; dele
                   {doc.name}
                 </Link>
                 <span className="library-date num">
-                  Saved <time dateTime={doc.createdAt}>{formatSavedDate(doc.createdAt)}</time>
+                  Saved <LocalDate iso={doc.createdAt} />
                 </span>
               </li>
             ))}
